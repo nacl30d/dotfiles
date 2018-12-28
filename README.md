@@ -2,4 +2,4 @@
 
 ## Installation  
 
-`bash -c "$(curl -L dot.d-salt.net)"`  
+`$ bash -c "$(curl -L dot.d-salt.net)"`  
