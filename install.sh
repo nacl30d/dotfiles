@@ -6,17 +6,24 @@ THIS_DIR=$(cd $(dirname $0); pwd;)
 
 cd $THIS_DIR
 
+cat >> ./log <<EOF
+***
+$(date)
+***
+EOF
+
 echo "start install dotfiles..."
 
-for file in $(find . -type f -name ".??*" -exec basename {} \;); do
+for file in $(ls -a | grep '^\...?*'); do
     [ ${file} == ".DS_Store" ] && continue
+    [ ${file} == ".git" ] && continue
     [ ${file} == ".gitignore" ] && continue
     if [ -e $HOME/${file} ]; then
-        ln -sv $HOME/dotfiles/${file} $HOME/dot${file}
-#        echo "Made ${file}.dot. This file has already exist: ${file}"
+        ln -sv $HOME/dotfiles/${file} $HOME/dot${file} >> ./log
+        echo "Made ${file}.dot. This file has already exist: ${file}"
     else
-        ln -sv $HOME/dotfiles/${file} $HOME/${file}
-#        echo "Made symbolic link: ${file}"
+        ln -sv $HOME/dotfiles/${file} $HOME/${file}  >> ./log
+        echo "Made symbolic link: ${file}"
     fi
 done
 
