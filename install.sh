@@ -9,13 +9,15 @@ cd $THIS_DIR
 echo "start install dotfiles..."
 
 for file in $(find . -type f -name ".??*" -exec basename {} \;); do
-  if [ -e $HOME/${file} ]; then
-#    ln -sv $HOME/dotfiles/${file} $HOME/${file}.dot
-      echo "Made ${file}.dot. This file has already exist: ${file}"
-  else
-#    ln -sv $HOME/dotfiles/${file} $HOME/${file}
-     echo "Made symbolic link: ${file}"
-  fi
+    [ ${file} == ".DS_Store" ] && continue
+    [ ${file} == ".gitignore" ] && continue
+    if [ -e $HOME/${file} ]; then
+        ln -sv $HOME/dotfiles/${file} $HOME/${file}.dot
+#        echo "Made ${file}.dot. This file has already exist: ${file}"
+    else
+        ln -sv $HOME/dotfiles/${file} $HOME/${file}
+#        echo "Made symbolic link: ${file}"
+    fi
 done
 
 cat <<EOF
