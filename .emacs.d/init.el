@@ -1,3 +1,13 @@
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(require 'package)
+(setq debug-on-error t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
 ;; encoding
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -10,6 +20,8 @@
 (set-locale-environment nil)
 (set-language-environment "Japanese")
 
+;; theme
+(load-theme 'srcery t)
 
 (setq ingibit-startup-message t)
 (setq-default tab-width 4 indent-tabs-mode nil)
@@ -46,9 +58,12 @@
       '((".*", (expand-file-name "~/.emacs.d/backup/")) t)
 )
 
+;; key bainds
+(global-set-key "\C-x:" 'goto-line)
+
 ;; assign meta key to option key on Mac
 (when (eq system-type 'darwin)
-  (setq mac-option-modifire 'meta)
+  (setq mac-option-modifier 'meta)
 )
 
 ;; change cursor color when jspanese input mode
