@@ -63,5 +63,6 @@ alias webs='sudo nginx &'
 #alias stop-webs="ps aux | grep php-fpm | grep Ss | grep -v grep | awk '{print \$2}' | xargs sudo kill && ps aux | grep nginx | grep master | grep -v grep | awk '{print \$2}' | xargs sudo kill"
 alias stop-webs="ps aux | grep nginx | grep master | grep -v grep | awk '{print \$2}' | xargs sudo kill"
 alias cs="cd ~/www/coursespace/"
+alias deim="cd ~/www/coursespace/doc/articles/deim/"
 alias turtle="open ~/RonproEditor/RonproEditor.jar"
 alias alg="docker run -it -v /Users/d-salt/Box\ Sync/Aoyama/StudentAssistant/2018/ads/docker:/code ads bash"
