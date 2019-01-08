@@ -61,6 +61,16 @@
 (global-whitespace-mode 1)
 (global-set-key (kbd "C-x w") 'global-whitespace-mode)
 
+;; comment
+(defun one-line-comment ()
+  (interactive)
+   (save-excursion
+     (beginning-of-line)
+     (set-mark (point))
+     (end-of-line)
+     (comment-or-uncomment-region (region-beginning) (region-end))))
+(global-set-key (kbd "M-/") 'one-line-comment)
+
 ;; auto-complete
 (require 'auto-complete)
 (ac-config-default)
