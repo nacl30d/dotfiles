@@ -1,64 +1,60 @@
-((("comment-region" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("LOG_FILE" .
-   [0 0 0 0 2 1 0 0])
-  ("THIS_DIR" .
-   [0 0 0 0 1 0 0 0])
-  ("N-/" .
-   [8 0 0])
-  ("if" .
-   [2 0])
-  ("defun" .
-   [2 0 0 0 0])
-  ("git-gutter:toggle" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("hl-line" .
-   [0 0 0 0 0 0 1])
-  ("set-face-background" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("require" .
-   [1 0 0 0 0 0 3])
-  ("git-gutter" .
-   [0 0 0 0 0 0 0 0 0 1])
-  ("global-git-gutter-mode" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1])
-  ("git-gutter:linum-setup" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0])
+((("subsection" .
+   [2 0 0 0 0 0 0 0 0 0])
+  ("face" .
+   [1 0 0 0])
+  ("concat" .
+   [2 0 0 0 0 0])
+  ("propertize" .
+   [2 0 0 0 0 0 0 0 0 0])
+  ("display-time-string-forms" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
   ("setq" .
-   [1 0 0 0])
-  ("load-path" .
-   [0 0 0 0 0 0 0 0 2])
-  ("cons" .
-   [1 0 0 0])
-  ("global-set-key" .
-   [0 0 0 0 0 0 0 0 0 2 0 0 0 3])
-  ("kbd" .
-   [5 0 0])
-  ("lambda" .
-   [0 0 0 1 0 0])
-  ("git-gutter-mode" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 1 0 0])
-  ("linum-mode" .
-   [0 0 0 0 0 0 1 1 0 3])
-  ("interactive" .
-   [0 0 0 0 0 0 0 0 0 0 3])
-  ("linum-ex" .
+   [2 0 0 0])
+  ("pentland" .
    [1 0 0 0 0 0 0 0])
-  ("global-linum-mode" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0])
-  ("save-excursion" .
-   [0 0 0 0 0 0 1 0 0 0 0 0 0 0])
-  ("beginning-of-line" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("set-mark" .
+  ("esibok" .
+   [1 0 0 0 0 0])
+  ("cite" .
+   [2 0 0 0])
+  ("Knowledge" .
+   [1 0 0 0 0 0 0 0 0])
+  ("mima" .
+   [1 0 0 0])
+  ("oec" .
+   [1 0 0])
+  ("Gakuin" .
+   [0 0 1 0 0 0])
+  ("bibitem" .
+   [3 0 0 0 3 0 1])
+  ("aoyama" .
+   [2 0 0 0 0 0])
+  ("curriculum" .
+   [0 0 0 1 0 0 0 0 0 0])
+  ("ref" .
+   [1 0 0])
+  ("sibok" .
+   [1 0 0 0 0])
+  ("medskip" .
+   [0 0 0 0 1 0 0])
+  ("smallskip" .
+   [3 0 0 0 0 1 0 0 0])
+  ("setlength" .
+   [1 0 0 0 0 0 2 0 0])
+  ("leftskip" .
+   [2 0 0 0 1 0 0 0])
+  ("leftmargini" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("vspace" .
+   [1 0 0 0 0 0])
+  ("defface" .
+   [1 0 0 0 0 0 0])
+  ("egoge-display-time" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])
+  (":foreground" .
+   [2 0 0 0 0 0 0 0 0 0 0])
+  (":inherit" .
    [1 0 0 0 0 0 0 0])
-  ("end-of-line" .
-   [0 0 0 0 0 0 0 0 0 0 1])
-  ("comment-or-uncomment-region" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("region-beginning" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("region-end" .
-   [0 0 0 0 0 0 0 0 0 1])
-  ("one-line-comment" .
-   [0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])))
+  ("bold" .
+   [1 0 0 0])
+  ("type" .
+   [1 0 0 0])))
