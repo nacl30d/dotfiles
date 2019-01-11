@@ -1,60 +1,60 @@
-((("subsection" .
-   [2 0 0 0 0 0 0 0 0 0])
-  ("face" .
+((("type" .
    [1 0 0 0])
-  ("concat" .
-   [2 0 0 0 0 0])
-  ("propertize" .
-   [2 0 0 0 0 0 0 0 0 0])
-  ("display-time-string-forms" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
-  ("setq" .
-   [2 0 0 0])
-  ("pentland" .
-   [1 0 0 0 0 0 0 0])
-  ("esibok" .
-   [1 0 0 0 0 0])
-  ("cite" .
-   [2 0 0 0])
-  ("Knowledge" .
-   [1 0 0 0 0 0 0 0 0])
-  ("mima" .
-   [1 0 0 0])
-  ("oec" .
-   [1 0 0])
-  ("Gakuin" .
-   [0 0 1 0 0 0])
-  ("bibitem" .
-   [3 0 0 0 3 0 1])
-  ("aoyama" .
-   [2 0 0 0 0 0])
-  ("curriculum" .
-   [0 0 0 1 0 0 0 0 0 0])
-  ("ref" .
-   [1 0 0])
-  ("sibok" .
-   [1 0 0 0 0])
-  ("medskip" .
-   [0 0 0 0 1 0 0])
-  ("smallskip" .
-   [3 0 0 0 0 1 0 0 0])
-  ("setlength" .
-   [1 0 0 0 0 0 2 0 0])
-  ("leftskip" .
-   [2 0 0 0 1 0 0 0])
-  ("leftmargini" .
-   [1 0 0 0 0 0 0 0 0 0 0])
-  ("vspace" .
-   [1 0 0 0 0 0])
-  ("defface" .
-   [1 0 0 0 0 0 0])
-  ("egoge-display-time" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])
-  (":foreground" .
-   [2 0 0 0 0 0 0 0 0 0 0])
-  (":inherit" .
-   [1 0 0 0 0 0 0 0])
   ("bold" .
    [1 0 0 0])
-  ("type" .
-   [1 0 0 0])))
+  (":inherit" .
+   [1 0 0 0 0 0 0 0])
+  (":foreground" .
+   [2 0 0 0 0 0 0 0 0 0 0])
+  ("egoge-display-time" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])
+  ("defface" .
+   [1 0 0 0 0 0 0])
+  ("vspace" .
+   [1 0 0 0 0 0])
+  ("leftmargini" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("leftskip" .
+   [2 0 0 0 1 0 0 0])
+  ("setlength" .
+   [1 0 0 0 0 0 2 0 0])
+  ("smallskip" .
+   [3 0 0 0 0 1 0 0 0])
+  ("medskip" .
+   [0 0 0 0 1 0 0])
+  ("sibok" .
+   [1 0 0 0 0])
+  ("ref" .
+   [1 0 0])
+  ("curriculum" .
+   [0 0 0 1 0 0 0 0 0 0])
+  ("aoyama" .
+   [2 0 0 0 0 0])
+  ("bibitem" .
+   [3 0 0 0 3 0 1])
+  ("Gakuin" .
+   [0 0 1 0 0 0])
+  ("oec" .
+   [1 0 0])
+  ("mima" .
+   [1 0 0 0])
+  ("Knowledge" .
+   [1 0 0 0 0 0 0 0 0])
+  ("cite" .
+   [2 0 0 0])
+  ("esibok" .
+   [1 0 0 0 0 0])
+  ("pentland" .
+   [1 0 0 0 0 0 0 0])
+  ("setq" .
+   [2 0 0 0])
+  ("display-time-string-forms" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
+  ("propertize" .
+   [2 0 0 0 0 0 0 0 0 0])
+  ("concat" .
+   [2 0 0 0 0 0])
+  ("face" .
+   [1 0 0 0])
+  ("subsection" .
+   [2 0 0 0 0 0 0 0 0 0])))
