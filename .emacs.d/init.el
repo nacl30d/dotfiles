@@ -33,6 +33,14 @@
 (global-linum-mode t)
 (setq linum-format "%d ")
 (column-number-mode t)
+(defface egoge-display-time
+  '((((type tty))
+       (:foreground "blue")))
+  "Face used to display the time in the mode line.")
+(setq display-time-string-forms
+      '((propertize (concat " " monthname " " day " " 24-hours ":" minutes " ")
+                    'face 'egoge-display-time)))
+(display-time-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq vc-follow-symlinks t)
 
@@ -42,7 +50,7 @@
 (hiwin-activate)
 (set-face-background 'hiwin-face "gray50")
 (require 'hl-line+)
-(global-set-key (kbd "C-x c") 'flash-line-highlight)
+(global-set-key (kbd "C-x C-h") 'flash-line-highlight)
 (set-face-background 'hl-line "yellow")
 
 ;; white space
@@ -89,8 +97,8 @@
       )
 
 ;; auto-save file
-(setq auto-sava-file-name-transforms
-      '((".*", (expand-file-name "~/.emacs.d/backup/")) t)
+(setq auto-save-file-name-transforms
+      `((".*", (expand-file-name "~/.emacs.d/backup/") t))
 )
 
 ;; key bainds
