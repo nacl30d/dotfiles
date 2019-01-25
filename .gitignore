@@ -1,3 +1,4 @@
-.emacs.d/backup
+.emacs.d/.backup
+.emacs.d/.cache
+.emacs.d/straight
 log
-*~
