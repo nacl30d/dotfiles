@@ -1,9 +1,18 @@
+;;; package --- init.el
+;;; commentary:
+
+;; prerequirements
+;;   - mozc - for input method
+;;   - lint for flycheck
+
+
+;;; Code:
 
 (setq debug-on-error t)
 
-;;
+;;----------------------------------------------------------------------------------
 ;; straight.el
-;;
+;;----------------------------------------------------------------------------------
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -22,44 +31,41 @@
 (setq straight-use-package-by-default t)
 
 
-;;
-;; encoding
-;;
+;;----------------------------------------------------------------------------------
+;; Encoding and Language
+;;----------------------------------------------------------------------------------
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
-
-;;
-;; language
-;;
 (set-locale-environment nil)
 (set-language-environment 'utf-8)
 
-;;
-;; input method
-;;
+
+;;----------------------------------------------------------------------------------
+;; Input method
+;;----------------------------------------------------------------------------------
 (use-package mozc
-             :init
-             (setq mozc-helper-program-name "mozc_emacs_helper")
-             (setq default-input-method "japanese-mozc")
-             (custom-set-variables '(mozc-leim-title "あ"))
-             :config
-             (set-cursor-color "cyan")
-             (add-hook 'input-method-activate-hook
-                       (lambda () (set-cursor-color "masenta")))
-             (add-hook 'input-method-inactivate-hook
-                       (lambda () (set-cursor-color "cyan"))))
+  :init
+  (defvar mozc-helper-program-name "mozc_emacs_helper")
+  (setq default-input-method "japanese-mozc")
+  (custom-set-variables '(mozc-leim-title "あ"))
+  :config
+  (set-cursor-color "cyan")
+  (add-hook 'input-method-activate-hook
+            (lambda () (set-cursor-color "masenta")))
+  (add-hook 'input-method-inactivate-hook
+            (lambda () (set-cursor-color "cyan"))))
 
 (use-package mozc-popup
-             :config
-             (setq mozc-candidate-style 'popup))
+  :config
+  (defvar mozc-candidate-style 'popup))
 
-;;
+;;----------------------------------------------------------------------------------
 ;; basics
-;;
+;;----------------------------------------------------------------------------------
 (setq-default tab-width 4 indent-tabs-mode nil)
 (setq completion-ignore-case t)
 (global-auto-revert-mode 1)
@@ -71,76 +77,78 @@
       `((".*", (expand-file-name "~/.emacs.d/.backup/") t)))
 (setq auto-save-list-file-prefix "~/.emacs.d/.backup/auto-save-list/.saves-")
 
-;;
+
+;;----------------------------------------------------------------------------------
 ;; mode line
-;;
+;;----------------------------------------------------------------------------------
 (defface egoge-display-time
   '((((type tty))
        (:foreground "blue")))
   "Face used to display the time in the mode line.")
-(setq display-time-string-forms
+(defvar display-time-string-forms
       '((propertize (concat " " monthname " " day " " 24-hours ":" minutes " ")
                     'face 'egoge-display-time)))
 (display-time-mode t)
 (global-linum-mode t)
-(setq linum-format "%d ")
+(defvar linum-format "%d ")
 (column-number-mode t)
 
 
-;;
+;;----------------------------------------------------------------------------------
 ;; version control system
-;;
+;;----------------------------------------------------------------------------------
 (setq vc-follow-symlinks t)
 (use-package magit
-             :bind ("C-x g". magit-status))
+  :bind ("C-x g" . magit-status))
 
 
-;;
+
+;;----------------------------------------------------------------------------------
 ;; views
-;;
+;;----------------------------------------------------------------------------------
 (show-paren-mode t)                     ;highlight paren pairs
 (menu-bar-mode -1)                      ;hidden menu bar
 (setq inhibit-startup-message t)        ;hidden startup msg
 (global-set-key (kbd "C-x p") '(lambda () (interactive)(other-window -1))) ;reverse windo
 
 (use-package srcery-theme               ;theme
-             :init
-             (load-theme 'srcery t))
+  :init
+  (load-theme 'srcery t))
 
 (use-package hiwin                      ;change background color if active window or not
-             :init
-             (hiwin-activate)
-             :config
-             (set-face-background 'hiwin-face "gray50"))
+  :init
+  (hiwin-activate)
+  :config
+  (set-face-background 'hiwin-face "gray50"))
 
 (use-package hl-line+                   ;flash cursor line
-             :bind ("C-x C-h" . flash-line-highlight)
-             :config
-             (set-face-background 'hl-line "yellow"))
+  :bind ("C-x C-h" . flash-line-highlight)
+  :config
+  (set-face-background 'hl-line "yellow"))
 
 (use-package whitespace                ;white spaces
-              :bind ("C-x w" . global-whitespace-mode)
-              :init
-              (global-whitespace-mode 1)
-              :config
-              (setq whitespace-style '(face tabs tab-mark spaces space-mark))
-              (setq whitespace-display-mappings
-                    '((space-mark ?\u3000 [?\u25a1])
-                      (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])))
-              (setq whitespace-space-regexp "\\(\u3000+\\)")
-              (set-face-foreground 'whitespace-tab "#adff2f")
-              (set-face-background 'whitespace-tab 'nil)
-              (set-face-underline  'whitespace-tab t)
-              (set-face-foreground 'whitespace-space "#7cfc00")
-              (set-face-background 'whitespace-space 'nil)
-              (set-face-bold-p     'whitespace-space t))
+  :bind ("C-x w" . global-whitespace-mode)
+  :init
+  (global-whitespace-mode 1)
+  :config
+  (setq whitespace-style '(face tabs tab-mark spaces space-mark))
+  (setq whitespace-display-mappings
+        '((space-mark ?\u3000 [?\u25a1])
+          (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])))
+  (setq whitespace-space-regexp "\\(\u3000+\\)")
+  (set-face-foreground 'whitespace-tab "#adff2f")
+  (set-face-background 'whitespace-tab 'nil)
+  (set-face-underline  'whitespace-tab t)
+  (set-face-foreground 'whitespace-space "#7cfc00")
+  (set-face-background 'whitespace-space 'nil)
+  (set-face-bold-p     'whitespace-space t))
 
 
-;;
+;;----------------------------------------------------------------------------------
 ;; edit
-;;
+;;----------------------------------------------------------------------------------
 (global-set-key (kbd "C-c g") 'goto-line) ;goto line
-(defun one-line-comment ()              ;toggle comment
+(defun one-line-comment ()                ; toggle comment  
   (interactive)
   (save-excursion
     (beginning-of-line)
@@ -150,37 +158,51 @@
 (global-set-key (kbd "M-/") 'one-line-comment)
 
 (use-package auto-complete              ;complement
-             :init
-             (ac-config-default)
-             :config
-             (add-to-list 'ac-modes 'text-mode)
-             (add-to-list 'ac-modes 'fundamental-mode)
-             (add-to-list 'ac-modes 'latex-mode)
-             (add-to-list 'ac-modes 'markdown-mode)
-             (ac-set-trigger-key "TAB")
-             (setq ac-use-menu-map t)
-             (setq ac-use-fuzzy t)
-             (setq ac-comphist-file "~/.emacs.d/.cache/auto-complete/ac-comphist.dat"))
+  :init
+  (ac-config-default)
+  :config
+  (add-to-list 'ac-modes 'text-mode)
+  (add-to-list 'ac-modes 'fundamental-mode)
+  (add-to-list 'ac-modes 'latex-mode)
+  (add-to-list 'ac-modes 'markdown-mode)
+  (ac-set-trigger-key "TAB")
+  (setq ac-use-menu-map t)
+  (setq ac-use-fuzzy t)
+  (setq ac-comphist-file "~/.emacs.d/.cache/auto-complete/ac-comphist.dat"))
 
 (use-package undo-tree
-             :init
-             (global-undo-tree-mode))
+  :init
+  (global-undo-tree-mode))
+
+(use-package flycheck
+  :init
+  (global-flycheck-mode))
 
 (use-package web-mode
-             :mode (("\\.html?\\'" . web-mode)
-                    ("\\.js\\'" . web-mode)
-                    ("\\.css\\'" . web-mode)
-                    ("\\.php\\'" . web-mode))
-             :config
-             (setq web-mode-enable-auto-closing t)
-             (setq web-mode-enable-auto-pairing t)
-             (setq web-mode-markup-indent-offset 2)
-             (setq web-mode-css-indent-offset 2)
-             (setq web-mode-code-indent-offset 2)
-             (setq web-mode-style-padding 1)
-             (setq web-mode-script-padding 1)
-             (setq web-mode-block-padding 0)
-             (setq web-mode-enable-css-colorization t))
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.css\\'" . web-mode))
+  :config
+  (setq web-mode-enable-auto-closing t)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-style-padding 1)
+  (setq web-mode-script-padding 1)
+  (setq web-mode-block-padding 0)
+  (setq web-mode-enable-css-colorization t))
+
+(use-package js2-mode
+  :mode (("\\.js\\'" . js2-mode)))
+
+(use-package php-mode
+  :mode (("\\.php\\'" . php-mode)))
+
+(use-package markdown-mode
+  :commands (markdown-mode)
+  :mode (("\\.md\\'" . markdown-mode))
+  :init
+  (setq markdown-command "multimarkdown"))
 
 
 ;; TeX mode
@@ -225,21 +247,24 @@
 
 
 
-;;
+;;----------------------------------------------------------------------------------
 ;; shell
-;;
+;;----------------------------------------------------------------------------------
 (use-package multi-term
-             :bind ("C-c t" . multi-term)
-             :config
-             (setq multi-term-program "/usr/local/bin/zsh")
-             (delete "C-c" term-unbind-key-list)
-             (defun term-send-previous-line ()
-               (interactive)
-               (term-send-raw-string (kbd "C-p")))
-             (defun term-send-next-line ()
-               (interactive)
-               (term-send-raw-string (kbd "C-n")))
-             (add-hook 'term-mode-hook
-                       '(lambda ()
-                          (define-key term-raw-map (kbd "C-p") 'term-send-previous-line)
-                          (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
+  :bind ("C-c t" . multi-term)
+  :config
+  (setq multi-term-program "/usr/local/bin/zsh")
+  (delete "C-c" term-unbind-key-list)
+  (defun term-send-previous-line ()
+    (interactive)
+    (term-send-raw-string (kbd "C-p")))
+  (defun term-send-next-line ()
+    (interactive)
+    (term-send-raw-string (kbd "C-n")))
+  (add-hook 'term-mode-hook
+            '(lambda ()
+               (define-key term-raw-map (kbd "C-p") 'term-send-previous-line)
+               (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
+
+(provide 'init)
+;;; init.el ends here
