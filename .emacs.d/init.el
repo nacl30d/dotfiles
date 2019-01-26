@@ -2,8 +2,9 @@
 ;;; commentary:
 
 ;; prerequirements
-;;   - mozc - for input method
-;;   - lint for flycheck
+;;   - git for package, magit
+;;   - mozc for input method
+;;   - lints for flycheck
 
 
 ;;; Code:
