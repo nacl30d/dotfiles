@@ -20,6 +20,7 @@ update: ## Fetch changes fot this repo
 	git pull origin master
 
 install: update deploy #init ## Run make update, deploy, init
+	@exec $$SHELL
 
 # test: ## Test dotfiles and init scripts
 # 	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/test/test.sh
