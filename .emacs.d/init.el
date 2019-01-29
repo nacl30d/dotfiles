@@ -1,4 +1,4 @@
-;;; package --- init.el
+;;; init.el --- my init el
 ;;; commentary:
 
 ;; prerequirements
@@ -63,6 +63,7 @@
 (use-package mozc-popup
   :config
   (defvar mozc-candidate-style 'popup))
+
 
 ;;----------------------------------------------------------------------------------
 ;; basics
@@ -149,7 +150,8 @@
 ;; edit
 ;;----------------------------------------------------------------------------------
 (global-set-key (kbd "C-c g") 'goto-line) ;goto line
-(defun one-line-comment ()                ; toggle comment  
+(defun one-line-comment ()
+  "Toggle comment out."
   (interactive)
   (save-excursion
     (beginning-of-line)
@@ -228,6 +230,7 @@
         ("open -a \"Google Chrome\" %r.pdf" "%r.pdf")))
 
 (defun skim-forward-search ()
+  "Skim search function."
   (interactive)
   (let* ((ctf (buffer-name))
          (mtf (tex-main-file))
