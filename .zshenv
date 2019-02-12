@@ -1,6 +1,7 @@
 setopt no_global_rcs
 export LANG=ja_JP.UTF-8
 path=(
+    /usr/local/opt/curl/bin(N-/)
     /usr/local/bin(N-/)
     /usr/local/sbin(N-/)
     /Library/TeX/texbin(N-/)
@@ -11,6 +12,9 @@ path=(
     /opt/X11/bin(N-/)
     $HOME/bin(N-/)
 )
+export LDFLAGS="-L/usr/local/opt/curl/lib"
+export CPPFLAGS="-I/usr/local/opt/curl/include"
+export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig"
 
 # export DBD_MYSQL_CFLAGS=-I/usr/local/Cellar/mysql/5.6.15/bin/mysql
 # export DBD_MYSQL_LIBS="-L/usr/local/Cellar/mysql/5.6.15/bin/mysql -lmysqlclient"
