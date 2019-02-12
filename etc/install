@@ -61,7 +61,7 @@ has() {
 }
 
 if [ -z "${DOTPATH:-}" ]; then
-    DOTPATH="${HOME}/dotfiles"; export DOTPATH
+    DOTPATH="${HOME}/.dotfiles"; export DOTPATH
 fi
 DOTFILE_GITHUB="https://github.com/d-salt/dotfiles.git"; export DOTFILE_GITHUB
 
