@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+
+ostype() {
+    uname | lower
+}
+
+os_detect() {
+    export PLATFORM
+    case "$(ostype)" in
+        *'linux'*)  PLATFORM='linux'   ;;
+        *'darwin'*) PLATFORM='osx'     ;;
+        *'bsd'*)    PLATFORM='bsd'     ;;
+        *)          PLATFORM='unknown' ;;
+    esac
+}
+
+is_osx() {
+    os_detect
+    if [ "$PLATFORM" = "osx" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+is_linux() {
+    os_detect
+    if [ "$PLATFORM" = "linux" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+is_bsd() {
+    os_detect
+    if [ "$PLATFORM" = "bsd" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# get_os returns OS name of the platform that is runnning
+get_os() {
+    local os
+    for os in osx linux bsd; do
+        if is_$os; then
+            echo $os
+        fi
+    done
+}
+
+is_exists() {
+    type "$1" > /dev/null 2>&1
+    return $?
+}
+
+has() {
+    is_exists "$@"
+}
+
+if [ -z "${DOTPATH:-}" ]; then
+    DOTPATH="${HOME}/.dotfile"; export DOTPATH
+fi
+DOTFILE_GITHUB="https://github.com/d-salt/dotfiles.git"; export DOTFILE_GITHUB
+
+latex_download() {
+    if [ -d "$DOTPATH" ]; then
+        echo "error: $DOTPATH: already exists"
+        exit 1
+    fi
+
+    if is_exists "git"; then
+        git clone "$DOTFILE_GITHUB" "$DOTPATH"
+    else
+        echo "error: require: git"
+    fi
+    echo "Success Download"
+}
+
+latex_deploy() {
+    echo "Deploying latex..."
+
+    if [ ! -d $DOTPATH ]; then
+        echo "error: $DOTPATH: not found"
+        exit 1
+    fi
+
+    cd "$DOTPATH"
+    make deploy
+    echo "Success Deploy"
+}
+
+latex_initialize() {
+    if [ "$1" = "init" ]; then
+        echo "Initializing latex..."
+
+        if [ -f Makefile ]; then
+            make init
+        else
+            echo "error: Makefile: not found"
+            exit 1
+        fi
+        echo "Success Initialize"
+    fi
+}
+
+# A script for the file named "install"
+latex_install() {
+    latex_download &&
+    latex_deploy &&
+    latex_initialize "$@"
+}
+
+if echo "$-" | grep -q "i"; then
+    # -> source a.sh
+    VITALIZED=1
+    export VITALIZED
+
+    : return
+else
+    latex_install "$@"
+
+    # Restart shell if specified "bash -c $(curl -L {URL})"
+    # not restart:
+    #   curl -L {URL} | bash
+    if [ -p /dev/stdin ]; then
+        echo "Now continue with Rebooting your shell"
+    else
+        echo "Restarting your shell..."
+        exec "${SHELL}"
+    fi
+fi
+
