@@ -1,4 +1,4 @@
-!# /usr/bin/env bash
+#! /usr/bin/env bash
 
 set -Ceu
 
@@ -12,7 +12,7 @@ fi
 
 cd "$DOTPATH"
 
-brew file install
+brew bundle install
 
 
 
