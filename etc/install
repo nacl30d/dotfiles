@@ -61,7 +61,7 @@ has() {
 }
 
 if [ -z "${DOTPATH:-}" ]; then
-    DOTPATH="${HOME}/.dotfile"; export DOTPATH
+    DOTPATH="${HOME}/dotfiles"; export DOTPATH
 fi
 DOTFILE_GITHUB="https://github.com/d-salt/dotfiles.git"; export DOTFILE_GITHUB
 
@@ -80,7 +80,7 @@ latex_download() {
 }
 
 latex_deploy() {
-    echo "Deploying latex..."
+    echo "Deploying dotfiles..."
 
     if [ ! -d $DOTPATH ]; then
         echo "error: $DOTPATH: not found"
