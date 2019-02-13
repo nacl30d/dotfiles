@@ -4,6 +4,8 @@ set -Ceu
 
 . ${DOTPATH}/etc/lib/vital.sh
 
+MOZCPATH="${DOTPATH}/etc/mozc"; export $MOZCPATH
+
 : "check pre-requirements" && {
     if ! has git; then
         echo 'error: require: git'
@@ -32,8 +34,8 @@ set -Ceu
     patch -u mozc_build.py < ${DOTPATH}/etc/init/osx/mozc_build.patch
     
     echo 'Build mozc...'
-    SW_VER="$(sw_vers | grep ProductVersion | awk '{print $2}')"; export SW_VER
-    SDK_VER="$(ls /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs | grep -E "[0-9]+\.sdk$" | sed -E 's/^MacOSX([0-9\.]+)\.sdk$/\1/')"; export SDK_VER
+    SW_VER="$(sw_vers | grep ProductVersion | awk '{print $2}')"; export $SW_VER
+    SDK_VER="$(ls /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs | grep -E "[0-9]+\.sdk$" | sed -E 's/^MacOSX([0-9\.]+)\.sdk$/\1/')"; export $SDK_VER
     GYP_DEFINES="mac_sdk=${SDK_VER}mac_deployment_target=${SW_VER}" python build_mozc.py gyp --noqt
 
     python build_mozc.py build -c Release mac/mac.gyp:GoogleJapaneseInput mac/mac.gyp:gen_launchd_confs unix/emacs/emacs.gyp:mozc_emacs_helper
