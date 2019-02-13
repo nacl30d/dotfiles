@@ -9,7 +9,7 @@ list: ## Show dot files in this repo
 	@$(foreach file, $(DOTFILES), ls -dF $(file);)
 
 init: ## Setup environment
-	@$DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/init.sh
+	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/init.sh
 
 deploy: ## Create symbolic link to home dir
 	@echo '==> Start to deploy dotfiles to home directory.'
