@@ -77,14 +77,15 @@ DOTFILE_GITHUB="https://github.com/d-salt/dotfiles.git"; export DOTFILE_GITHUB
 
 dotfiles_download() {
     if [ -d "$DOTPATH" ]; then
-        echo "error: $DOTPATH: already exists"
+        echo "Error: $DOTPATH: already exists"
         exit 1
     fi
 
     if is_exists "git"; then
         git clone "$DOTFILE_GITHUB" "$DOTPATH"
     else
-        echo "error: require: git"
+        echo "Error: require: git"
+        exit 1
     fi
     echo "Success Download"
 }
@@ -93,7 +94,7 @@ dotfiles_deploy() {
     echo "Deploying dotfiles..."
 
     if [ ! -d $DOTPATH ]; then
-        echo "error: $DOTPATH: not found"
+        echo "Error: $DOTPATH: not found"
         exit 1
     fi
 
@@ -109,7 +110,7 @@ dotfiles_initialize() {
         if [ -f Makefile ]; then
             make init
         else
-            echo "error: Makefile: not found"
+            echo "Error: Makefile: not found"
             exit 1
         fi
         echo "Success Initialize"
