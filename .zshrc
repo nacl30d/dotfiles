@@ -7,7 +7,6 @@ colors
 
 # lsに色を使用
 export LSCOLORS='exfxxxxxcxxxxxxxxxexex'
-alias ls='ls -G'
 export LS_COLORS='di=34:ln=35:ex=32'
 zstyle 'completion:*' list-colors 'di=34' 'ln=35' 'ex=32'
 
@@ -53,16 +52,15 @@ alias la='ls -la'
 alias ll='ls -l'
 alias curl-h='curl -D - -s -o /dev/null'
 alias php-s='php -S localhost:8000'
-alias op-dev='cd ~/oi/officepass/staging-project'
-alias oihp-dev='cd ~/oi/homepage/html'
-alias oihp-pull='rsync -av -e ssh oihp:/usr/share/nginx/html/ ~/oi/homepage/html'
-alias oihp-push='rsync -av -e ssh ~/oi/homepage/html/ oihp:/usr/share/nginx/html'
-alias web='cd ~/web/d-salt.net/d-salt.net/'
-#alias webs='sudo php-fpm && sudo nginx &'
-alias webs='sudo nginx &'
-#alias stop-webs="ps aux | grep php-fpm | grep Ss | grep -v grep | awk '{print \$2}' | xargs sudo kill && ps aux | grep nginx | grep master | grep -v grep | awk '{print \$2}' | xargs sudo kill"
-alias stop-webs="ps aux | grep nginx | grep master | grep -v grep | awk '{print \$2}' | xargs sudo kill"
-alias cs="cd ~/www/coursespace/"
-alias deim="cd ~/www/coursespace/doc/articles/deim/"
-alias turtle="open ~/RonproEditor/RonproEditor.jar"
-alias alg="docker run -it -v /Users/d-salt/Box\ Sync/Aoyama/StudentAssistant/2018/ads/docker:/code ads bash"
+
+
+## OS別
+case ${OSTYPE} in
+    darwin*)
+        alias ls='ls -G'
+        ;;
+    linux*)
+        alias ls='ls --color'
+    ;;
+esac
+
