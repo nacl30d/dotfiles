@@ -4,7 +4,7 @@ set -Cue
 
 . ${DOTPATH}/etc/lib/vital.sh
 
-PACHAGES="git zsh emacs tmux curl tree wget "
+PACHAGES="git zsh emacs tmux curl gcc tree wget"
 
 if has "yum"; then
 echo "Install packages with Yellowdog Updater Modified."
