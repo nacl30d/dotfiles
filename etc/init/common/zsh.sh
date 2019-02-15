@@ -21,6 +21,7 @@ if ! contains "${SHELL:-}" "zsh"; then
     if [ -x "$zsh_path" ]; then
         if chsh -s "$zsh_path" "${USER:-root}"; then
             echo "Done: Change shell to '$zsh_path' for '${USER:-root}' successfully"
+            echo "You shoul run 'exec \$SHELL -l' to restart shell."
         else
             echo "Error: cannnot set '$zsh_path' as \$SHELL"
             echo "       Is '$zsh_path' descrived in /etc/shells?"
