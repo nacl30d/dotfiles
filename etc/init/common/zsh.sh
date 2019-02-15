@@ -2,7 +2,7 @@
 
 set -Cue
 
-. "$DOTPATH"/etc/ilb/vital.sh
+. "$DOTPATH"/etc/lib/vital.sh
 
 
 if ! has "zsh"; then
