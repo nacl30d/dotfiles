@@ -48,21 +48,21 @@
 ;;----------------------------------------------------------------------------------
 ;; Input method
 ;;----------------------------------------------------------------------------------
-(use-package mozc
-  :init
-  (defvar mozc-helper-program-name "mozc_emacs_helper")
-  (setq default-input-method "japanese-mozc")
-  (custom-set-variables '(mozc-leim-title "あ"))
-  :config
-  (set-cursor-color "cyan")
-  (add-hook 'input-method-activate-hook
-            (lambda () (set-cursor-color "masenta")))
-  (add-hook 'input-method-inactivate-hook
-            (lambda () (set-cursor-color "cyan"))))
+;; (use-package mozc
+;;   :init
+;;   (defvar mozc-helper-program-name "mozc_emacs_helper")
+;;   (setq default-input-method "japanese-mozc")
+;;   (custom-set-variables '(mozc-leim-title "あ"))
+;;   :config
+;;   (set-cursor-color "cyan")
+;;   (add-hook 'input-method-activate-hook
+;;             (lambda () (set-cursor-color "masenta")))
+;;   (add-hook 'input-method-inactivate-hook
+;;             (lambda () (set-cursor-color "cyan"))))
 
-(use-package mozc-popup
-  :config
-  (defvar mozc-candidate-style 'popup))
+;; (use-package mozc-popup
+;;   :config
+;;   (defvar mozc-candidate-style 'popup))
 
 
 ;;----------------------------------------------------------------------------------
@@ -123,10 +123,10 @@
   :config
   (set-face-background 'hiwin-face "gray50"))
 
-(use-package hl-line+                   ;flash cursor line
-  :bind ("C-x C-h" . flash-line-highlight)
-  :config
-  (set-face-background 'hl-line "yellow"))
+;; (use-package hl-line+                   ;flash cursor line
+;;   :bind ("C-x C-h" . flash-line-highlight)
+;;   :config
+;;   (set-face-background 'hl-line "yellow"))
 
 (use-package whitespace                ;white spaces
   :bind ("C-x w" . global-whitespace-mode)
