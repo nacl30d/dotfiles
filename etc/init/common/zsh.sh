@@ -11,7 +11,7 @@ if ! has "zsh"; then
 fi
 
 if ! contains "${SHELL:-}" "zsh"; then
-    zsh_path="${which zsh}"
+    zsh_path="$(which zsh)"
 
     if ! grep -xq "${zsh_path:=/bin/zsh}" /etc/shells; then
         echo "Error: you should append '$zsh_path' to /etc/shells"
