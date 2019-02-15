@@ -22,6 +22,7 @@ fi
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 if has "brew"; then
+    sudo mkdir -p /usr/locasl/Frameworks
     brew doctor;
 else
     echo "error: brew: faild to install."
