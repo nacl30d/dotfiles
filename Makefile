@@ -14,7 +14,7 @@ init: ## Setup environment
 deploy: ## Create symbolic link to home dir
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
-	@echo $(foreach file, $(DOTFILES), ln -sfvn $(abspath $(file)) $(HOME)/$(file);)
+	@$(foreach file, $(DOTFILES), ln -snfv $(abspath $(file)) $(HOME)/$(file);)
 
 update: ## Fetch changes fot this repo
 	git pull origin master
