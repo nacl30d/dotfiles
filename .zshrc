@@ -44,12 +44,12 @@ precmd () { vcs_info }
 
 p_dir='%F{cyan}[%~]%f'
 p_vcs='${vcs_info_msg_0_}'
-p_host='%F{red}(%m)%f'
-p_user='%(?.%F{yellow}.%F{magenta})%n%f'
-PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_user %# "
+p_host='%F{yellow}(%m)%f'
+p_user='%(?.%F{green}.%F{magenta})%n %#%f'
+PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_user "
 
 [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
-    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user %# "
+    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user "
 ;
 
 # Alias
