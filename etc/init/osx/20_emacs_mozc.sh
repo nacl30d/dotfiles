@@ -32,6 +32,7 @@ MOZCPATH="${DOTPATH}/etc/mozc"; export MOZCPATH
 
     echo 'Modify mozc source'
     patch -u build_mozc.py < ${DOTPATH}/etc/init/osx/build_mozc.patch
+    patch -u mac/mac.gyp < ${DOTPATH}/etc/init/osx/mac.gyp.patch
     
     echo 'Build mozc...'
     SW_VER="$(sw_vers | grep ProductVersion | awk '{print $2}')"; export SW_VER
