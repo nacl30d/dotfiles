@@ -181,6 +181,20 @@
   :init
   (global-flycheck-mode))
 
+(use-package ac-mozc
+  :init
+  (bind-keys :map ac-mode-map
+             ("C-c C-SPC" . ac-complete-mozc))
+  (add-hook 'after-change-major-mode-hook 'ac-mozc-mode)
+  :config
+  (defun ac-mozc-mode ()                ; Enable ac-mozc-mode if not latex mode.
+    (unless (eq major-mode 'latex-mode)
+      (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p nil t)))
+  (defun ac-mozc-setup ()               ; See <https://github.com/igjit/ac-mozc>
+    (setq ac-sources
+          '(ac-source-mozc ac-source-ascii-words-in-same-mode-buffers))
+    (set (make-local-variable 'ac-auto-show-menu) 0.2)))
+
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
          ("\\.css\\'" . web-mode))
