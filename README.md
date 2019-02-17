@@ -2,4 +2,4 @@
 
 ## Installation  
 
-`$ bash -c "$(curl -L cli.d-salt.net/init)"`  
+`$ bash -c "$(curl -L cli.d-salt.net/dot)"`  
