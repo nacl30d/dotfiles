@@ -51,7 +51,7 @@ MOZCPATH="${DOTPATH}/etc/mozc"
     GYP_DEFINES="mac_sdk=${SDK_VER} mac_deployment_target=${SW_VER}" python build_mozc.py gyp --noqt
 
     e_info "Please change build terget by your self. \n Select Deployment Target (your sdk ver) on `Interface Builder Document > Document Editing > Builds for`"
-    open -Wa /Applications/Xcode.app ./third_party/breakpad/src/client/mac/sender/Breakpad.xib
+    open -W -aa /Applications/Xcode.app ./third_party/breakpad/src/client/mac/sender/Breakpad.xib
     
     python build_mozc.py build -c Release mac/mac.gyp:GoogleJapaneseInput mac/mac.gyp:gen_launchd_confs unix/emacs/emacs.gyp:mozc_emacs_helper
 
