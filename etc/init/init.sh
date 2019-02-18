@@ -13,12 +13,14 @@ fi
 for script in "$DOTPATH"/etc/init/$(get_os)/*.sh
 do
     if [ -f "$script" ]; then
-        echo "-> $(basename $script)"
+        e_arrow_green "$(basename $script)"
         bash $script
     else
         continue
     fi
 done
 
-echo "Done. Bye!"
+e_done "Have a nice terminal life!"
+echo "Bye!"
 exit 0
+

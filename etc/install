@@ -70,6 +70,48 @@ contains() {
     fi
 }
 
+e_arrow() {
+    printf " \033[37;1m%s\033[m\n" "==> $*"
+}
+
+e_arrow_green() {
+    printf " \033[32;1m%s\033[m\n" "==> $*"
+}
+
+e_arrow_blue() {
+    printf " \033[34;1m%s\033[m\n" "==> $*"
+}
+
+e_ok() {
+    printf " \033[37;1m%s...\033[32mOK\033[m" "✔  $*"
+}
+
+e_success() {
+    printf " \033[32m%s\033[m" "$*"
+}
+
+e_done() {
+    printf " \033[37;1Done! %s\033[m" "$*"
+}
+
+e_info() {
+    printf " \033[36mInfo: %s\033[m\n" "$*"
+}
+
+e_warning() {
+    printf " \033[33mWarning: %s\033[m\n" "$*"
+}
+
+e_error() {
+    printf " \033[31mError: %s\033[m\n" "$*" 1>&2
+}
+
+die() {
+    e_error "$1" 1>&2
+    exit "${2:-1}"
+}
+
+
 if [ -z "${DOTPATH:-}" ]; then
     DOTPATH="${HOME}/.dotfiles"; export DOTPATH
 fi

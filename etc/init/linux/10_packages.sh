@@ -2,21 +2,28 @@
 
 set -Cue
 
+if [ -z "$DOTPATH" ]; then
+    echo '$DOTPATH not set' >&2
+    exit 1
+fi
+
 . ${DOTPATH}/etc/lib/vital.sh
+
 
 PACHAGES="git zsh emacs tmux curl gcc tree wget emacs-mozc-bin emacs-mozc"
 
 if has "yum"; then
-echo "Install packages with Yellowdog Updater Modified."
-sudo yum update
-sudo yum -y install $PACHAGES
+    e_arrow "Install packages with Yellowdog Updater Modified."
+    sudo yum update
+    sudo yum -y install $PACHAGES
 elif has "apt"; then
-echo "Install packages with Advanced Packaging Tool."
-sudo apt update && sudo apt upgrade
-sudo apt -y install $PACHAGES
+    e_arrow "Install packages with Advanced Packaging Tool."
+    sudo apt update && sudo apt upgrade
+    sudo apt -y install $PACHAGES
 else
-echo "Error: require: yum or apt"
-exit 1
+    die "require: yum or apt"
 fi
 
-echo "Done: packages: Installed successfully."
+e_success "packages: Installed successfully."
+exit 0
+
