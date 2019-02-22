@@ -2,8 +2,8 @@
 
 set -Cue
 
-if [ -z "$DOTPAH" ]; then
-    echo '$DOTPAH not set' >&2
+if [ -z "$DOTPATH" ]; then
+    echo '$DOTPATH not set' >&2
     exit 1
 fi
 
