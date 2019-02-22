@@ -12,6 +12,7 @@ fi
 
 CORE_PACKAGES="git zsh emacs tmux curl gcc tree wget"
 PACKAGES="$CORE_PACKAGES emacs-mozc-bin emacs-mozc"
+APK_PACKAGES="$CORE_PACKAGES zsh-vcs"
 
 if has "yum"; then
     e_arrow "Install packages with Yellowdog Updater Modified."
