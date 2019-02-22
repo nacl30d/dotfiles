@@ -10,7 +10,8 @@ fi
 . ${DOTPATH}/etc/lib/vital.sh
 
 
-PACKAGES="git zsh emacs tmux curl gcc tree wget emacs-mozc-bin emacs-mozc"
+CORE_PACKAGES="git zsh emacs tmux curl gcc tree wget"
+PACKAGES="$CORE_PACKAGES emacs-mozc-bin emacs-mozc"
 
 if has "yum"; then
     e_arrow "Install packages with Yellowdog Updater Modified."
@@ -22,7 +23,7 @@ elif has "apt"; then
     sudo apt -y install $PACKAGES
 elif has "apk"; then
     e_arrow "Install packages with Alpine Packages."
-    apk add $PACKAGES
+    apk add $CORE_PACKAGES
 else
     die "require: yum or apt"
 fi
