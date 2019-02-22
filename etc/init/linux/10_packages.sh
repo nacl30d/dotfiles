@@ -20,6 +20,9 @@ elif has "apt"; then
     e_arrow "Install packages with Advanced Packaging Tool."
     sudo apt update && sudo apt upgrade
     sudo apt -y install $PACHAGES
+elif has "apk"; then
+    e_arrow "Install packages with Alpine Packages."
+    apk add $PACKAGES
 else
     die "require: yum or apt"
 fi
