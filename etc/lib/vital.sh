@@ -111,15 +111,15 @@ e_arrow_blue() {
 }
 
 e_ok() {
-    printf " \033[37;1m%s...\033[32mOK\033[m" "✔  $*"
+    printf " \033[37;1m%s...\033[32mOK\033[m\n" "✔  $*"
 }
 
 e_success() {
-    printf " \033[32m%s\033[m" "$*"
+    printf " \033[32m%s\033[m\n" "$*"
 }
 
 e_done() {
-    printf " \033[37;1Done! %s\033[m" "$*"
+    printf " \033[37;1Done! %s\033[m\n" "$*"
 }
 
 e_info() {
