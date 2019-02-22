@@ -10,16 +10,16 @@ fi
 . ${DOTPATH}/etc/lib/vital.sh
 
 
-PACHAGES="git zsh emacs tmux curl gcc tree wget emacs-mozc-bin emacs-mozc"
+PACKAGES="git zsh emacs tmux curl gcc tree wget emacs-mozc-bin emacs-mozc"
 
 if has "yum"; then
     e_arrow "Install packages with Yellowdog Updater Modified."
     sudo yum update
-    sudo yum -y install $PACHAGES
+    sudo yum -y install $PACKAGES
 elif has "apt"; then
     e_arrow "Install packages with Advanced Packaging Tool."
     sudo apt update && sudo apt upgrade
-    sudo apt -y install $PACHAGES
+    sudo apt -y install $PACKAGES
 elif has "apk"; then
     e_arrow "Install packages with Alpine Packages."
     apk add $PACKAGES
