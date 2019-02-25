@@ -92,7 +92,6 @@ automaticcaly_attach_tmux_session() {
         tmux new-session && echo "tmux: created new session."
     fi
 }
-automaticcaly_attach_tmux_session
 
 # Alias
 alias e='emacs'
@@ -103,7 +102,8 @@ alias curl-h='curl -D - -s -o /dev/null'
 
 ## remote host or not
 if is_remote_host; then
-    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user ";
+    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user "
+    automaticcaly_attach_tmux_session
 fi
 
 
