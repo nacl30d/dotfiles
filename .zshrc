@@ -42,16 +42,21 @@ zstyle ':vcs_info:*' formats "%F{green}%c%u(%b)%f"
 zstyle ':vcs_info:*' actionformats '[%b|%a]'
 precmd () { vcs_info }
 
-PROMPT='
-%F{cyan}[%~]%f ${vcs_info_msg_0_}
-%(?.%F{yellow}.%F{magenta})%n@%m%f %# '
+p_dir='%F{cyan}[%~]%f'
+p_vcs='${vcs_info_msg_0_}'
+p_host='%F{yellow}(%m)%f'
+p_user='%(?.%F{green}.%F{magenta})%n %#%f'
+PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_user "
+
+[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
+    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user "
+;
 
 # Alias
 alias e='emacs'
 alias la='ls -la'
 alias ll='ls -l'
 alias curl-h='curl -D - -s -o /dev/null'
-alias php-s='php -S localhost:8000'
 
 
 ## OS別
@@ -64,3 +69,6 @@ case ${OSTYPE} in
     ;;
 esac
 
+
+# Added by Krypton
+export GPG_TTY=$(tty)

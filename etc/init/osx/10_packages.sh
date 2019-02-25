@@ -12,7 +12,9 @@ fi
 
 cd "$DOTPATH"
 
+e_arrow "Installing brew packages"
 brew bundle install
 
-
+e_success "packages: Installed successfully!"
+exit 0
 
