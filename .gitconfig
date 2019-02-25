@@ -44,18 +44,4 @@
     d2 = diff HEAD~2
     d3 = diff HEAD~3
     f = '!git ls-files | grep -i'
-
-
     
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[gpg]
-	program = /usr/local/bin/krgpg
-[commit]
-	gpgSign = true
-[tag]
-	forceSignAnnotated = true
