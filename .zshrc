@@ -48,9 +48,51 @@ p_host='%F{yellow}(%m)%f'
 p_user='%(?.%F{green}.%F{magenta})%n %#%f'
 PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_user "
 
-[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
-    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user "
-;
+is_exists() { type "$1" >/dev/null 2>&1; return $?; }
+is_osx() { [[ $OSTYPE == darwin* ]]; }
+is_linux() { [[ $OSTYPE == linux* ]]; }
+is_screen_running() { [ ! -z "$STY" ]; }
+is_tmux_running() { [ ! -z "$TMUX" ]; }
+is_interactive_shell() { [ ! -z "$PS1" ]; }
+is_remote_host() { [[ ! -z "${REMOTEHOST}" || ! -z "${SSH_CONNECTION}" ]]; }
+
+automaticcaly_attach_tmux_session() {
+    if ! is_interactive_shell; then
+        return 1
+    fi
+    
+    if is_screen_running; then
+        echo "This is on screen."
+        return 0
+    elif is_tmux_running; then
+        echo "This is on tmux."
+        return 0
+    else
+        ! is_exists 'tmux' && return 1
+    fi
+    
+    if tmux has-session >/dev/null 2>&1; then
+        tmux list-sessions
+        echo -n "Tmux: attach? [Y/n/num]: "
+        read
+        if [[ "$REPLY" =~ ^[Yy]$ ]] || [[ "$REPLY" == '' ]]; then
+            tmux attach-session
+            if [ $? = 0 ]; then
+                echo "$(tmux -V) attached session."
+                return 0
+            fi
+        elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
+            tmux attach -t "$REPLY"
+            if [ $? = 0 ]; then
+                echo "$(tmux -V) attached session."
+                return 0
+            fi
+        fi
+    else
+        tmux new-session && echo "tmux: created new session."
+    fi
+}
+automaticcaly_attach_tmux_session
 
 # Alias
 alias e='emacs'
@@ -59,15 +101,18 @@ alias ll='ls -l'
 alias curl-h='curl -D - -s -o /dev/null'
 
 
-## OS別
-case ${OSTYPE} in
-    darwin*)
-        alias ls='ls -G'
-        ;;
-    linux*)
-        alias ls='ls --color'
-    ;;
-esac
+## remote host or not
+if is_remote_host; then
+    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user ";
+fi
+
+
+## osx or linux
+if is_osx; then
+    alias ls='ls -G'
+elif is_linux; then
+    alias ls='ls --color'
+fi
 
 
 # Added by Krypton
