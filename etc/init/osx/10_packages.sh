@@ -12,6 +12,11 @@ fi
 
 cd "$DOTPATH"
 
+if [ ! -d "/usr/local/Frameworks" ]; then
+    sudo mkdir -p /usr/local/Frameworks
+fi
+sudo chown -R $(whoami):admin /usr/local/Frameworks
+
 e_arrow "Installing brew packages"
 brew bundle install
 

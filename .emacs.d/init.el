@@ -49,20 +49,20 @@
 ;; Input method
 ;;----------------------------------------------------------------------------------
 (use-package mozc
-  :init
-  (defvar mozc-helper-program-name "mozc_emacs_helper")
-  (setq default-input-method "japanese-mozc")
-  (custom-set-variables '(mozc-leim-title "あ"))
-  :config
-  (set-cursor-color "cyan")
-  (add-hook 'input-method-activate-hook
-            (lambda () (set-cursor-color "masenta")))
-  (add-hook 'input-method-inactivate-hook
-            (lambda () (set-cursor-color "cyan"))))
+ :init
+ (defvar mozc-helper-program-name "mozc_emacs_helper")
+ (setq default-input-method "japanese-mozc")
+ (custom-set-variables '(mozc-leim-title "あ"))
+ :config
+ (set-cursor-color "cyan")
+ (add-hook 'input-method-activate-hook
+           (lambda () (set-cursor-color "masenta")))
+ (add-hook 'input-method-inactivate-hook
+           (lambda () (set-cursor-color "cyan"))))
 
 (use-package mozc-popup
-  :config
-  (defvar mozc-candidate-style 'popup))
+ :config
+ (defvar mozc-candidate-style 'popup))
 
 
 ;;----------------------------------------------------------------------------------
@@ -182,18 +182,18 @@
   (global-flycheck-mode))
 
 (use-package ac-mozc
-  :init
-  (bind-keys :map ac-mode-map
-             ("C-c C-SPC" . ac-complete-mozc))
-  (add-hook 'after-change-major-mode-hook 'ac-mozc-mode)
-  :config
-  (defun ac-mozc-mode ()                ; Enable ac-mozc-mode if not latex mode.
-    (unless (eq major-mode 'latex-mode)
-      (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p nil t)))
-  (defun ac-mozc-setup ()               ; See <https://github.com/igjit/ac-mozc>
-    (setq ac-sources
-          '(ac-source-mozc ac-source-ascii-words-in-same-mode-buffers))
-    (set (make-local-variable 'ac-auto-show-menu) 0.2)))
+ :init
+ (bind-keys :map ac-mode-map
+            ("C-c C-SPC" . ac-complete-mozc))
+ (add-hook 'after-change-major-mode-hook 'ac-mozc-mode)
+ :config
+ (defun ac-mozc-mode ()                ; Enable ac-mozc-mode if not latex mode.
+   (unless (eq major-mode 'latex-mode)
+     (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p nil t)))
+ (defun ac-mozc-setup ()               ; See <https://github.com/igjit/ac-mozc>
+   (setq ac-sources
+         '(ac-source-mozc ac-source-ascii-words-in-same-mode-buffers))
+   (set (make-local-variable 'ac-auto-show-menu) 0.2)))
 
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
@@ -204,13 +204,17 @@
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
-  (setq web-mode-style-padding 1)
-  (setq web-mode-script-padding 1)
+  (setq web-mode-style-padding 2)
+  (setq web-mode-script-padding 2)
   (setq web-mode-block-padding 0)
   (setq web-mode-enable-css-colorization t))
 
 (use-package js2-mode
-  :mode (("\\.js\\'" . js2-mode)))
+  :mode (("\\.js\\'" . js2-mode))
+  :config
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-missing-semi-one-line-override nil)
+  (setq js2-basic-offset 2))
 
 (use-package php-mode
   :mode (("\\.php\\'" . php-mode)))
