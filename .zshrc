@@ -7,6 +7,10 @@ export LSCOLORS='exfxxxxxcxxxxxxxxxexex'
 export LS_COLORS='di=34:ln=35:ex=32'
 zstyle 'completion:*' list-colors 'di=34' 'ln=35' 'ex=32'
 
+# Color for less
+export LESSOPEN='| src-hilite-lesspipe.sh %s'
+export LESS='-IRM'
+
 # Complement
 autoload -U compinit;
 compinit -C 
@@ -92,6 +96,7 @@ alias e='emacs'
 alias ls='ls --color'
 alias la='ls -la'
 alias ll='ls -l'
+alias grep='grep --color=always -IHn'
 alias curl-h='curl -D -s -o /dev/null'
 
 
@@ -103,7 +108,7 @@ automaticcaly_attach_tmux_session
 
 ## OSX or Linux
 if is_osx; then
-#    alias ls='ls -G'
+    # alias ls='ls -G'
 elif is_linux; then
     # alias ls='ls --color'
 fi
