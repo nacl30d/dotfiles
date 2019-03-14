@@ -179,7 +179,9 @@
 
 (use-package flycheck
   :init
-  (global-flycheck-mode))
+  (global-flycheck-mode)
+  :config
+  (flycheck-add-mode 'html-tidy 'web-mode))
 
 (use-package ac-mozc
  :init
