@@ -2,7 +2,7 @@ setopt no_global_rcs
 export LANG=ja_JP.UTF-8
 export LC_ALL=ja_JP.UTF-8
 path=(
-    /usr/local/opt/gnu-sed/liibexec/gnubin(N-/)
+    /usr/local/opt/gnu-sed/libexec/gnubin(N-/)
     /usr/local/opt/grep/libexec/gnubin(N-/)
     /usr/local/opt/coreutils/libexec/gnubin(N-/)
     /usr/local/opt/curl/bin(N-/)
