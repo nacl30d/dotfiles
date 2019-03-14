@@ -177,10 +177,14 @@
   :init
   (global-undo-tree-mode))
 
+(use-package flycheck-popup-tip)
+
 (use-package flycheck
   :init
   (global-flycheck-mode)
   :config
+  (setq flycheck-display-errors-delay 0.1)
+  (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (flycheck-add-mode 'html-tidy 'web-mode))
 
 (use-package ac-mozc
