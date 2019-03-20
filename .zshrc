@@ -97,7 +97,6 @@ alias ls='ls --color'
 alias la='ls -la'
 alias ll='ls -l'
 alias grep='grep --color=always -IHn'
-alias curl-h='curl -D -s -o /dev/null'
 
 
 ## Remote host (or not)
