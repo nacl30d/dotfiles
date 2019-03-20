@@ -226,8 +226,9 @@
   :mode (("\\.php\\'" . php-mode)))
 
 (use-package markdown-mode
-  :commands (markdown-mode)
-  :mode (("\\.md\\'" . markdown-mode))
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode))
   :init
   (setq markdown-command "multimarkdown"))
 
