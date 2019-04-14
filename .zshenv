@@ -1,6 +1,12 @@
 setopt no_global_rcs
 export LANG=ja_JP.UTF-8
-export LC_ALL=ja_JP.UTF-8
+export LC_COLLATE=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+export LC_MESSAGES=en_US.UTF-8
+export LC_MONETARY=en_US.UTF-8
+export LC_NUMERIC=en_US.UTF-8
+export LC_TIME=en_US.UTF-8
+
 path=(
     /usr/local/opt/gnu-sed/libexec/gnubin(N-/)
     /usr/local/opt/grep/libexec/gnubin(N-/)
