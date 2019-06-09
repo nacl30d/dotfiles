@@ -149,6 +149,8 @@
 ;;----------------------------------------------------------------------------------
 ;; edit
 ;;----------------------------------------------------------------------------------
+(global-set-key (kbd "C-h") 'delete-backward-char)
+(keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-c g") 'goto-line) ;goto line
 (defun one-line-comment ()
   "Toggle comment out."
