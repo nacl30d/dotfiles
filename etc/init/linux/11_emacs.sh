@@ -17,10 +17,10 @@ fi
 if has "yum"; then
     e_arrow "Install emacs25 by Source Build."
     sudo yum -y install ncurses-devel
-    curl -LO http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-25.3.tar.xz
-    tar xzvf emacs-25.3.tar.xz
+    curl -LO http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-25.3.tar.gz
+    tar xzvf emacs-25.3.tar.gz
     cd emacs-25.3
-    ./configure
+    ./configure --without-x
     make
     sudo make install
 elif has "apt"; then
@@ -29,7 +29,6 @@ elif has "apt"; then
     sudo add-apt-repository ppa:kelleyk/emacs
     sudo apt update
     sudo apt -y install emacs25
-elif has "apk"; then
 else
     die "require: yum or apt"
 fi
