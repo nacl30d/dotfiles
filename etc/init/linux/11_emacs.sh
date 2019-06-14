@@ -9,6 +9,11 @@ fi
 
 . ${DOTPATH}/etc/lib/vital.sh
 
+if has "emacs"; then
+    die "emacs: You have already installed."
+    exit 0
+fi
+
 if has "yum"; then
     e_arrow "Install emacs25 by Source Build."
     sudo yum -y install ncurses-devel

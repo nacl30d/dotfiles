@@ -9,6 +9,11 @@ fi
 
 . ${DOTPATH}/etc/lib/vital.sh
 
+if has "tmux"; then
+    die "tmux: You have already installed."
+    exit 0
+fi
+
 if has "yum"; then
     e_arrow "Install emacs25 by Source Build."
     sudo yum -y install kernel-devel ncurses-devel
