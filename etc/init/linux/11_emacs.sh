@@ -10,7 +10,7 @@ fi
 . ${DOTPATH}/etc/lib/vital.sh
 
 if has "emacs"; then
-    die "emacs: You have already installed."
+    e_arrow "emacs: You have already installed."
     exit 0
 fi
 

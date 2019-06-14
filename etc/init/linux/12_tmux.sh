@@ -10,7 +10,7 @@ fi
 . ${DOTPATH}/etc/lib/vital.sh
 
 if has "tmux"; then
-    die "tmux: You have already installed."
+    e_arrow "tmux: You have already installed."
     exit 0
 fi
 
