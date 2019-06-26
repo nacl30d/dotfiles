@@ -10,7 +10,7 @@ fi
 . ${DOTPATH}/etc/lib/vital.sh
 
 
-CORE_PACKAGES="git zsh emacs tmux curl gcc tree wget source-highlight"
+CORE_PACKAGES="git zsh curl gcc tree wget source-highlight"
 PACKAGES="$CORE_PACKAGES emacs-mozc-bin emacs-mozc"
 APK_PACKAGES="$CORE_PACKAGES zsh-vcs"
 
