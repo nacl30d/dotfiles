@@ -145,6 +145,11 @@
   (set-face-background 'whitespace-space 'nil)
   (set-face-bold-p     'whitespace-space t))
 
+(use-package sr-speedbar
+  :config
+  (setq sr-speedbar-right-side nil)
+  (global-set-key (kbd "C-c s") 'sr-speedbar-toggle))
+
 
 ;;----------------------------------------------------------------------------------
 ;; edit
@@ -202,8 +207,7 @@
    (set (make-local-variable 'ac-auto-show-menu) 0.2)))
 
 (use-package web-mode
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.css\\'" . web-mode))
+  :mode (("\\.html?\\'" . web-mode))
   :config
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-auto-pairing t)
