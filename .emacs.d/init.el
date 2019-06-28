@@ -191,8 +191,11 @@
   (global-flycheck-mode)
   :config
   (setq flycheck-display-errors-delay 0.1)
+  (setq-default flycheck-disabled-checkers '(javascript-jshint))
   (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
-  (flycheck-add-mode 'html-tidy 'web-mode))
+  (flycheck-add-mode 'html-tidy 'web-mode)
+  (flycheck-add-mode 'javascript-standard 'web-mode)
+  (flycheck-add-mode 'javascript-standard 'js2-mode))
 
 (use-package ac-mozc
  :init
