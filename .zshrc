@@ -111,7 +111,3 @@ if is_osx; then
 elif is_linux; then
     # alias ls='ls --color'
 fi
-
-# Added by Krypton
-export GPG_TTY=$(tty)
-
