@@ -13,6 +13,8 @@ path=(
     /usr/local/opt/coreutils/libexec/gnubin(N-/)
     /usr/local/opt/curl/bin(N-/)
     /usr/local/opt/sqlite/bin(N-/)
+    /usr/local/opt/nss/bin(N-/)
+    /usr/local/opt/qt/bin(N-/)
     /usr/local/bin(N-/)
     /usr/local/sbin(N-/)
     /Library/TeX/texbin(N-/)
@@ -23,7 +25,8 @@ path=(
     /opt/X11/bin(N-/)
     $HOME/bin(N-/)
 )
-export LDFLAGS="-L/usr/local/opt/curl/lib -L/usr/local/opt/sqlite/lib"
-export CPPFLAGS="-I/usr/local/opt/curl/include -I/usr/local/opt/sqlite/include"
-export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig:/usr/local/opt/sqlite/lib/pkgconfig"
+export LDFLAGS="-L/usr/local/opt/curl/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/nss/lib -L/usr/local/opt/qt/lib"
+export CPPFLAGS="-I/usr/local/opt/curl/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/nss/include -I/usr/local/opt/qt/include"
+export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig:/usr/local/opt/sqlite/lib/pkgconfig:/usr/local/opt/nss/lib/pkgconfig"
 
+export HUGO_NEWCONTENTEDITOR="emacs"
