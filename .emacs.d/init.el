@@ -246,6 +246,9 @@
   :config
   (define-key yaml-mode-map (kbd "C-m") 'newline-and-indent))
 
+(use-package json-mode
+  :mode (("\\.json$" . json-mode)))
+
 ;; TeX mode
 (setq auto-mode-alist
       (append '(("\\.tex$" . latex-mode)) auto-mode-alist))
