@@ -241,6 +241,10 @@
   :init
   (setq markdown-command "multimarkdown"))
 
+(use-package yaml-mode
+  :mode (("\\.ya?ml$" . yaml-mode))
+  :config
+  (define-key yaml-mode-map (kbd "C-m") 'newline-and-indent))
 
 ;; TeX mode
 (setq auto-mode-alist
