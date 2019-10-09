@@ -91,6 +91,11 @@ automaticcaly_attach_tmux_session() {
     fi
 }
 
+# emacs
+function er () {
+    emacs "$1" --eval '(setq buffer-read-only t)'
+}
+
 # Alias
 alias e='emacs'
 alias ls='ls --color'
