@@ -30,3 +30,5 @@ export CPPFLAGS="-I/usr/local/opt/curl/include -I/usr/local/opt/sqlite/include -
 export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig:/usr/local/opt/sqlite/lib/pkgconfig:/usr/local/opt/nss/lib/pkgconfig"
 
 export HUGO_NEWCONTENTEDITOR="emacs"
+export EDITOR="emacs"
+
