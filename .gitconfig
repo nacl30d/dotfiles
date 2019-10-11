@@ -11,8 +11,8 @@
 [color]
     ui = true
 
-[pull]
-    ff = only
+# [pull]
+#     ff = only
 
 [push]
     default = simple            # push if same branch exist on remote
