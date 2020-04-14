@@ -312,4 +312,63 @@
                (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
 
 (provide 'init)
+
+
+;;----------------------------------------------------------------------------------
+;; diff
+;;----------------------------------------------------------------------------------
+(defun command-line-diff (switch)
+  "Ediff from ommand line."
+  (let ((file1 (pop command-line-args-left))
+        (file2 (pop command-line-args-left)))
+    (ediff file1 file2)))
+
+;; Usage: emacs -diff file1 file2
+(add-to-list 'command-switch-alist '("diff" . command-line-diff))
+
+(add-hook 'ediff-load-hook
+          (lambda ()
+            (set-face-foreground
+             ediff-current-diff-face-A "Black")
+            (set-face-background
+             ediff-current-diff-face-A "Green")
+            (set-face-foreground
+             ediff-fine-diff-face-A "White")
+            (make-face-bold
+             ediff-fine-diff-face-A)
+            (set-face-background
+             ediff-fine-diff-face-A "Green")
+            (set-face-background
+             ediff-odd-diff-face-A "PaleGreen")
+            (set-face-foreground
+             ediff-odd-diff-face-A "Black")
+            (set-face-foreground
+             ediff-current-diff-face-B "Black")
+            (set-face-background
+             ediff-current-diff-face-B "Red")
+            (set-face-foreground
+             ediff-fine-diff-face-B "Black")
+            (make-face-bold
+             ediff-fine-diff-face-B)
+            (set-face-background
+             ediff-fine-diff-face-B "Red")
+            (set-face-background
+             ediff-odd-diff-face-B "Pink")
+            (set-face-foreground
+             ediff-odd-diff-face-B "Black")
+            (set-face-background
+             ediff-odd-diff-face-A "PaleGreen")
+            (set-face-foreground
+             ediff-odd-diff-face-A "Black")
+            (set-face-background
+             ediff-even-diff-face-B "Pink")
+            (set-face-foreground
+             ediff-even-diff-face-B "Black")
+            (set-face-background
+             ediff-even-diff-face-A "PaleGreen")
+            (set-face-foreground
+             ediff-even-diff-face-A "Black")
+            ))
+
+(setq ediff-split-window-function 'split-window-horizontally)
 ;;; init.el ends here
