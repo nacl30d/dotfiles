@@ -186,12 +186,17 @@
 
 (use-package flycheck-popup-tip)
 
+(use-package exec-path-from-shell
+  :init
+  (exec-path-from-shell-initialize))
+
 (use-package flycheck
   :init
   (global-flycheck-mode)
   :config
   (setq flycheck-display-errors-delay 0.1)
   (setq-default flycheck-disabled-checkers '(javascript-jshint))
+  (setq flycheck-javascript-standard-executable "semistandard")
   (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (flycheck-add-mode 'html-tidy 'web-mode)
   (flycheck-add-mode 'javascript-standard 'web-mode)
@@ -227,8 +232,8 @@
 (use-package js2-mode
   :mode (("\\.js\\'" . js2-mode))
   :config
-  (setq js2-strict-missing-semi-warning nil)
-  (setq js2-missing-semi-one-line-override nil)
+  ;; (setq js2-strict-missing-semi-warning nil)
+  ;; (setq js2-missing-semi-one-line-override nil)
   (setq js2-basic-offset 2))
 
 (use-package php-mode
