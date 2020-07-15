@@ -16,5 +16,3 @@ verbosity: INFO
 log-file: log.json
 
 pdf-engine: lualatex
-
-  
