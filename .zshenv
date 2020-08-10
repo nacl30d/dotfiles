@@ -11,6 +11,7 @@ path=(
     /usr/local/opt/gnu-sed/libexec/gnubin(N-/)
     /usr/local/opt/grep/libexec/gnubin(N-/)
     /usr/local/opt/coreutils/libexec/gnubin(N-/)
+    /usr/local/opt/findutils/libexec/gnubin(N-/)
     /usr/local/opt/curl/bin(N-/)
     /usr/local/opt/sqlite/bin(N-/)
     /usr/local/opt/nss/bin(N-/)
