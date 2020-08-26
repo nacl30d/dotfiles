@@ -24,6 +24,9 @@
 [grep]
     lineNumber = true
 
+[init]
+    templateDir = ~/.gittemplate
+
 [alias]
     alias = !git config --get-regexp '^alias\\.' | sed 's/alias\\.\\([^ ]*\\) \\(.*\\)/\\1\\\t => \\2/' | sort
     s = status
@@ -44,4 +47,3 @@
     d2 = diff HEAD~2
     d3 = diff HEAD~3
     f = '!git ls-files | grep -i'
-    
