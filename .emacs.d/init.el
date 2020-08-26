@@ -255,7 +255,9 @@
   (define-key yaml-mode-map (kbd "C-m") 'newline-and-indent))
 
 (use-package json-mode
-  :mode (("\\.json$" . json-mode)))
+  :mode (("\\.json$" . json-mode))
+  :config
+  (setq js-indent-level 2))
 
 ;; TeX mode
 (setq auto-mode-alist
