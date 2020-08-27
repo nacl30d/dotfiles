@@ -244,10 +244,16 @@
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode))
+  :mode (("\\.md\\'" . markdown-mode)
+         ("README\\.md\\'" . gfm-mode))
   :init
-  (setq markdown-command "multimarkdown"))
+  (setq markdown-command "github-markup")
+  :config
+  (setq markdown-command-needs-filename t)
+  (setq markdown-content-type "application/xhtml+xml")
+  (setq markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css"))
+  (setq markdown-xhtml-body-preamble "<div class='markdown-body'>" )
+  (setq markdown-xhtml-body-epilogue "</div>"))
 
 (use-package yaml-mode
   :mode (("\\.ya?ml$" . yaml-mode))
