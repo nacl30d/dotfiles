@@ -24,6 +24,7 @@ path=(
     /usr/sbin(N-/)
     /sbin(N-/)
     /opt/X11/bin(N-/)
+    /opt/cisco/anyconnect/bin(N-/)
     $HOME/bin(N-/)
 )
 export LDFLAGS="-L/usr/local/opt/curl/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/nss/lib -L/usr/local/opt/qt/lib"
