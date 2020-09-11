@@ -239,6 +239,10 @@
   ;; (setq js2-missing-semi-one-line-override nil)
   (setq js2-basic-offset 2))
 
+(use-package rjsx-mode
+  :mode (("\\.js\\'" . rjsx-mode))
+  )
+
 (use-package php-mode
   :mode (("\\.php\\'" . php-mode)))
 
