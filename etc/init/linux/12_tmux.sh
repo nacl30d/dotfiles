@@ -15,12 +15,13 @@ if has "tmux"; then
 fi
 
 if has "yum"; then
-    e_arrow "Install emacs25 by Source Build."
+    e_arrow "Install tmux by Source Build."
     sudo yum -y install kernel-devel ncurses-devel
 elif has "apt"; then
-    e_arrow "Install emacs25 via PPA with Advanced Packaging Tool."
-    sudo apt -y install libevent-dev libncurses-dev
+    e_arrow "Install tmux via PPA with Advanced Packaging Tool."
+    sudo apt -y install libevent-dev libncurses-dev automake bison
 elif has "apk"; then
+    : # do nothing
 else
     die "require: yum or apt"
 fi
