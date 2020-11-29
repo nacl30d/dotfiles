@@ -1,6 +1,6 @@
 [user]
     name = d-salt
-    email = d.salt.web+dev@gmail.com
+    email = dev@d-salt.net
 
 [core]
     excludesfile = ~/.gitignore_global

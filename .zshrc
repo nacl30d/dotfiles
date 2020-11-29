@@ -13,7 +13,7 @@ export LESS='-IRM'
 
 # Complement
 autoload -U compinit;
-compinit -C 
+compinit -C
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
@@ -58,7 +58,7 @@ automaticcaly_attach_tmux_session() {
     if ! is_interactive_shell; then
         return 1
     fi
-    
+
     if is_screen_running; then
         echo "This is on screen."
         return 0
@@ -68,7 +68,7 @@ automaticcaly_attach_tmux_session() {
     else
         ! is_exists 'tmux' && return 1
     fi
-    
+
     if tmux has-session >/dev/null 2>&1; then
         tmux list-sessions
         echo -n "Tmux: attach? [Y/n/num]: "
