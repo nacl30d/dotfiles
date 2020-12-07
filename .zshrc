@@ -54,6 +54,14 @@ is_interactive_shell() { [ ! -z "$PS1" ]; }
 is_remote_host() { [[ ! -z "${REMOTEHOST}" || ! -z "${SSH_CONNECTION}" ]]; }
 
 # tmux
+echo_tmux() {
+    echo ' _____ __  __ _   ___  __'
+    echo '|_   _|  \/  | | | \ \/ /'
+    echo '  | | | |\/| | | | |\  / '
+    echo '  | | | |  | | |_| |/  \ '
+    echo '  |_| |_|  |_|\___//_/\_\'
+}
+
 automaticcaly_attach_tmux_session() {
     if ! is_interactive_shell; then
         return 1
@@ -63,7 +71,7 @@ automaticcaly_attach_tmux_session() {
         echo "This is on screen."
         return 0
     elif is_tmux_running; then
-        echo "This is on tmux."
+        echo_tmux
         return 0
     else
         ! is_exists 'tmux' && return 1
@@ -91,6 +99,12 @@ automaticcaly_attach_tmux_session() {
     fi
 }
 
+function run_my_modulars () {
+    for PROFILE_SCRIPT in /etc/profile.d/*.sh; do
+        source $PROFILE_SCRIPT
+    done
+}
+
 # emacs
 function er () {
     emacs "$1" --eval '(setq buffer-read-only t)'
@@ -109,6 +123,7 @@ if is_remote_host; then
     PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user "
 fi
 automaticcaly_attach_tmux_session
+run_my_modulars
 
 ## OSX or Linux
 if is_osx; then
