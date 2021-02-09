@@ -110,12 +110,28 @@ function er () {
     emacs "$1" --eval '(setq buffer-read-only t)'
 }
 
+function build-minute () {
+    if [ $# = 0 ]; then
+        exit 1;
+    elif [ $# = 1 ]; then
+        FILENAME=${1%.*}
+    elif [ $# = 2 ]; then
+        FILENAME=$2
+    fi
+    mkdir $FILENAME
+    pandoc -d md2pdf -o ${FILENAME}/${FILENAME}.pdf $1
+    pdftoppm -png ${FILENAME}.pdf ${FILENAME}/${FILENAME}
+}
+
 # Alias
 alias e='emacs'
 alias ls='ls --color'
 alias la='ls -la'
 alias ll='ls -l'
 alias grep='grep --color=always -IHn'
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
 
 
 ## Remote host (or not)
@@ -123,7 +139,7 @@ if is_remote_host; then
     PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user "
 fi
 automaticcaly_attach_tmux_session
-run_my_modulars
+# run_my_modulars
 
 ## OSX or Linux
 if is_osx; then
