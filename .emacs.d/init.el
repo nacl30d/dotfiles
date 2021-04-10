@@ -212,6 +212,7 @@
   (setq flycheck-display-errors-delay 0.1)
   (setq-default flycheck-disabled-checkers '(javascript-jshint))
   (setq flycheck-javascript-standard-executable "semistandard")
+  (setq flycheck-phpcs-standard  "PSR12")
   (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (flycheck-add-mode 'html-tidy 'web-mode)
   (flycheck-add-mode 'javascript-standard 'web-mode)
@@ -241,8 +242,15 @@
   :mode (("\\.js\\'" . rjsx-mode))
   )
 
+(use-package flycheck-phpstan
+  :config
+  (flycheck-add-next-checker 'phpstan 'php-phpcs))
+
 (use-package php-mode
   :mode (("\\.php\\'" . php-mode)))
+
+;; (use-package jinja2-mode
+;;   :mode (("\\.tpl\\'" . jinja2-mode)))
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)

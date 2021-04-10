@@ -120,7 +120,7 @@ function build-minute () {
     fi
     mkdir $FILENAME
     pandoc -d md2pdf -o ${FILENAME}/${FILENAME}.pdf $1
-    pdftoppm -png ${FILENAME}.pdf ${FILENAME}/${FILENAME}
+    pdftoppm -png ${FILENAME}/${FILENAME}.pdf ${FILENAME}/${FILENAME}
 }
 
 # Alias
