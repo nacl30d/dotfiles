@@ -275,6 +275,14 @@
   :config
   (setq js-indent-level 2))
 
+(use-package docker
+  :bind ("C-c d" . docker))
+
+(use-package dockerfile-mode
+  :mode (("Dockefile\\'" . dockerfile-mode)))
+
+(use-package docker-compose-mode)
+
 ;; TeX mode
 (setq auto-mode-alist
       (append '(("\\.tex$" . latex-mode)) auto-mode-alist))
