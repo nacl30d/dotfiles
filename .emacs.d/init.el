@@ -112,10 +112,14 @@
 ;; version control system
 ;;----------------------------------------------------------------------------------
 (setq vc-follow-symlinks t)
+
 (use-package magit
   :bind ("C-x g" . magit-status))
 
-
+(use-package git-gutter
+  :init
+  (global-git-gutter-mode t)
+)
 
 ;;----------------------------------------------------------------------------------
 ;; views
