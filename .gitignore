@@ -2,5 +2,6 @@
 .emacs.d/.cache
 .emacs.d/straight
 .emacs.d/elpa
+.emacs.d/tramp
 .emacs.d/transient
 log
