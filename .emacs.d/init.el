@@ -103,7 +103,7 @@
       '((propertize (concat " " monthname " " day " " 24-hours ":" minutes " ")
                     'face 'egoge-display-time)))
 (display-time-mode t)
-(global-linum-mode t)
+(global-display-line-numbers-mode)
 (defvar linum-format "%d ")
 (column-number-mode t)
 
