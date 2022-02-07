@@ -129,6 +129,10 @@
 (setq inhibit-startup-message t)        ;hidden startup msg
 (global-set-key (kbd "C-x p") '(lambda () (interactive)(other-window -1))) ;reverse windo
 
+(use-package window-numbering
+  :init
+  (window-numbering-mode 1))
+
 (use-package srcery-theme               ;theme
   :init
   (load-theme 'srcery t))
