@@ -291,6 +291,26 @@
 
 (use-package docker-compose-mode)
 
+(use-package elpy
+  :init
+  (elpy-enable)
+  ;; (elpy-rpc--install-dependencies)
+  :config
+  (remove-hook 'elpy-modules 'elpy-module-flymake)
+  (setq elpy-rpc-python-command "python3")
+  (setq flycheck-python-flake8-executable "flake8")
+  :hook
+  (elpy-mode . flycheck-mode)
+  )
+
+(use-package poetry
+  :hook
+  (elpy-mode . poetry-tracking-mode))
+
+(use-package py-isort
+  :hook
+  (before-save . py-isort-before-save))
+
 ;; TeX mode
 (setq auto-mode-alist
       (append '(("\\.tex$" . latex-mode)) auto-mode-alist))
