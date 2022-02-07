@@ -26,6 +26,7 @@
 
 [init]
     templateDir = ~/.gittemplate
+	defaultBranch = master
 
 [alias]
     alias = !git config --get-regexp '^alias\\.' | sed 's/alias\\.\\([^ ]*\\) \\(.*\\)/\\1\\\t => \\2/' | sort
