@@ -253,6 +253,23 @@
   :mode (("\\.js\\'" . rjsx-mode))
   )
 
+(use-package npm-mode
+  :config
+  (add-hook 'typescript-mode-hook 'npm-mode)
+  (add-hook 'js2-mode 'npm-mode))
+
+(use-package typescript-mode
+  :mode (("\\.ts\\'" . typescript-mode)
+         ("\\.tsx\\'" . typescript-mode))
+  :config
+  (setq-default typescript-indent-level 2))
+
+(use-package tide
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
+
 (use-package flycheck-phpstan
   :config
   (flycheck-add-next-checker 'phpstan 'php-phpcs))
