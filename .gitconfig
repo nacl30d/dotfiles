@@ -21,12 +21,15 @@
     ff = false
     tool = emerge
 
+[commit]
+    template = ~/.gittemplate/.gitmessage
+
 [grep]
     lineNumber = true
 
 [init]
     templateDir = ~/.gittemplate
-	defaultBranch = master
+    defaultBranch = master
 
 [alias]
     alias = !git config --get-regexp '^alias\\.' | sed 's/alias\\.\\([^ ]*\\) \\(.*\\)/\\1\\\t => \\2/' | sort

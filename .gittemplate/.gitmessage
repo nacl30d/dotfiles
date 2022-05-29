@@ -1,0 +1,23 @@
+
+
+# ==================== Emojis ====================
+# ✨ :sparkles:            feat(xxx):   Features your commit message
+# 🐛 :bug:                 fix(xxx):    Bug Fixes
+# 📖 :book:                docs(xxx):   Documentation
+# 💎 :gem:                 style:       Styles
+# 📦 :package:             refactor:    Code Refactoring
+# 🚀 :rocket:              perf(xxx):   Performance Improvements
+# 🚨 :rotating_light:      test(xxx):   Tests
+# 👷 :construction_worker: build(xxx):  Build
+# 💻 :computer:            ci(xxx):     Continuous Integration
+# 🎫 :ticket               chore(xxx):  Chores
+# 🔙 :back:                revert(xxx): Reverts
+# 🚧 :construction:        wip:         Work in Progress
+# 🔖 :bookmark:            tag:         Version tagging
+
+
+# ==================== Format ====================
+# :emoji: Subject
+#
+# Commit body...
+
