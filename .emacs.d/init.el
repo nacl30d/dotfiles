@@ -210,6 +210,29 @@
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
+(use-package hl-todo
+  :init
+  (global-hl-todo-mode)
+  :config
+  (setq hl-todo-keyword-faces
+        '(("HOLD" . "#d0bf8f")
+          ("TODO" . "#cc9393")
+          ("NEXT" . "#dca3a3")
+          ("THEM" . "#dc8cc3")
+          ("PROG" . "#7cb8bb")
+          ("OKAY" . "#7cb8bb")
+          ("DONT" . "#5f7f5f")
+          ("FAIL" . "#8c5353")
+          ("DONE" . "#afd8af")
+          ("NOTE"   . "#d0bf8f")
+          ("KLUDGE" . "#d0bf8f")
+          ("HACK"   . "#d0bf8f")
+          ("TEMP"   . "#d0bf8f")
+          ("FIXME"  . "#cc9393")
+          ("WATCH"  . "#ff459a")
+          ("XXX+"   . "#cc9393")))
+  )
+
 (use-package flycheck-popup-tip)
 
 (use-package exec-path-from-shell
