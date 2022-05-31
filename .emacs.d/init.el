@@ -173,6 +173,11 @@
   (setq sr-speedbar-right-side nil)
   (global-set-key (kbd "C-c s") 'sr-speedbar-toggle))
 
+(use-package emojify
+  :bind ("C-c e" . 'emojify-insert-emoji)
+
+  :hook (after-init . global-emojify-mode))
+
 
 ;;----------------------------------------------------------------------------------
 ;; edit
