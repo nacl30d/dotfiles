@@ -259,7 +259,8 @@
   )
 
 (use-package web-mode
-  :mode (("\\.html?\\'" . web-mode))
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.blade\\.php\\." . web-mode))
   :config
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-auto-pairing t)
@@ -269,7 +270,10 @@
   (setq web-mode-style-padding 2)
   (setq web-mode-script-padding 2)
   (setq web-mode-block-padding 0)
-  (setq web-mode-enable-css-colorization t))
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-engines-alist
+        ' (("php" . "\\.phtml\\'")
+           ("blade" . "\\.blade\\.php\\."))))
 
 (use-package js2-mode
   :mode (("\\.js\\'" . js2-mode))
