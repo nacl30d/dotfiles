@@ -253,6 +253,11 @@
   :hook
   (flycheck-mode . flycheck-popup-tip-mode))
 
+(use-package eglot
+  :hook
+  (elpy-mode . eglot-ensure)
+  )
+
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode))
   :config
