@@ -127,7 +127,7 @@
 (show-paren-mode t)                     ;highlight paren pairs
 (menu-bar-mode -1)                      ;hidden menu bar
 (setq inhibit-startup-message t)        ;hidden startup msg
-(global-set-key (kbd "C-x p") '(lambda () (interactive)(other-window -1))) ;reverse windo
+(global-set-key (kbd "C-x p") #'(lambda () (interactive)(other-window -1))) ;reverse windo
 
 (use-package window-numbering
   :init
@@ -366,7 +366,7 @@
      (start-process-shell-command "displayline" nil cmd args))))
 
 (add-hook 'latex-mode-hook
-          '(lambda ()
+          #'(lambda ()
              (define-key latex-mode-map (kbd "C-c s") 'skim-forward-search)))
 
 ;; RefTeX with TeX mode
@@ -389,7 +389,7 @@
     (interactive)
     (term-send-raw-string (kbd "C-n")))
   (add-hook 'term-mode-hook
-            '(lambda ()
+            #'(lambda ()
                (define-key term-raw-map (kbd "C-p") 'term-send-previous-line)
                (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
 
