@@ -205,7 +205,10 @@
 
 (use-package undo-tree
   :init
-  (global-undo-tree-mode))
+  (global-undo-tree-mode)
+  :config
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
 (use-package flycheck-popup-tip)
 
@@ -249,6 +252,23 @@
 (use-package rjsx-mode
   :mode (("\\.js\\'" . rjsx-mode))
   )
+
+(use-package npm-mode
+  :config
+  (add-hook 'typescript-mode-hook 'npm-mode)
+  (add-hook 'js2-mode 'npm-mode))
+
+(use-package typescript-mode
+  :mode (("\\.ts\\'" . typescript-mode)
+         ("\\.tsx\\'" . typescript-mode))
+  :config
+  (setq-default typescript-indent-level 2))
+
+(use-package tide
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
 
 (use-package flycheck-phpstan
   :config
