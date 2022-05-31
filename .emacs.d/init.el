@@ -247,10 +247,11 @@
   (setq-default flycheck-disabled-checkers '(javascript-jshint))
   (setq flycheck-javascript-standard-executable "semistandard")
   (setq flycheck-phpcs-standard  "PSR12")
-  (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (flycheck-add-mode 'html-tidy 'web-mode)
   (flycheck-add-mode 'javascript-standard 'web-mode)
-  (flycheck-add-mode 'javascript-standard 'js2-mode))
+  (flycheck-add-mode 'javascript-standard 'js2-mode)
+  :hook
+  (flycheck-mode . flycheck-popup-tip-mode))
 
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode))
