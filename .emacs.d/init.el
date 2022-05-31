@@ -334,6 +334,11 @@
 
 (use-package docker-compose-mode)
 
+(use-package docker-tramp
+  :config
+  (set-variable 'docker-tramp-use-names t)
+  )
+
 (use-package elpy
   :init
   (elpy-enable)
