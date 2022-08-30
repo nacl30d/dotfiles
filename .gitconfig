@@ -1,6 +1,6 @@
 [user]
-    name = Daiki Shiozawa
     email = nacl30d@gmail.com
+    name = Daiki Shiozawa
 
 [core]
     excludesfile = ~/.gitignore_global

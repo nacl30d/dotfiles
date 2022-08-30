@@ -127,7 +127,7 @@
 (show-paren-mode t)                     ;highlight paren pairs
 (menu-bar-mode -1)                      ;hidden menu bar
 (setq inhibit-startup-message t)        ;hidden startup msg
-(global-set-key (kbd "C-x p") '(lambda () (interactive)(other-window -1))) ;reverse windo
+(global-set-key (kbd "C-x p") #'(lambda () (interactive)(other-window -1))) ;reverse windo
 
 (use-package window-numbering
   :init
@@ -173,6 +173,11 @@
   (setq sr-speedbar-right-side nil)
   (global-set-key (kbd "C-c s") 'sr-speedbar-toggle))
 
+(use-package emojify
+  :bind ("C-c e" . 'emojify-insert-emoji)
+
+  :hook (after-init . global-emojify-mode))
+
 
 ;;----------------------------------------------------------------------------------
 ;; edit
@@ -210,6 +215,29 @@
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
+(use-package hl-todo
+  :init
+  (global-hl-todo-mode)
+  :config
+  (setq hl-todo-keyword-faces
+        '(("HOLD" . "#d0bf8f")
+          ("TODO" . "#cc9393")
+          ("NEXT" . "#dca3a3")
+          ("THEM" . "#dc8cc3")
+          ("PROG" . "#7cb8bb")
+          ("OKAY" . "#7cb8bb")
+          ("DONT" . "#5f7f5f")
+          ("FAIL" . "#8c5353")
+          ("DONE" . "#afd8af")
+          ("NOTE"   . "#d0bf8f")
+          ("KLUDGE" . "#d0bf8f")
+          ("HACK"   . "#d0bf8f")
+          ("TEMP"   . "#d0bf8f")
+          ("FIXME"  . "#cc9393")
+          ("WATCH"  . "#ff459a")
+          ("XXX+"   . "#cc9393")))
+  )
+
 (use-package flycheck-popup-tip)
 
 (use-package exec-path-from-shell
@@ -224,13 +252,20 @@
   (setq-default flycheck-disabled-checkers '(javascript-jshint))
   (setq flycheck-javascript-standard-executable "semistandard")
   (setq flycheck-phpcs-standard  "PSR12")
-  (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (flycheck-add-mode 'html-tidy 'web-mode)
   (flycheck-add-mode 'javascript-standard 'web-mode)
-  (flycheck-add-mode 'javascript-standard 'js2-mode))
+  (flycheck-add-mode 'javascript-standard 'js2-mode)
+  :hook
+  (flycheck-mode . flycheck-popup-tip-mode))
+
+(use-package eglot
+  :hook
+  (elpy-mode . eglot-ensure)
+  )
 
 (use-package web-mode
-  :mode (("\\.html?\\'" . web-mode))
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.blade\\.php\\." . web-mode))
   :config
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-auto-pairing t)
@@ -240,7 +275,10 @@
   (setq web-mode-style-padding 2)
   (setq web-mode-script-padding 2)
   (setq web-mode-block-padding 0)
-  (setq web-mode-enable-css-colorization t))
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-engines-alist
+        ' (("php" . "\\.phtml\\'")
+           ("blade" . "\\.blade\\.php\\."))))
 
 (use-package js2-mode
   :mode (("\\.js\\'" . js2-mode))
@@ -311,6 +349,11 @@
 
 (use-package docker-compose-mode)
 
+(use-package docker-tramp
+  :config
+  (set-variable 'docker-tramp-use-names t)
+  )
+
 (use-package elpy
   :init
   (elpy-enable)
@@ -366,7 +409,7 @@
      (start-process-shell-command "displayline" nil cmd args))))
 
 (add-hook 'latex-mode-hook
-          '(lambda ()
+          #'(lambda ()
              (define-key latex-mode-map (kbd "C-c s") 'skim-forward-search)))
 
 ;; RefTeX with TeX mode
@@ -389,7 +432,7 @@
     (interactive)
     (term-send-raw-string (kbd "C-n")))
   (add-hook 'term-mode-hook
-            '(lambda ()
+            #'(lambda ()
                (define-key term-raw-map (kbd "C-p") 'term-send-previous-line)
                (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
 
