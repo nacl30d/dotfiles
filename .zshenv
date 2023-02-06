@@ -7,6 +7,9 @@ export LC_MONETARY=en_US.UTF-8
 export LC_NUMERIC=en_US.UTF-8
 export LC_TIME=en_US.UTF-8
 
+export GPG_TTY=${TTY}
+export GPG_KEYID=60518F98A502A1FB
+
 path=(
     /usr/local/opt/gnu-sed/libexec/gnubin(N-/)
     /usr/local/opt/grep/libexec/gnubin(N-/)
