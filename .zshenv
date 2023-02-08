@@ -19,6 +19,7 @@ path=(
     /usr/local/opt/sqlite/bin(N-/)
     /usr/local/opt/nss/bin(N-/)
     /usr/local/opt/qt/bin(N-/)
+    /usr/local/MacGPG2/bin(N-/)
     /usr/local/bin(N-/)
     /usr/local/sbin(N-/)
     /Library/TeX/texbin(N-/)
