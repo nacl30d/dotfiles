@@ -1,6 +1,7 @@
 [user]
-    email = nacl30d@gmail.com
     name = Daiki Shiozawa
+    email = me@nacl30d.com
+    signingkey = 4A19CA8C42F0EB4A!
 
 [core]
     excludesfile = ~/.gitignore_global
@@ -23,6 +24,10 @@
 
 [commit]
     template = ~/.gittemplate/.gitmessage
+    gpgsign = true
+
+[tag]
+    gpgsign = true
 
 [grep]
     lineNumber = true
