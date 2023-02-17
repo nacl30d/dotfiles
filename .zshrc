@@ -110,6 +110,14 @@ function er () {
     emacs "$1" --eval '(setq buffer-read-only t)'
 }
 
+# SSH over GPG
+unset SSH_AGENT_PID
+if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+fi
+gpgconf --launch gpg-agent
+
+
 function build-minute () {
     if [ $# = 0 ]; then
         exit 1;
