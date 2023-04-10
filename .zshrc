@@ -138,7 +138,7 @@ function build-minute () {
 }
 
 # Alias
-alias e='emacs'
+alias e='emacsclient -t -a ""'
 alias ls='ls --color'
 alias la='ls -la'
 alias ll='ls -l'
