@@ -299,12 +299,31 @@
          (typescript-mode . tide-hl-identifier-mode)
          (before-save . tide-format-before-save)))
 
-(use-package flycheck-phpstan
-  :config
-  (flycheck-add-next-checker 'phpstan 'php-phpcs))
-
 (use-package php-mode
   :mode (("\\.php\\'" . php-mode)))
+
+(use-package company-php
+  :hook (php-mode . (lambda ()
+             ;; Enable company-mode
+             (company-mode t)
+
+             ;; Enable ElDoc support (optional)
+             (ac-php-core-eldoc-setup)
+
+             (set (make-local-variable 'company-backends)
+                  '((company-dabbrev-code company-yasnippet)))
+
+             ;; (set (make-local-variable 'company-backends)
+             ;;      '((company-ac-php-backend company-dabbrev-code)
+             ;;        company-capf company-files))
+
+             ;; Jump to definition (optional)
+             (define-key php-mode-map (kbd "M-]")
+               'ac-php-find-symbol-at-point)
+
+             ;; Return back (optional)
+             (define-key php-mode-map (kbd "M-[")
+               'ac-php-location-stack-back))))
 
 ;; (use-package jinja2-mode
 ;;   :mode (("\\.tpl\\'" . jinja2-mode)))
