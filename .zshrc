@@ -147,6 +147,13 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 
+## Load files
+ZSHHOME="${HOME}/.zsh"
+if [ -d $ZSHHOME ]; then
+    for f in ${ZSHHOME}/*.zsh; do
+        source "$f"
+    done
+fi
 
 ## Remote host (or not)
 if is_remote_host; then
