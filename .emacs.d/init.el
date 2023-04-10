@@ -195,18 +195,9 @@
     (comment-or-uncomment-region (region-beginning) (region-end))))
 (global-set-key (kbd "M-/") 'one-line-comment)
 
-(use-package auto-complete              ;complement
+(use-package company
   :init
-  (ac-config-default)
-  :config
-  (add-to-list 'ac-modes 'text-mode)
-  (add-to-list 'ac-modes 'fundamental-mode)
-  (add-to-list 'ac-modes 'latex-mode)
-  (add-to-list 'ac-modes 'markdown-mode)
-  (ac-set-trigger-key "TAB")
-  (setq ac-use-menu-map t)
-  (setq ac-use-fuzzy t)
-  (setq ac-comphist-file "~/.emacs.d/.cache/auto-complete/ac-comphist.dat"))
+  (global-company-mode))
 
 (use-package undo-tree
   :init
