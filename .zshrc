@@ -95,7 +95,13 @@ automaticcaly_attach_tmux_session() {
             fi
         fi
     else
-        tmux new-session && echo "tmux: created new session."
+        tmux new-session -s 'workspace' -d
+
+        for f in $HOME/.tmux/*.sh; do
+            bash $f
+        done
+
+        tmux attach -t 'workspace'
     fi
 }
 
