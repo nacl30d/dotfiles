@@ -384,6 +384,9 @@
   :hook
   (before-save . py-isort-before-save))
 
+(use-package nginx-mode
+  :mode (("nginx.conf\\'" . nginx-mode)))
+
 ;; TeX mode
 (setq auto-mode-alist
       (append '(("\\.tex$" . latex-mode)) auto-mode-alist))
