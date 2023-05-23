@@ -250,9 +250,14 @@
   (flycheck-mode . flycheck-popup-tip-mode))
 
 (use-package eglot
-  :hook
+  :bind
+  ("M-." . xref-find-definitions)
+  ("M-," . pop-tag-mark)
+  :config
+  (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
+  :hook (
   (elpy-mode . eglot-ensure)
-  )
+  (go-mode . eglot-ensure)))
 
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
@@ -324,6 +329,13 @@
              ;; Return back (optional)
              (define-key php-mode-map (kbd "M-[")
                'ac-php-location-stack-back))))
+
+(use-package go-mode
+  :config (setq gofmt-command "goimports"))
+
+(use-package go-eldoc
+  :config (setq go-eldoc-gocode "gopls")
+  :hook ((go-mode . go-eldoc-setup)))
 
 ;; (use-package jinja2-mode
 ;;   :mode (("\\.tpl\\'" . jinja2-mode)))
