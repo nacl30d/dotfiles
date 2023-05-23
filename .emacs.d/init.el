@@ -133,9 +133,9 @@
   :init
   (window-numbering-mode 1))
 
-(use-package srcery-theme               ;theme
+(use-package dracula-theme               ;theme
   :init
-  (load-theme 'srcery t))
+  (load-theme 'dracula t))
 
 (use-package hiwin                      ;change background color if active window or not
   :init
