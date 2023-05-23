@@ -95,7 +95,7 @@ automaticcaly_attach_tmux_session() {
             fi
         fi
     else
-        tmux new-session -s 'workspace' -d
+        tmux new-session -s 'workspace' -c $HOME -d
 
         for f in $HOME/.tmux/*.sh; do
             bash $f
