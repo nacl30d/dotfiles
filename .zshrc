@@ -168,3 +168,6 @@ if is_osx; then
 elif is_linux; then
     # alias ls='ls --color'
 fi
+
+is_exists 'starship' && eval "$(starship init zsh)"
+is_exists 'nodenv' && eval "$(nordenv init -)"
