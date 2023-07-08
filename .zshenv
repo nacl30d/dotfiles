@@ -27,7 +27,8 @@ path=(
     /bin(N-/)
     /usr/sbin(N-/)
     /sbin(N-/)
-    /opt/X11/bin(N-/)
+    $HOME/bin(N-/)
+    $HOME/.nodenv/shims(N-/)
     $HOME/.local/bin(N-/)
 )
 export LDFLAGS="-L/usr/local/opt/curl/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/nss/lib -L/usr/local/opt/qt/lib"
