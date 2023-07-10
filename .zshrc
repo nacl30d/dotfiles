@@ -170,4 +170,4 @@ elif is_linux; then
 fi
 
 is_exists 'starship' && eval "$(starship init zsh)"
-is_exists 'nodenv' && eval "$(nordenv init -)"
+is_exists 'nodenv' && eval "$(nodenv init -)"
