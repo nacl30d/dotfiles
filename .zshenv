@@ -13,6 +13,10 @@ export GPG_KEYID=60518F98A502A1FB
 path=(
     /opt/homebrew/bin(N-/)
     /opt/homebrew/sbin(N-/)
+    /opt/homebrew/opt/gnu-sed/libexec/gnubin(N-/)
+    /opt/homebrew/opt/grep/libexec/gnubin(N-/)
+    /opt/homebrew/opt/coreutils/libexec/gnubin(N-/)
+    /opt/homebrew/opt/findutils/libexec/gnubin(N-/)
     /usr/local/opt/gnu-sed/libexec/gnubin(N-/)
     /usr/local/opt/grep/libexec/gnubin(N-/)
     /usr/local/opt/coreutils/libexec/gnubin(N-/)
