@@ -310,6 +310,8 @@
   :mode (("\\.js\\'" . rjsx-mode))
   )
 
+(use-package pnpm-mode)
+
 (use-package npm-mode
   :config
   (add-hook 'typescript-mode-hook 'npm-mode)
