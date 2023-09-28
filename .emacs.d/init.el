@@ -199,6 +199,15 @@
   :init
   (global-company-mode))
 
+(use-package swiper)
+(use-package ivy
+  :bind
+  ;; ("C-s" . isearch-forward-or-swiper)
+  ("C-s" . swiper-isearch)
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) "))
+
 (use-package undo-tree
   :init
   (global-undo-tree-mode)
