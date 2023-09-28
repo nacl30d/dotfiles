@@ -266,7 +266,7 @@
     (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
   :hook
   (text-mode . flyspell-mode)
-  (prot-mode . flyspell-prog-mode))
+  (prog-mode . flyspell-prog-mode))
 
 (use-package eglot
   :bind
