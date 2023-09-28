@@ -258,6 +258,16 @@
   :hook
   (flycheck-mode . flycheck-popup-tip-mode))
 
+(use-package flyspell
+  :config
+  (setq-default ispell-program-name "aspell")
+  (setq ispell-local-dictionary "en_US")
+  (with-eval-after-load "ispell"
+    (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
+  :hook
+  (text-mode . flyspell-mode)
+  (prot-mode . flyspell-prog-mode))
+
 (use-package eglot
   :bind
   ("M-." . xref-find-definitions)
