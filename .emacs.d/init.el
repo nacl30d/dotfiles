@@ -205,6 +205,8 @@
 
 (use-package swiper)
 (use-package ivy
+  :init
+  (ivy-mode)
   :bind
   ;; ("C-s" . isearch-forward-or-swiper)
   ("C-s" . swiper-isearch)
