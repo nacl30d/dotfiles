@@ -171,3 +171,4 @@ fi
 
 is_exists 'starship' && eval "$(starship init zsh)"
 is_exists 'nodenv' && eval "$(nodenv init -)"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
