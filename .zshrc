@@ -172,3 +172,10 @@ fi
 is_exists 'starship' && eval "$(starship init zsh)"
 is_exists 'nodenv' && eval "$(nodenv init -)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# bun completions
+[ -s ~/.bun/_bun ] && source ~/.bun/_bun
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
