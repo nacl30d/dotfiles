@@ -267,7 +267,7 @@
 (use-package flyspell
   :config
   (setq-default ispell-program-name "aspell")
-  (setq ispell-local-dictionary "en_US")
+  (setq ispell-dictionary "en_US")
   (with-eval-after-load "ispell"
     (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
   :hook
