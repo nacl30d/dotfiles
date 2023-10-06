@@ -282,7 +282,8 @@
   (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
   :hook (
   (elpy-mode . eglot-ensure)
-  (go-mode . eglot-ensure)))
+  (go-mode . eglot-ensure)
+  (yaml-mode . eglot-ensure)))
 
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
