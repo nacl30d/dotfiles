@@ -285,6 +285,11 @@
   (go-mode . eglot-ensure)
   (yaml-mode . eglot-ensure)))
 
+(use-package flycheck-eglot
+  :after (flycheck eglot)
+  :config
+  (global-flycheck-eglot-mode 1))
+
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
          ("\\.blade\\.php\\." . web-mode))
