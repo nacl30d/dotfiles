@@ -34,6 +34,7 @@ path=(
     /usr/sbin(N-/)
     /sbin(N-/)
     $HOME/bin(N-/)
+    $HOME/go/bin(N-/)
     $HOME/.nodenv/shims(N-/)
     $HOME/.local/bin(N-/)
 )
