@@ -274,21 +274,30 @@
   (text-mode . flyspell-mode)
   (prog-mode . flyspell-prog-mode))
 
-(use-package eglot
-  :bind
-  ("M-." . xref-find-definitions)
-  ("M-," . pop-tag-mark)
-  :config
-  (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
   :hook (
-  (elpy-mode . eglot-ensure)
-  (go-mode . eglot-ensure)
-  (yaml-mode . eglot-ensure)))
+         (go-mode . lsp)
+         (json-mode . lsp)
+         (php-mode . lsp)
+         (sh-mode . lsp)
+         (sql-mode . lsp)
+         (terraform-mode . lsp)
+         (yaml-mode . lsp))
+  :commands lsp)
 
-(use-package flycheck-eglot
-  :after (flycheck eglot)
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+(use-package lsp-ivy
+  :commands lsp-ivy-workspace-symbol)
+
+(use-package dap-mode
   :config
-  (global-flycheck-eglot-mode 1))
+  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
+
+(use-package sql-indent)
 
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
