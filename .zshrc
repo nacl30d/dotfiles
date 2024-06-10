@@ -12,8 +12,8 @@ export LESSOPEN='| src-hilite-lesspipe.sh %s'
 export LESS='-IRM'
 
 # Complement
-autoload -U compinit;
-compinit -C
+autoload bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
@@ -171,7 +171,11 @@ fi
 
 is_exists 'starship' && eval "$(starship init zsh)"
 is_exists 'nodenv' && eval "$(nodenv init -)"
+is_exists 'direnv' && eval "$(direnv hook zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# aws
+complete -C '/opt/homebrew/bin/aws_completer' aws
 
 # bun completions
 [ -s ~/.bun/_bun ] && source ~/.bun/_bun
@@ -179,3 +183,10 @@ is_exists 'nodenv' && eval "$(nodenv init -)"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# tabtab source for packages
+# uninstall by removing these lines
+[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+
+# Bitwarden
+eval "$(bw completion --shell zsh); compdef _bw bw;"
