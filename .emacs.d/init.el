@@ -114,7 +114,9 @@
 (setq vc-follow-symlinks t)
 
 (use-package magit
-  :bind ("C-x g" . magit-status))
+  :bind ("C-x g" . magit-status)
+  :config
+  (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package git-gutter
   :init
@@ -128,6 +130,7 @@
 (menu-bar-mode -1)                      ;hidden menu bar
 (setq inhibit-startup-message t)        ;hidden startup msg
 (global-set-key (kbd "C-x p") #'(lambda () (interactive)(other-window -1))) ;reverse windo
+(tab-bar-mode 1)
 
 (use-package window-numbering
   :init
@@ -204,14 +207,19 @@
   (global-company-mode))
 
 (use-package swiper)
+(use-package counsel)
 (use-package ivy
   :init
   (ivy-mode)
   :bind
   ;; ("C-s" . isearch-forward-or-swiper)
   ("C-s" . swiper-isearch)
+  ;; ("M-s" . counsel-imenu)
+  ("M-x" . counsel-M-x)
+  ("C-x C-f" . counsel-find-file)
   :config
   (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
   (setq ivy-count-format "(%d/%d) "))
 
 (use-package undo-tree
@@ -378,6 +386,8 @@
 (use-package go-eldoc
   :config (setq go-eldoc-gocode "gopls")
   :hook ((go-mode . go-eldoc-setup)))
+
+(use-package terraform-mode)
 
 ;; (use-package jinja2-mode
 ;;   :mode (("\\.tpl\\'" . jinja2-mode)))
