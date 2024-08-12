@@ -118,6 +118,13 @@
   :config
   (setq magit-completing-read-function 'ivy-completing-read))
 
+(use-package forge
+  :after magit
+  :config
+  (setq auth-sources '("~/.authinfo.gpg")))
+
+(use-package git-modes)
+
 (use-package git-gutter
   :init
   (global-git-gutter-mode t)
