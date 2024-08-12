@@ -125,6 +125,11 @@
 
 (use-package git-modes)
 
+(use-package git-link
+  :config
+  (setq git-link-open-in-browser 't))
+(global-set-key (kbd "C-c l") 'git-link)
+
 (use-package git-gutter
   :init
   (global-git-gutter-mode t)
