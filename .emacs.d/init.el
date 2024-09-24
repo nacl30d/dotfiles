@@ -226,7 +226,15 @@
 
 (use-package company
   :init
-  (global-company-mode))
+  (global-company-mode)
+  :bind(:map company-active-map
+             ("<return>" . nil)
+             ("RET" . nil)
+             ("<tab>" . company-complete-selection)
+             ("TAB" . company-complete-selection))
+  :config
+  (setq company-idle-delay 0.0
+        company-minimum-prefix-length 1))
 
 (use-package swiper)
 (use-package counsel)
