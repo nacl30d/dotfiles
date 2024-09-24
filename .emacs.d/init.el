@@ -393,30 +393,13 @@
          (before-save . tide-format-before-save)))
 
 (use-package php-mode
-  :mode (("\\.php\\'" . php-mode)))
-
-(use-package company-php
-  :hook (php-mode . (lambda ()
-             ;; Enable company-mode
-             (company-mode t)
-
-             ;; Enable ElDoc support (optional)
-             (ac-php-core-eldoc-setup)
-
-             (set (make-local-variable 'company-backends)
-                  '((company-dabbrev-code company-yasnippet)))
-
-             ;; (set (make-local-variable 'company-backends)
-             ;;      '((company-ac-php-backend company-dabbrev-code)
-             ;;        company-capf company-files))
-
-             ;; Jump to definition (optional)
-             (define-key php-mode-map (kbd "M-]")
-               'ac-php-find-symbol-at-point)
-
-             ;; Return back (optional)
-             (define-key php-mode-map (kbd "M-[")
-               'ac-php-location-stack-back))))
+  :mode (("\\.php\\'" . php-mode))
+  :config
+  (setq show-trailing-whitespace t)
+  (setq ac-disable-faces '(font-lock-comment-face font-lock-string-face))
+  (setq page-delimiter "\\_<\\(class\\|function\\|namespace\\)\\_>.+$")
+  :hook
+  ((php-mode . php-enable-psr2-coding-style)))
 
 (use-package go-mode
   :config (setq gofmt-command "goimports"))
