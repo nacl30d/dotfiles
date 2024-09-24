@@ -34,7 +34,7 @@
 
 [init]
     templateDir = ~/.gittemplate
-    defaultBranch = master
+    defaultBranch = main
 
 [diff]
         # tool = difftastic
