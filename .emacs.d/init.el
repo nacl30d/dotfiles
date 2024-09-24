@@ -286,8 +286,10 @@
 (use-package flycheck-popup-tip)
 
 (use-package exec-path-from-shell
-  :init
-  (exec-path-from-shell-initialize))
+  :config
+  (setq exec-path-from-shell-arguments nil)
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package flycheck
   :init
