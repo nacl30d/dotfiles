@@ -128,7 +128,7 @@
 (use-package git-link
   :config
   (setq git-link-open-in-browser 't))
-(global-set-key (kbd "C-c l") 'git-link)
+(global-set-key (kbd "C-c i") 'git-link)
 
 (use-package git-gutter
   :init
