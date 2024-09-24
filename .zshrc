@@ -176,6 +176,7 @@ is_exists 'direnv' && eval "$(direnv hook zsh)"
 
 # aws
 complete -C '/opt/homebrew/bin/aws_completer' aws
+is_exists 'saml2aws' && eval "$(saml2aws --completion-script-zsh)"
 
 # bun completions
 [ -s ~/.bun/_bun ] && source ~/.bun/_bun
