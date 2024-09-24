@@ -183,16 +183,26 @@
                       :foreground "#adff2f"
                       :underline t))
 
-(use-package sr-speedbar
+(use-package treemacs
+  :bind
+  (:map global-map
+        ("C-x t t"   . treemacs)
+        ("C-x t d"   . treemacs-select-directory)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag))
+
   :config
-  (setq sr-speedbar-right-side nil)
-  (global-set-key (kbd "C-c s") 'sr-speedbar-toggle))
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t)
+  (treemacs-fringe-indicator-mode 'always))
 
-(use-package emojify
-  :bind ("C-c e" . 'emojify-insert-emoji)
+(use-package treemacs-magit
+  :after (treemacs magit))
 
-  :hook (after-init . global-emojify-mode))
-
+(use-package treemacs-tab-bar
+  :after (treemacs)
+  :config (treemacs-set-scope-type 'Tabs))
 
 ;;----------------------------------------------------------------------------------
 ;; edit
