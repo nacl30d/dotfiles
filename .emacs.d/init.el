@@ -236,9 +236,10 @@
   :bind
   ;; ("C-s" . isearch-forward-or-swiper)
   ("C-s" . swiper-isearch)
-  ;; ("M-s" . counsel-imenu)
+  ("M-s" . counsel-imenu)
   ("M-x" . counsel-M-x)
   ("C-x C-f" . counsel-find-file)
+  ("C-c j" . counsel-git-grep)
   :config
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
@@ -307,6 +308,9 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
+  :config
+  (setq gc-cons-threshold (* 100 1024 1024)
+        read-process-output-max (* 1024 1024))
   :hook (
          (go-mode . lsp)
          (json-mode . lsp)
@@ -318,12 +322,16 @@
   :commands lsp)
 
 (use-package lsp-ui
+  :config
+  (setq lsp-idle-delay 0.1)
   :commands lsp-ui-mode)
 
 (use-package lsp-ivy
   :commands lsp-ivy-workspace-symbol)
 
 (use-package dap-mode
+  :after
+  (lsp-mode)
   :config
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
