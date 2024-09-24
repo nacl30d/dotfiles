@@ -375,11 +375,6 @@
 
 (use-package pnpm-mode)
 
-(use-package npm-mode
-  :config
-  (add-hook 'typescript-mode-hook 'npm-mode)
-  (add-hook 'js2-mode 'npm-mode))
-
 (use-package typescript-mode
   :mode (("\\.ts\\'" . typescript-mode)
          ("\\.tsx\\'" . typescript-mode))
