@@ -123,20 +123,6 @@ if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
 fi
 gpgconf --launch gpg-agent
 
-
-function build-minute () {
-    if [ $# = 0 ]; then
-        exit 1;
-    elif [ $# = 1 ]; then
-        FILENAME=${1%.*}
-    elif [ $# = 2 ]; then
-        FILENAME=$2
-    fi
-    mkdir $FILENAME
-    pandoc -d md2pdf -o ${FILENAME}/${FILENAME}.pdf $1
-    pdftoppm -png ${FILENAME}/${FILENAME}.pdf ${FILENAME}/${FILENAME}
-}
-
 # Alias
 alias e='emacsclient -t -a ""'
 alias ls='ls --color'
