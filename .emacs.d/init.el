@@ -392,17 +392,23 @@
   :config
   (setq-default typescript-indent-level 2))
 
-(use-package tide
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save)))
+;; (use-package tide
+;;   :after (typescript-mode company flycheck)
+;;   :hook ((typescript-mode . tide-setup)
+;;          (typescript-mode . tide-hl-identifier-mode)
+;;          (before-save . tide-format-before-save)))
 
 (use-package php-mode
   :mode (("\\.php\\'" . php-mode))
   :config
-  (setq show-trailing-whitespace t)
-  (setq ac-disable-faces '(font-lock-comment-face font-lock-string-face))
+  (subword-mode 1)
+  (setq-local show-trailing-whitespace t)
+  (setq-local ac-disable-faces '(font-lock-comment-face font-lock-string-face))
+  (add-hook 'hack-local-variables-hook 'php-ide-turn-on nil t)
+  (custom-set-variables
+   '(php-mode-coding-style 'psr2)
+   '(php-mode-template-compatibility nil)
+   '(php-imenu-generic-expression 'php-imenu-generic-expression-simple))
   (setq page-delimiter "\\_<\\(class\\|function\\|namespace\\)\\_>.+$")
   :hook
   ((php-mode . php-enable-psr2-coding-style)))
