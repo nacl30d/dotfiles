@@ -283,7 +283,7 @@
           ("XXX+"   . "#cc9393")))
   )
 
-(use-package flycheck-popup-tip)
+;; (use-package flycheck-popup-tip)
 
 (use-package exec-path-from-shell
   :config
@@ -301,9 +301,9 @@
   (setq flycheck-phpcs-standard  "PSR12")
   (flycheck-add-mode 'html-tidy 'web-mode)
   (flycheck-add-mode 'javascript-standard 'web-mode)
-  (flycheck-add-mode 'javascript-standard 'js2-mode)
-  :hook
-  (flycheck-mode . flycheck-popup-tip-mode))
+  (flycheck-add-mode 'javascript-standard 'js2-mode))
+  ;; :hook
+  ;; (flycheck-mode . flycheck-popup-tip-mode))
 
 (use-package flyspell
   :config
@@ -321,10 +321,17 @@
   :config
   (setq gc-cons-threshold (* 100 1024 1024)
         read-process-output-max (* 1024 1024))
+  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-doc-lines 1)
+  (with-eval-after-load 'lsp-mode
+    ; ignore laravel's storage directory
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'"))
   :hook (
          (go-mode . lsp)
          (json-mode . lsp)
          (php-mode . lsp)
+         (python-mode . lsp)
+         (typescript-mode . lsp)
          (sh-mode . lsp)
          (sql-mode . lsp)
          (terraform-mode . lsp)
@@ -333,7 +340,9 @@
 
 (use-package lsp-ui
   :config
-  (setq lsp-idle-delay 0.1)
+  (setq
+   lsp-eldoc-render-all t
+   lsp-idle-delay 0.1)
   :commands lsp-ui-mode)
 
 (use-package lsp-ivy
