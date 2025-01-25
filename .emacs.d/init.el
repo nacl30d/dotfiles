@@ -350,7 +350,6 @@
          (typescript-mode . lsp)
          (php-mode . lsp)
          (python-mode . lsp)
-         (typescript-mode . lsp)
          (sh-mode . lsp)
          (terraform-mode . lsp)
          (sql-mode . lsp)
