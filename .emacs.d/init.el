@@ -90,6 +90,7 @@
 (setq auto-save-file-name-transforms    ;auto-save file dir
       `((".*", (expand-file-name "~/.emacs.d/.backup/") t)))
 (setq auto-save-list-file-prefix "~/.emacs.d/.backup/auto-save-list/.saves-")
+(setq backup-by-copying t)
 
 
 ;;----------------------------------------------------------------------------------
@@ -318,6 +319,8 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
+  ;; (setq lsp-log-io t)
+
   :config
   (setq gc-cons-threshold (* 100 1024 1024)
         read-process-output-max (* 1024 1024))
@@ -328,13 +331,15 @@
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'"))
   :hook (
          (go-mode . lsp)
-         (json-mode . lsp)
+         (js2-mode . lsp)
+         (typescript-mode . lsp)
          (php-mode . lsp)
          (python-mode . lsp)
          (typescript-mode . lsp)
          (sh-mode . lsp)
-         (sql-mode . lsp)
          (terraform-mode . lsp)
+         (sql-mode . lsp)
+         (json-mode . lsp)
          (yaml-mode . lsp))
   :commands lsp)
 
@@ -358,7 +363,8 @@
 
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
-         ("\\.blade\\.php\\." . web-mode))
+         ("\\.blade\\.php\\." . web-mode)
+         ("\\.astro\\'" . web-mode))
   :config
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-auto-pairing t)
@@ -374,28 +380,32 @@
            ("blade" . "\\.blade\\.php\\."))))
 
 (use-package js2-mode
-  :mode (("\\.js\\'" . js2-mode))
+  :mode (("\\.js\\'" . js2-mode)
+         ("\\.cjs\\'" . js2-mode)
+         ("\\.mjs\\'" . js2-mode))
   :config
   ;; (setq js2-strict-missing-semi-warning nil)
   ;; (setq js2-missing-semi-one-line-override nil)
   (setq js2-basic-offset 2))
 
-(use-package rjsx-mode
-  :mode (("\\.js\\'" . rjsx-mode))
-  )
+;; (use-package rjsx-mode
+;;   :mode (("\\.js\\'" . rjsx-mode))
+;;   )
 
 (use-package pnpm-mode)
 
 (use-package typescript-mode
   :mode (("\\.ts\\'" . typescript-mode)
-         ("\\.tsx\\'" . typescript-mode))
-  :config
-  (setq-default typescript-indent-level 2))
+         ("\\.tsx\\'" . typescript-mode)))
+  ;; :config
+  ;; (setq-default typescript-indent-level 2))
 
 ;; (use-package tide
 ;;   :after (typescript-mode company flycheck)
+;;   :config
 ;;   :hook ((typescript-mode . tide-setup)
 ;;          (typescript-mode . tide-hl-identifier-mode)
+;;          (tide-mode . eldoc-mode)
 ;;          (before-save . tide-format-before-save)))
 
 (use-package php-mode
@@ -446,7 +456,7 @@
 (use-package json-mode
   :mode (("\\.json$" . json-mode))
   :config
-  (setq js-indent-level 2))
+  (setq js-indent-level 4))
 
 (use-package docker
   :bind ("C-c d" . docker))
