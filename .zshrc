@@ -176,4 +176,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
 # Bitwarden
+# https://github.com/bitwarden/clients/issues/6689
+alias bw='NODE_OPTIONS="--no-deprecation" bw'
 eval "$(bw completion --shell zsh); compdef _bw bw;"
+
