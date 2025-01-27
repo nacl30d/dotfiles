@@ -258,6 +258,17 @@
   (setq enable-recursive-minibuffers t)
   (setq ivy-count-format "(%d/%d) "))
 
+(use-package projectile
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map))
+  :config
+  (setq projectile-project-search-path ' (("~/Developer" . 1))))
+(use-package counsel-projectile
+  :defer t
+  :init (counsel-projectile-mode t))
+  ;; :bind (("C-c p" . projectile-command-map)))
+
 (use-package undo-tree
   :init
   (global-undo-tree-mode)
