@@ -92,7 +92,6 @@
 (setq auto-save-list-file-prefix "~/.emacs.d/.backup/auto-save-list/.saves-")
 (setq backup-by-copying t)
 
-
 ;;----------------------------------------------------------------------------------
 ;; mode line
 ;;----------------------------------------------------------------------------------
@@ -334,13 +333,13 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
-  ;; (setq lsp-log-io t)
 
   :config
+  ;; (setq lsp-log-io t)
   (setq gc-cons-threshold (* 100 1024 1024)
         read-process-output-max (* 1024 1024))
   (setq lsp-signature-auto-activate nil)
-  (setq lsp-signature-doc-lines 1)
+  (setq lsp-typescript-preferences-import-module-specifier "relative")
   (with-eval-after-load 'lsp-mode
     ; ignore laravel's storage directory
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'"))
@@ -354,13 +353,15 @@
          (terraform-mode . lsp)
          (sql-mode . lsp)
          (json-mode . lsp)
-         (yaml-mode . lsp))
+         (yaml-mode . lsp)
+         (dockerfile-mode . lsp))
   :commands lsp)
 
 (use-package lsp-ui
   :config
   (setq
    lsp-eldoc-render-all t
+   lsp-ui-sideline-diagnostic-max-lines 3
    lsp-idle-delay 0.1)
   :commands lsp-ui-mode)
 
