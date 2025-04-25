@@ -191,6 +191,7 @@
 (use-package treemacs
   :bind
   (:map global-map
+        ("C-x t 1"   . treemacs-delete-other-windows)
         ("C-x t t"   . treemacs)
         ("C-x t d"   . treemacs-select-directory)
         ("C-x t B"   . treemacs-bookmark)
@@ -201,6 +202,20 @@
   (treemacs-follow-mode t)
   (treemacs-filewatch-mode t)
   (treemacs-fringe-indicator-mode 'always))
+
+(use-package treemacs-nerd-icons
+  :after (treemacs)
+  :config
+  (treemacs-load-theme "nerd-icons"))
+
+(use-package treemacs-icons-dired
+  :after (treemacs dired)
+  :config
+  (treemacs-icons-dired-mode))
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :config (treemacs-project-follow-mode))
 
 (use-package treemacs-magit
   :after (treemacs magit))
