@@ -224,6 +224,11 @@
   :after (treemacs)
   :config (treemacs-set-scope-type 'Tabs))
 
+(use-package imenu-list
+  :bind ("C-c '" . imenu-list-smart-toggle)
+  :config (setq imenu-list-focus-after-activation t
+                imenu-list-auto-resize t))
+
 ;;----------------------------------------------------------------------------------
 ;; edit
 ;;----------------------------------------------------------------------------------
