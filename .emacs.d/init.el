@@ -351,6 +351,39 @@
   (text-mode . flyspell-mode)
   (prog-mode . flyspell-prog-mode))
 
+(use-package treesit
+  :straight (:type built-in)
+  :init
+  (setq treesit-language-source-alist
+        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
+          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (go "https://github.com/tree-sitter/tree-sitter-go")
+          (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (make "https://github.com/alemuller/tree-sitter-make")
+          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+  (mapc (lambda (lang)
+          (unless (treesit-language-available-p lang nil)
+            (treesit-install-language-grammar lang)))
+        (mapcar #'car treesit-language-source-alist))
+  :config
+  (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(css-mode . css-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(js-mode . javascript-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(toml-mode . toml-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
+  (setq treesit-font-lock-level 4))
+
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
@@ -359,23 +392,27 @@
   ;; (setq lsp-log-io t)
   (setq gc-cons-threshold (* 100 1024 1024)
         read-process-output-max (* 1024 1024))
+  (setf lsp-prefer-capf t)
   (setq lsp-signature-auto-activate nil)
+  (setq lsp-javascript-preferences-import-module-specifier "relative")
   (setq lsp-typescript-preferences-import-module-specifier "relative")
+
   (with-eval-after-load 'lsp-mode
     ; ignore laravel's storage directory
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'"))
   :hook (
-         (go-mode . lsp)
-         (js2-mode . lsp)
-         (typescript-mode . lsp)
-         (php-mode . lsp)
+         (go-ts-mode . lsp)
+         (js-ts-mode . lsp)
+         (typescript-ts-mode . lsp)
+         (tsx-ts-mode . lsp)
+         (php-ts-mode . lsp)
          (python-mode . lsp)
-         (sh-mode . lsp)
+         (bash-ts-mode . lsp)
          (terraform-mode . lsp)
          (sql-mode . lsp)
-         (json-mode . lsp)
-         (yaml-mode . lsp)
-         (dockerfile-mode . lsp))
+         (json-ts-mode . lsp)
+         (yaml-ts-mode . lsp)
+         (dockerfile-ts-mode . lsp))
   :commands lsp)
 
 (use-package lsp-ui
@@ -397,28 +434,29 @@
 
 (use-package sql-indent)
 
-(use-package web-mode
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.blade\\.php\\." . web-mode)
-         ("\\.astro\\'" . web-mode))
-  :config
-  (setq web-mode-enable-auto-closing t)
-  (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-style-padding 2)
-  (setq web-mode-script-padding 2)
-  (setq web-mode-block-padding 0)
-  (setq web-mode-enable-css-colorization t)
-  (setq web-mode-engines-alist
-        ' (("php" . "\\.phtml\\'")
-           ("blade" . "\\.blade\\.php\\."))))
+;; (use-package web-mode
+;;   :mode (("\\.html?\\'" . web-mode)
+;;          ("\\.blade\\.php\\." . web-mode)
+;;          ("\\.astro\\'" . web-mode))
+;;   :config
+;;   (setq web-mode-enable-auto-closing t)
+;;   (setq web-mode-enable-auto-pairing t)
+;;   (setq web-mode-markup-indent-offset 2)
+;;   (setq web-mode-css-indent-offset 2)
+;;   (setq web-mode-code-indent-offset 2)
+;;   (setq web-mode-style-padding 2)
+;;   (setq web-mode-script-padding 2)
+;;   (setq web-mode-block-padding 0)
+;;   (setq web-mode-enable-css-colorization t)
+;;   (setq web-mode-engines-alist
+;;         ' (("php" . "\\.phtml\\'")
+;;            ("blade" . "\\.blade\\.php\\."))))
 
-(use-package js2-mode
-  :mode (("\\.js\\'" . js2-mode)
-         ("\\.cjs\\'" . js2-mode)
-         ("\\.mjs\\'" . js2-mode))
+(use-package js-ts-mode
+  :straight (:type built-in)
+  :mode (("\\.js\\'" . js-ts-mode)
+         ("\\.cjs\\'" . js-ts-mode)
+         ("\\.mjs\\'" . js-ts-mode))
   :config
   ;; (setq js2-strict-missing-semi-warning nil)
   ;; (setq js2-missing-semi-one-line-override nil)
@@ -430,11 +468,12 @@
 
 (use-package pnpm-mode)
 
-(use-package typescript-mode
-  :mode (("\\.ts\\'" . typescript-mode)
-         ("\\.tsx\\'" . typescript-mode)))
-  ;; :config
-  ;; (setq-default typescript-indent-level 2))
+(use-package typescript-ts-mode
+  :straight (:type built-in)
+  :mode (("\\.ts\\'" . typescript-ts-mode)
+         ("\\.tsx\\'" . tsx-ts-mode))
+  :config
+  (setq-default typescript-indent-level 2))
 
 ;; (use-package tide
 ;;   :after (typescript-mode company flycheck)
@@ -444,8 +483,9 @@
 ;;          (tide-mode . eldoc-mode)
 ;;          (before-save . tide-format-before-save)))
 
-(use-package php-mode
-  :mode (("\\.php\\'" . php-mode))
+(use-package php-ts-mode
+  :straight (:type built-in)
+  :mode (("\\.php\\'" . php-ts-mode))
   :config
   (subword-mode 1)
   (setq-local show-trailing-whitespace t)
@@ -459,12 +499,12 @@
   :hook
   ((php-mode . php-enable-psr2-coding-style)))
 
-(use-package go-mode
+(use-package go-ts-mode
   :config (setq gofmt-command "goimports"))
 
 (use-package go-eldoc
   :config (setq go-eldoc-gocode "gopls")
-  :hook ((go-mode . go-eldoc-setup)))
+  :hook ((go-ts-mode . go-eldoc-setup)))
 
 (use-package terraform-mode)
 
@@ -484,12 +524,14 @@
   (setq markdown-xhtml-body-preamble "<div class='markdown-body'>" )
   (setq markdown-xhtml-body-epilogue "</div>"))
 
-(use-package yaml-mode
-  :mode (("\\.ya?ml$" . yaml-mode))
+(use-package yaml-ts-mode
+  :straight (:type built-in)
+  :mode (("\\.ya?ml$" . yaml-ts-mode))
   :config
-  (define-key yaml-mode-map (kbd "C-m") 'newline-and-indent))
+  (define-key yaml-ts-mode-map (kbd "C-m") 'newline-and-indent))
 
-(use-package json-mode
+(use-package json-ts-mode
+  :straight (:type built-in)
   :mode (("\\.json$" . json-mode))
   :config
   (setq js-indent-level 4))
@@ -497,7 +539,8 @@
 (use-package docker
   :bind ("C-c d" . docker))
 
-(use-package dockerfile-mode
+(use-package dockerfile-ts-mode
+  :straight (:type built-in)
   :mode (("Dockefile\\'" . dockerfile-mode)))
 
 (use-package docker-compose-mode)
