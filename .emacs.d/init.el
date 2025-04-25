@@ -147,6 +147,7 @@
 (setq inhibit-startup-message t)        ;hidden startup msg
 (global-set-key (kbd "C-x p") #'(lambda () (interactive)(other-window -1))) ;reverse windo
 (tab-bar-mode 1)
+(which-key-mode 1)
 
 (use-package window-numbering
   :init
