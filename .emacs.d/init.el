@@ -259,7 +259,8 @@
              ("TAB" . company-complete-selection))
   :config
   (setq company-idle-delay 0.0
-        company-minimum-prefix-length 1))
+        company-minimum-prefix-length 1)
+  (setq company-dabbrev-downcase nil))
 
 (use-package swiper)
 (use-package counsel)
@@ -344,6 +345,7 @@
 (use-package flyspell
   :config
   (setq-default ispell-program-name "aspell")
+  (setq ispell-extra-args '("--camel-case"))
   (setq ispell-dictionary "en_US")
   (with-eval-after-load "ispell"
     (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
