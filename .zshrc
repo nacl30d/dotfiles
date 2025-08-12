@@ -27,41 +27,13 @@ setopt EXTENDED_HISTORY
 # Emacs keybind
 bindkey -e
 
-# Git status
-autoload -Uz vcs_info
-setopt prompt_subst
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
-zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
-zstyle ':vcs_info:*' formats "%F{green}%c%u(%b)%f"
-zstyle ':vcs_info:*' actionformats '[%b|%a]'
-precmd () { vcs_info }
-
-# Prompt
-p_dir='%F{cyan}[%~]%f'
-p_vcs='${vcs_info_msg_0_}'
-p_host='%F{yellow}(%m)%f'
-p_user='%(?.%F{green}.%F{magenta})%n %#%f'
-PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_user "
-
 # Functions
 is_exists() { type "$1" >/dev/null 2>&1; return $?; }
-is_osx() { [[ $OSTYPE == darwin* ]]; }
-is_linux() { [[ $OSTYPE == linux* ]]; }
 is_screen_running() { [ ! -z "$STY" ]; }
 is_tmux_running() { [ ! -z "$TMUX" ]; }
 is_interactive_shell() { [ ! -z "$PS1" ]; }
-is_remote_host() { [[ ! -z "${REMOTEHOST}" || ! -z "${SSH_CONNECTION}" ]]; }
 
 # tmux
-echo_tmux() {
-    echo ' _____ __  __ _   ___  __'
-    echo '|_   _|  \/  | | | \ \/ /'
-    echo '  | | | |\/| | | | |\  / '
-    echo '  | | | |  | | |_| |/  \ '
-    echo '  |_| |_|  |_|\___//_/\_\'
-}
-
 automaticcaly_attach_tmux_session() {
     if ! is_interactive_shell; then
         return 1
@@ -71,7 +43,6 @@ automaticcaly_attach_tmux_session() {
         echo "This is on screen."
         return 0
     elif is_tmux_running; then
-        echo_tmux
         return 0
     else
         ! is_exists 'tmux' && return 1
@@ -105,11 +76,7 @@ automaticcaly_attach_tmux_session() {
     fi
 }
 
-function run_my_modulars () {
-    for PROFILE_SCRIPT in /etc/profile.d/*.sh; do
-        source $PROFILE_SCRIPT
-    done
-}
+automaticcaly_attach_tmux_session
 
 # emacs
 function er () {
@@ -141,24 +108,26 @@ if [ -d $ZSHHOME ]; then
     done
 fi
 
-## Remote host (or not)
-if is_remote_host; then
-    PROMPT=$'\n'"$p_dir $p_vcs"$'\n'"$p_host $p_user "
-fi
-automaticcaly_attach_tmux_session
-# run_my_modulars
-
-## OSX or Linux
-if is_osx; then
-    # alias ls='ls -G'
-elif is_linux; then
-    # alias ls='ls --color'
-fi
-
 is_exists 'starship' && eval "$(starship init zsh)"
 is_exists 'nodenv' && eval "$(nodenv init -)"
 is_exists 'direnv' && eval "$(direnv hook zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# pnpm
+export PNPM_HOME="/Users/d_shiozawa/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# # volta
+# export VOLTA_HOME="$HOME/.volta"
+# export PATH="$VOLTA_HOME/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 # aws
 complete -C '/opt/homebrew/bin/aws_completer' aws
@@ -166,10 +135,6 @@ is_exists 'saml2aws' && eval "$(saml2aws --completion-script-zsh)"
 
 # bun completions
 [ -s ~/.bun/_bun ] && source ~/.bun/_bun
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 # tabtab source for packages
 # uninstall by removing these lines
@@ -179,4 +144,3 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # https://github.com/bitwarden/clients/issues/6689
 alias bw='NODE_OPTIONS="--no-deprecation" bw'
 eval "$(bw completion --shell zsh); compdef _bw bw;"
-
