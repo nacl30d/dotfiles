@@ -109,8 +109,7 @@ if [ -d $ZSHHOME ]; then
 fi
 
 is_exists 'starship' && eval "$(starship init zsh)"
-is_exists 'nodenv' && eval "$(nodenv init -)"
-is_exists 'direnv' && eval "$(direnv hook zsh)"
+is_exists 'mise' && eval "$(mise activate zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # pnpm
