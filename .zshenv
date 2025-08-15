@@ -10,31 +10,23 @@ export LC_TIME=en_US.UTF-8
 export GPG_TTY=${TTY}
 export GPG_KEYID=60518F98A502A1FB
 
+if [ -f /opt/homebrew/bin/brew ]; then
+    BREW_PREFIX=/opt/homebrew
+elif [ -f /opt/homebrew/bin/brew ]; then
+    BREW_PREFIX=/usr/local/homebrew
+fi
+
 path=(
-    /opt/homebrew/bin(N-/)
-    /opt/homebrew/sbin(N-/)
-    /opt/homebrew/opt/mysql-client@8.0/bin(N-/)
-    /opt/homebrew/opt/postgresql@15/bin(N-/)
-    /opt/homebrew/opt/libpq/bin(N-/)
-    /opt/homebrew/opt/curl/bin(N-/)
-    /opt/homebrew/opt/gawk/libexec/gnubin(N-/)
-    /opt/homebrew/opt/gnu-sed/libexec/gnubin(N-/)
-    /opt/homebrew/opt/grep/libexec/gnubin(N-/)
-    /opt/homebrew/opt/make/libexec/gnubin(N-/)
-    /opt/homebrew/opt/coreutils/libexec/gnubin(N-/)
-    /opt/homebrew/opt/findutils/libexec/gnubin(N-/)
-    /opt/homebrew/opt/unzip/bin(N-/)
-    /usr/local/opt/gnu-sed/libexec/gnubin(N-/)
-    /usr/local/opt/grep/libexec/gnubin(N-/)
-    /usr/local/opt/coreutils/libexec/gnubin(N-/)
-    /usr/local/opt/findutils/libexec/gnubin(N-/)
-    /usr/local/opt/curl/bin(N-/)
-    /usr/local/opt/sqlite/bin(N-/)
-    /usr/local/opt/nss/bin(N-/)
-    /usr/local/opt/qt/bin(N-/)
-    /usr/local/bin(N-/)
-    /usr/local/sbin(N-/)
-    /usr/local/MacGPG2/bin(N-/)
+    $BREW_PREFIX/bin(N-/)
+    $BREW_PREFIX/sbin(N-/)
+    $BREW_PREFIX/opt/curl/bin(N-/)
+    $BREW_PREFIX/opt/gawk/libexec/gnubin(N-/)
+    $BREW_PREFIX/opt/gnu-sed/libexec/gnubin(N-/)
+    $BREW_PREFIX/opt/grep/libexec/gnubin(N-/)
+    $BREW_PREFIX/opt/make/libexec/gnubin(N-/)
+    $BREW_PREFIX/opt/coreutils/libexec/gnubin(N-/)
+    $BREW_PREFIX/opt/findutils/libexec/gnubin(N-/)
+    $BREW_PREFIX/opt/unzip/bin(N-/)
     /Library/TeX/texbin(N-/)
     /usr/bin(N-/)
     /bin(N-/)
@@ -47,13 +39,12 @@ path=(
 )
 
 fpath=(
-    $(brew --prefix)/share/zsh/site-functions
+    $BREW_PREFIX/share/zsh/site-functions
     $fpath
 )
 
 export LDFLAGS="-L/usr/local/opt/curl/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/nss/lib -L/usr/local/opt/qt/lib"
 export CPPFLAGS="-I/usr/local/opt/curl/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/nss/include -I/usr/local/opt/qt/include"
-export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig:/usr/local/opt/sqlite/lib/pkgconfig:/usr/local/opt/nss/lib/pkgconfig"
+export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig:/usr/local/opt/sqlite/lib/pkgconfig:/usr/local/opt/nss/lib/pkgconfig:$BREW_PREFIX/opt/libffi/lib/pkgconfig:$BREW_PREFIX/opt/zlib/lib/pkgconfig:$BREW_PREFIX/opt/expat/lib/pkgconfig:$BREW_PREFIX/opt/libxml2/lib/pkgconfig"
 
-export HUGO_NEWCONTENTEDITOR="emacs"
-export EDITOR="emacs"
+export EDITOR="emacsclient"

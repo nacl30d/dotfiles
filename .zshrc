@@ -110,36 +110,31 @@ fi
 
 is_exists 'starship' && eval "$(starship init zsh)"
 is_exists 'mise' && eval "$(mise activate zsh)"
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+is_exists 'fzf' && eval "$(fzf --zsh)"
 
 # pnpm
-export PNPM_HOME="/Users/d_shiozawa/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+is_exists 'pnpm' && eval "$(pnpm completion zsh)"
 # pnpm end
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s ~/.bun/_bun ] && source ~/.bun/_bun
 
 # # volta
 # export VOLTA_HOME="$HOME/.volta"
 # export PATH="$VOLTA_HOME/bin:$PATH"
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
 # aws
-complete -C '/opt/homebrew/bin/aws_completer' aws
+complete -C "$(brew --prefix)/bin/aws_completer" aws
 is_exists 'saml2aws' && eval "$(saml2aws --completion-script-zsh)"
-
-# bun completions
-[ -s ~/.bun/_bun ] && source ~/.bun/_bun
-
-# tabtab source for packages
-# uninstall by removing these lines
-[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
 # Bitwarden
 # https://github.com/bitwarden/clients/issues/6689
 alias bw='NODE_OPTIONS="--no-deprecation" bw'
-eval "$(bw completion --shell zsh); compdef _bw bw;"
+is_exists 'bw' && eval "$(bw completion --shell zsh); compdef _bw bw;"
