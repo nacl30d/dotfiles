@@ -135,6 +135,10 @@ complete -C "$(brew --prefix)/bin/aws_completer" aws
 is_exists 'saml2aws' && eval "$(saml2aws --completion-script-zsh)"
 
 # Bitwarden
-# https://github.com/bitwarden/clients/issues/6689
-alias bw='NODE_OPTIONS="--no-deprecation" bw'
-is_exists 'bw' && eval "$(bw completion --shell zsh); compdef _bw bw;"
+is_exists 'bw' && {
+    # https://github.com/bitwarden/clients/issues/6689
+    alias bw='NODE_OPTIONS="--no-deprecation" bw'
+    eval "$(bw completion --shell zsh); compdef _bw bw;"
+}
+
+complete -o nospace -C /opt/homebrew/bin/hcp hcp
