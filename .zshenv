@@ -46,8 +46,17 @@ fpath=(
     $fpath
 )
 
-export LDFLAGS="-L/usr/local/opt/curl/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/nss/lib -L/usr/local/opt/qt/lib"
-export CPPFLAGS="-I/usr/local/opt/curl/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/nss/include -I/usr/local/opt/qt/include"
-export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig:/usr/local/opt/sqlite/lib/pkgconfig:/usr/local/opt/nss/lib/pkgconfig:$BREW_PREFIX/opt/libffi/lib/pkgconfig:$BREW_PREFIX/opt/zlib/lib/pkgconfig:$BREW_PREFIX/opt/expat/lib/pkgconfig:$BREW_PREFIX/opt/libxml2/lib/pkgconfig"
+export LDFLAGS="-L/usr/local/opt/curl/lib"
+export CPPFLAGS="-I/usr/local/opt/curl/include"
+
+typeset -xTU PKG_CONFIG_PATH pkg_config_path
+pkg_config_path=(
+    $BREW_PREFIX/opt/curl/lib/pkgconfig(N-/)
+    $BREW_PREFIX/opt/expat/lib/pkgconfig(N-/)
+    $BREW_PREFIX/opt/libffi/lib/pkgconfig(N-/)
+    $BREW_PREFIX/opt/libxml2/lib/pkgconfig(N-/)
+    $BREW_PREFIX/opt/sqlite/lib/pkgconfig(N-/)
+    $BREW_PREFIX/opt/zlib/lib/pkgconfig(N-/)
+)
 
 export EDITOR="emacsclient"
