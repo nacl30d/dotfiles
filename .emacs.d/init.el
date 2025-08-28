@@ -493,6 +493,9 @@
   :config
   (setq-default typescript-indent-level 2))
 
+(use-package prisma-mode
+  :straight (:host github :repo "pimeys/emacs-prisma-mode" :branch "main"))
+
 ;; (use-package tide
 ;;   :after (typescript-mode company flycheck)
 ;;   :config
