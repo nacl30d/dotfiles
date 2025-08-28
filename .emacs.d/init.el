@@ -363,6 +363,7 @@
           (go "https://github.com/tree-sitter/tree-sitter-go")
           (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
           (html "https://github.com/tree-sitter/tree-sitter-html")
+          (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
           (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
           (json "https://github.com/tree-sitter/tree-sitter-json")
           (make "https://github.com/alemuller/tree-sitter-make")
@@ -396,8 +397,22 @@
         read-process-output-max (* 1024 1024))
   (setf lsp-prefer-capf t)
   (setq lsp-signature-auto-activate nil)
+
+  ; JS/TS
   (setq lsp-javascript-preferences-import-module-specifier "relative")
   (setq lsp-typescript-preferences-import-module-specifier "relative")
+
+  ; Kotlin
+  (defun kotlin-lsp-server-start-fun (port)
+    (list "kotlin-lsp.sh" "--socket" (number-to-string port)))
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-tcp-connection 'kotlin-lsp-server-start-fun)
+    :activation-fn (lsp-activate-on "kotlin")
+    :major-modes '(kotlin-mode kotlin-ts-mode)
+    :priority -1
+    :server-id 'kotlin-jb-lsp
+    ))
 
   (with-eval-after-load 'lsp-mode
     ; ignore laravel's storage directory
@@ -405,6 +420,7 @@
   :hook (
          (go-ts-mode . lsp)
          (js-ts-mode . lsp)
+         (kotlin-ts-mode . lsp)
          (typescript-ts-mode . lsp)
          (tsx-ts-mode . lsp)
          (php-ts-mode . lsp)
@@ -509,6 +525,11 @@
   :hook ((go-ts-mode . go-eldoc-setup)))
 
 (use-package terraform-mode)
+
+(use-package kotlin-ts-mode
+  ;; :straight (:host gitlab :repo "bricka/emacs-kotlin-ts-mode")
+  :mode "\\.kt\\'"
+  )
 
 ;; (use-package jinja2-mode
 ;;   :mode (("\\.tpl\\'" . jinja2-mode)))
