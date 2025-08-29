@@ -110,6 +110,7 @@ fi
 
 is_exists 'starship' && eval "$(starship init zsh)"
 is_exists 'mise' && eval "$(mise activate zsh)"
+is_exists 'xcenv' && eval "$(xcenv init -)"
 is_exists 'fzf' && eval "$(fzf --zsh)"
 
 # pnpm
