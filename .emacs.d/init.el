@@ -126,9 +126,9 @@
 (use-package git-modes)
 
 (use-package git-link
+  :bind ("C-c i" . git-link)
   :config
   (setq git-link-open-in-browser 't))
-(global-set-key (kbd "C-c i") 'git-link)
 
 (use-package git-gutter
   :init
@@ -414,9 +414,9 @@
     :server-id 'kotlin-jb-lsp
     ))
 
-  (with-eval-after-load 'lsp-mode
-    ; ignore laravel's storage directory
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'"))
+  ;; ignore laravel's storage directory
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'")
+
   :hook (
          (go-ts-mode . lsp)
          (js-ts-mode . lsp)
@@ -716,4 +716,6 @@
             ))
 
 (setq ediff-split-window-function 'split-window-horizontally)
+
+(provide 'init)
 ;;; init.el ends here
