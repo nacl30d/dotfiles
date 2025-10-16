@@ -29,6 +29,7 @@ path=(
     $BREW_PREFIX/opt/unzip/bin(N-/)
     $BREW_PREFIX/opt/kotlin-lsp/libexec(N-/)
     /Library/TeX/texbin(N-/)
+    /Usr/local/MacGPG2/bin(N-/)
     /usr/local/bin(N-/)
     /usr/local/sbin(N-/)
     /usr/bin(N-/)
