@@ -424,12 +424,13 @@
          (typescript-ts-mode . lsp)
          (tsx-ts-mode . lsp)
          (php-ts-mode . lsp)
-         (python-mode . lsp)
+         (python-ts-mode . lsp)
          (bash-ts-mode . lsp)
          (terraform-mode . lsp)
          (sql-mode . lsp)
          (json-ts-mode . lsp)
          (yaml-ts-mode . lsp)
+         (toml-ts-mode . lsp)
          (dockerfile-ts-mode . lsp))
   :commands lsp)
 
@@ -549,6 +550,11 @@
   (setq markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css"))
   (setq markdown-xhtml-body-preamble "<div class='markdown-body'>" )
   (setq markdown-xhtml-body-epilogue "</div>"))
+
+(use-package toml-ts-mode
+  :straight (:type built-in)
+  :mode (("\\.toml$" . toml-ts-mode))
+  )
 
 (use-package yaml-ts-mode
   :straight (:type built-in)
