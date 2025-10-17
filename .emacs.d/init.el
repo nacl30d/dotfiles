@@ -635,29 +635,87 @@
 ;; RefTeX with TeX mode
 (add-hook 'latex-mode-hook 'turn-on-reftex)
 
+(use-package org
+  :bind
+  ("C-c c" . org-capture)
+  ("C-c a" . org-agenda)
+  :config
+  ;; Basics
+  (setq org-directory "~/org/"
+        org-default-notes-file (concat org-directory "index.org")
+        org-use-speed-commands t)
+  ;; Task Managements
+  (setq org-todo-keywords '((sequence
+                             "TODO(!)" "NOT STARTED(n!)" "IN PROGRESS(p!)" "WAITING(w!)" "FUTURE(f!)"
+                             "|" "DONE(d!)" "DECLINED(x!)"))
+        org-todo-keyword-faces '(("TODO" . (:foreground "brightyellow" :weight bold)) ("NOT STARTED" . (:foreground "deeppink" :weight bold))
+                                 ("IN PROGRESS" . (:foreground "paleturquoise" :weight bold)) ("WAITING" . (:foreground "lightcyan" :weight bold))
+                                 ("FUTURE" . (:foreground "palegoldenrod" :background "darkgray" :weight bold))
+                                 ("DONE" . (:foreground "palegreen" :weight bold)) ("DECLINED" . (:foreground "palegreen" :background "darkgray" :weight bold))))
+  (setq org-priority-faces '((?A . (:foreground "orangered" :weight bold))
+                             (?B . (:foreground "yellowgreen"))
+                             (?C . (:foreground "brightblue"))))
+  ;; Agenda
+  (setq org-agenda-files (list org-directory)
+        org-agenda-window-setup 'current-window
+        calendar-holidays nil
+        org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (setq org-agenda-sorting-strategy
+        '(deadline-up scheduled-up todo-state-up priority-down))
+  (setq org-agenda-skip-timestamp-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-scheduled-if-deadline-is-shown t
+        org-agenda-skip-timestamp-if-deadline-is-shown t)
+  )
 
+(use-package org-super-agenda
+  :after org-agenda
+  :config
+  (org-super-agenda-mode 1)
+  (setq org-super-agenda-groups
+        '((:name "Overdue"
+                 :deadline past
+                 :deadline today
+                 :order 1)
+          (:name "Scheduled"
+                 :scheduled t
+                 :order 2)
+          (:name "Recursive"
+                 :habit t
+                 :order 110)
+          (:name "NOT Scheduled"
+                 :and (:deadline t :scheduled nil)
+                 :order 3)
+          (:name "Inbox"
+                 :todo "TODO"
+                 :order 100)
+          (:name "Backlog"
+                 :todo "FUTURE"
+                 :order 120)
+          (:name ""
+                 :auto-outline-path t
+                 :order 10)))
+  )
 
 ;;----------------------------------------------------------------------------------
 ;; shell
 ;;----------------------------------------------------------------------------------
-(use-package multi-term
-  :bind ("C-c t" . multi-term)
-  :config
-  (setq multi-term-program "/usr/local/bin/zsh")
-  (delete "C-c" term-unbind-key-list)
-  (defun term-send-previous-line ()
-    (interactive)
-    (term-send-raw-string (kbd "C-p")))
-  (defun term-send-next-line ()
-    (interactive)
-    (term-send-raw-string (kbd "C-n")))
-  (add-hook 'term-mode-hook
-            #'(lambda ()
-               (define-key term-raw-map (kbd "C-p") 'term-send-previous-line)
-               (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
-
-(provide 'init)
-
+;; (use-package multi-term
+;;   :bind ("C-c t" . multi-term)
+;;   :config
+;;   (setq multi-term-program "/usr/local/bin/zsh")
+;;   (delete "C-c" term-unbind-key-list)
+;;   (defun term-send-previous-line ()
+;;     (interactive)
+;;     (term-send-raw-string (kbd "C-p")))
+;;   (defun term-send-next-line ()
+;;     (interactive)
+;;     (term-send-raw-string (kbd "C-n")))
+;;   (add-hook 'term-mode-hook
+;;             #'(lambda ()
+;;                (define-key term-raw-map (kbd "C-p") 'term-send-previous-line)
+;;                (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
 
 ;;----------------------------------------------------------------------------------
 ;; diff
