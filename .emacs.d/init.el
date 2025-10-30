@@ -362,6 +362,7 @@
           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
           (go "https://github.com/tree-sitter/tree-sitter-go")
           (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+          (graphql "https://github.com/bkegley/tree-sitter-graphql")
           (html "https://github.com/tree-sitter/tree-sitter-html")
           (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
           (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
@@ -427,6 +428,7 @@
          (python-ts-mode . lsp)
          (bash-ts-mode . lsp)
          (terraform-mode . lsp)
+         (graphql-mode . lsp)
          (sql-mode . lsp)
          (json-ts-mode . lsp)
          (yaml-ts-mode . lsp)
@@ -564,7 +566,7 @@
 
 (use-package json-ts-mode
   :straight (:type built-in)
-  :mode (("\\.json$" . json-mode))
+  :mode (("\\.json$" . json-ts-mode))
   :config
   (setq js-indent-level 4))
 
@@ -780,6 +782,15 @@
             ))
 
 (setq ediff-split-window-function 'split-window-horizontally)
+
+(use-package restclient
+  :mode ("\\.http\\'" . restclient-mode))
+(use-package restclient-jq
+  :after restclient)
+
+(use-package request)
+(use-package graphql-mode
+  :after request)
 
 (provide 'init)
 ;;; init.el ends here
