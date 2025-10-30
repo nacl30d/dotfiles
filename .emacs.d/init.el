@@ -564,7 +564,7 @@
 
 (use-package json-ts-mode
   :straight (:type built-in)
-  :mode (("\\.json$" . json-mode))
+  :mode (("\\.json$" . json-ts-mode))
   :config
   (setq js-indent-level 4))
 
@@ -780,6 +780,15 @@
             ))
 
 (setq ediff-split-window-function 'split-window-horizontally)
+
+(use-package restclient
+  :mode ("\\.http\\'" . restclient-mode))
+(use-package restclient-jq
+  :after restclient)
+
+(use-package request)
+(use-package graphql-mode
+  :after request)
 
 (provide 'init)
 ;;; init.el ends here
