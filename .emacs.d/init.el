@@ -328,6 +328,10 @@
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
+(use-package mise
+  :init
+  (global-mise-mode))
+
 (use-package flycheck
   :init
   (global-flycheck-mode)
