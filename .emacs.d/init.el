@@ -386,6 +386,7 @@
   (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
   (add-to-list 'major-mode-remap-alist '(css-mode . css-ts-mode))
   (add-to-list 'major-mode-remap-alist '(js-mode . javascript-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
   (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
   (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode))
   (add-to-list 'major-mode-remap-alist '(toml-mode . toml-ts-mode))
