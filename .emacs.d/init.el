@@ -431,6 +431,7 @@
          (tsx-ts-mode . lsp)
          (php-ts-mode . lsp)
          (python-ts-mode . lsp)
+         (vue-mode . lsp)
          (bash-ts-mode . lsp)
          (terraform-mode . lsp)
          (graphql-mode . lsp)
@@ -460,23 +461,27 @@
 
 (use-package sql-indent)
 
-;; (use-package web-mode
-;;   :mode (("\\.html?\\'" . web-mode)
-;;          ("\\.blade\\.php\\." . web-mode)
-;;          ("\\.astro\\'" . web-mode))
-;;   :config
-;;   (setq web-mode-enable-auto-closing t)
-;;   (setq web-mode-enable-auto-pairing t)
-;;   (setq web-mode-markup-indent-offset 2)
-;;   (setq web-mode-css-indent-offset 2)
-;;   (setq web-mode-code-indent-offset 2)
-;;   (setq web-mode-style-padding 2)
-;;   (setq web-mode-script-padding 2)
-;;   (setq web-mode-block-padding 0)
-;;   (setq web-mode-enable-css-colorization t)
-;;   (setq web-mode-engines-alist
-;;         ' (("php" . "\\.phtml\\'")
-;;            ("blade" . "\\.blade\\.php\\."))))
+(use-package web-mode
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.blade\\.php\\." . web-mode)
+         ("\\.astro\\'" . web-mode))
+  :config
+  (setq web-mode-enable-auto-closing t)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-style-padding 2)
+  (setq web-mode-script-padding 2)
+  (setq web-mode-block-padding 0)
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-engines-alist
+        ' (("php" . "\\.phtml\\'")
+           ("blade" . "\\.blade\\.php\\."))))
+
+(define-derived-mode vue-mode
+  web-mode "vue")
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 
 (use-package js-ts-mode
   :straight (:type built-in)
