@@ -560,9 +560,8 @@
   :commands (markdown-mode gfm-mode)
   :mode (("\\.md\\'" . markdown-mode)
          ("README\\.md\\'" . gfm-mode))
-  :init
-  (setq markdown-command "github-markup")
   :config
+  (setq markdown-command "cmark-gfm -e table")
   (setq markdown-command-needs-filename t)
   (setq markdown-content-type "application/xhtml+xml")
   (setq markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css"))
