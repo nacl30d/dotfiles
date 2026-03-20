@@ -362,7 +362,8 @@
   :straight (:type built-in)
   :init
   (setq treesit-language-source-alist
-        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        '((astro "https://github.com/virchau13/tree-sitter-astro")
+          (bash "https://github.com/tree-sitter/tree-sitter-bash")
           (css "https://github.com/tree-sitter/tree-sitter-css")
           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
           (go "https://github.com/tree-sitter/tree-sitter-go")
@@ -425,6 +426,7 @@
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'")
 
   :hook (
+         (astro-ts-mode . lsp)
          (go-ts-mode . lsp)
          (js-ts-mode . lsp)
          (kotlin-ts-mode . lsp)
@@ -509,6 +511,8 @@
 
 (use-package prisma-mode
   :straight (:host github :repo "pimeys/emacs-prisma-mode" :branch "main"))
+
+(use-package astro-ts-mode)
 
 ;; (use-package tide
 ;;   :after (typescript-mode company flycheck)
