@@ -107,7 +107,6 @@
 (defvar linum-format "%d ")
 (column-number-mode t)
 
-
 ;;----------------------------------------------------------------------------------
 ;; version control system
 ;;----------------------------------------------------------------------------------
@@ -739,7 +738,7 @@
 ;; diff
 ;;----------------------------------------------------------------------------------
 (defun command-line-diff (switch)
-  "Ediff from ommand line."
+  "Ediff from command line."
   (let ((file1 (pop command-line-args-left))
         (file2 (pop command-line-args-left)))
     (ediff file1 file2)))
