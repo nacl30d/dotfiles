@@ -794,13 +794,13 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 
 (use-package restclient
+  :ensure restclient-jq
   :mode ("\\.http\\'" . restclient-mode))
-(use-package restclient-jq
-  :after restclient)
+;; (use-package restclient-jq
+;;   :ensure restclient)
 
-(use-package request)
 (use-package graphql-mode
-  :after request)
+  :ensure request)
 
 (provide 'init)
 ;;; init.el ends here
