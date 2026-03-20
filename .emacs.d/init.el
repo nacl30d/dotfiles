@@ -581,7 +581,7 @@
 
 (use-package json-ts-mode
   :straight (:type built-in)
-  :mode (("\\.json$" . json-ts-mode))
+  :mode (("\\.jsonc?$" . json-ts-mode))
   :config
   (setq js-indent-level 4))
 
