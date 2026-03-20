@@ -291,6 +291,12 @@
   :init (counsel-projectile-mode t))
   ;; :bind (("C-c p" . projectile-command-map)))
 
+(use-package consult-dir
+  :bind (("C-x C-d" . consult-dir)
+         :map minibuffer-local-completion-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
+
 (use-package undo-tree
   :init
   (global-undo-tree-mode)
