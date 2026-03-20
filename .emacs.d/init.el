@@ -440,6 +440,7 @@
          (graphql-mode . lsp)
          (sql-mode . lsp)
          (json-ts-mode . lsp)
+         (toml-ts-mode .lsp)
          (yaml-ts-mode . lsp)
          (toml-ts-mode . lsp)
          (dockerfile-ts-mode . lsp))
