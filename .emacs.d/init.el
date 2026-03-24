@@ -366,7 +366,7 @@
 
 (use-package treesit
   :straight (:type built-in)
-  :init
+  :config
   (setq treesit-language-source-alist
         '((astro "https://github.com/virchau13/tree-sitter-astro")
           (bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -390,7 +390,6 @@
           (unless (treesit-language-available-p lang nil)
             (treesit-install-language-grammar lang)))
         (mapcar #'car treesit-language-source-alist))
-  :config
   (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
   (add-to-list 'major-mode-remap-alist '(css-mode . css-ts-mode))
   (add-to-list 'major-mode-remap-alist '(js-mode . javascript-ts-mode))
