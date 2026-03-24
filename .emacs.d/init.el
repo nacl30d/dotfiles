@@ -244,7 +244,7 @@
     (comment-or-uncomment-region (region-beginning) (region-end))))
 (global-set-key (kbd "M-/") 'one-line-comment)
 
-(subword-mode t)
+(global-subword-mode)
 
 (use-package editorconfig
   :init
