@@ -468,6 +468,8 @@
   :config
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
+(use-package csv-mode)
+
 (use-package sql-indent)
 
 (use-package web-mode
