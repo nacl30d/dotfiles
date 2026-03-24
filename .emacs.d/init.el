@@ -804,13 +804,14 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 
 (use-package restclient
-  :ensure restclient-jq
+  :after restclient-jq
+  :config
+  (setq restclient-enable-eval t)
   :mode ("\\.http\\'" . restclient-mode))
-;; (use-package restclient-jq
-;;   :ensure restclient)
+(use-package restclient-jq)
 
 (use-package graphql-mode
-  :ensure request)
+  :after request)
 
 (provide 'init)
 ;;; init.el ends here
