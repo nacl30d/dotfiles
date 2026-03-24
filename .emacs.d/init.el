@@ -684,7 +684,7 @@
                              (?B . (:foreground "yellowgreen"))
                              (?C . (:foreground "brightblue"))))
   ;; Agenda
-  (setq org-agenda-files (list org-directory)
+  (setq org-agenda-files (directory-files-recursively org-directory "\\.org$")
         org-agenda-window-setup 'current-window
         calendar-holidays nil
         org-refile-targets '((org-agenda-files :maxlevel . 2)))
@@ -695,7 +695,18 @@
         org-agenda-skip-scheduled-if-done t
         org-agenda-skip-scheduled-if-deadline-is-shown t
         org-agenda-skip-timestamp-if-deadline-is-shown t)
+  ;; Capture
+  (setq org-capture-templates
+        '(
+          ("t" "Task" entry (file+headline "" "Tasks")
+           "* TODO %?\n  %u\n  %a"
+           :empty-lines 1)
+          ("s" "Sticky note" entry (file+datetree org-default-notes-file)
+           "* %U\n%?\n%i\n"
+           :empty-lines 1)
+          ))
   )
+
 
 (use-package org-super-agenda
   :after org-agenda
