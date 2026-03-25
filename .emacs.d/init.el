@@ -233,7 +233,6 @@
 ;;----------------------------------------------------------------------------------
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (keyboard-translate ?\C-h ?\C-?)
-(global-set-key (kbd "C-c g") 'goto-line) ;goto line
 (defun one-line-comment ()
   "Toggle comment out."
   (interactive)
@@ -250,35 +249,129 @@
   :init
   (editorconfig-mode t))
 
-(use-package company
-  :init
-  (global-company-mode)
-  :bind(:map company-active-map
-             ("<return>" . nil)
-             ("RET" . nil)
-             ("<tab>" . company-complete-selection)
-             ("TAB" . company-complete-selection))
-  :config
-  (setq company-idle-delay 0.0
-        company-minimum-prefix-length 1)
-  (setq company-dabbrev-downcase nil))
+(use-package corfu
+  ;; TAB-and-Go customizations
+  :custom
+  (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect 'prompt) ;; Always preselect the prompt
+  ;; Enable auto completion, configure delay, trigger and quitting
+  (corfu-auto t)
+  (corfu-auto-delay 0.2)
+  ;; (corfu-auto-trigger ".") ;; Custom trigger characters
+  (corfu-quit-no-match 'separator) ;; or t
 
-(use-package swiper)
-(use-package counsel)
-(use-package ivy
-  :init
-  (ivy-mode)
+  ;; Use TAB for cycling, default is `corfu-complete'.
   :bind
-  ;; ("C-s" . isearch-forward-or-swiper)
-  ("C-s" . swiper-isearch)
-  ("M-s" . counsel-imenu)
-  ("M-x" . counsel-M-x)
-  ("C-x C-f" . counsel-find-file)
-  ("C-c j" . counsel-git-grep)
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+
+  :init
+  (global-corfu-mode))
+
+(use-package corfu-terminal
+  :if (version< emacs-version "31")
+  :after corfu
+  :unless (display-graphic-p)
   :config
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (setq ivy-count-format "(%d/%d) "))
+  (corfu-terminal-mode))
+
+(use-package kind-icon
+  :after corfu
+  ;:custom
+  ; (kind-icon-blend-background t)
+  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
+(use-package cape
+  :bind ("C-c p" . cape-prefix-map)
+  :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.  The order of the functions matters, the
+  ;; first function returning a result wins.  Note that the list of buffer-local
+  ;; completion functions takes precedence over the global list.
+  (advice-add 'lsp-completion-at-point :around #'cape-wrap-buster)
+  (advice-add 'lsp-completion-at-point :around #'cape-wrap-nonexclusive)
+  (advice-add 'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
+
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-keyword)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-tex t)
+  ;; (add-hook 'completion-at-point-functions #'cape-history)
+)
+
+(use-package consult
+  :bind
+  (("C-s" . consult-line)
+   ("C-x b" . consult-buffer)
+   ("C-c g" . consult-goto-line)
+   ("C-c j" . consult-git-grep)
+   ("M-s" . consult-imenu)
+   ;; ("C-c o" . consult-outline)
+   )
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
+
+(use-package consult-dir
+  :bind (("C-x C-d" . consult-dir)
+         :map minibuffer-local-completion-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
+
+(use-package consult-flycheck
+  :after (consult flycheck))
+
+;; Enable Vertico.
+(use-package vertico
+  :custom
+  ;; (vertico-scroll-margin 0) ;; Different scroll margin
+  ;; (vertico-count 20) ;; Show more candidates
+  (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+  (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  :init
+  (vertico-mode))
+
+;; Configure directory extension.
+(use-package vertico-directory
+  :after vertico
+  :straight (:type built-in)
+  ;; More convenient directory navigation commands
+  :bind (:map vertico-map
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("C-h" . vertico-directory-delete-word)
+              ("M-DEL" . vertico-directory-delete-word))
+  ;; ;; Tidy shadowed file names
+  ;; :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+  )
+
+;; Optionally use the `orderless' completion style.
+(use-package orderless
+  :custom
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
+  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion))))
+  (completion-category-defaults nil) ;; Disable defaults, use our settings
+  (completion-pcm-leading-wildcard t)) ;; Emacs 31: partial-completion behaves like substring
+
+;; Enable rich annotations using the Marginalia package
+(use-package marginalia
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  :init
+  (marginalia-mode))
 
 (use-package projectile
   :bind (:map projectile-mode-map
@@ -286,16 +379,8 @@
               ("C-c p" . projectile-command-map))
   :config
   (setq projectile-project-search-path ' (("~/Developer" . 1))))
-(use-package counsel-projectile
-  :defer t
-  :init (counsel-projectile-mode t))
-  ;; :bind (("C-c p" . projectile-command-map)))
 
-(use-package consult-dir
-  :bind (("C-x C-d" . consult-dir)
-         :map minibuffer-local-completion-map
-         ("C-x C-d" . consult-dir)
-         ("C-x C-j" . consult-dir-jump-file)))
+(use-package consult-projectile)
 
 (use-package undo-tree
   :init
@@ -405,10 +490,12 @@
   (setq lsp-keymap-prefix "C-c l")
 
   :config
+  ;; with corfu
+  (setq lsp-completion-provider :none)
+
   ;; (setq lsp-log-io t)
   (setq gc-cons-threshold (* 100 1024 1024)
         read-process-output-max (* 1024 1024))
-  (setf lsp-prefer-capf t)
   (setq lsp-signature-auto-activate nil)
 
   ; JS/TS
@@ -458,9 +545,6 @@
    lsp-ui-sideline-diagnostic-max-lines 3
    lsp-idle-delay 0.1)
   :commands lsp-ui-mode)
-
-(use-package lsp-ivy
-  :commands lsp-ivy-workspace-symbol)
 
 (use-package dap-mode
   :after
