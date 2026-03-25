@@ -7,7 +7,7 @@ exists 'fzf' && eval "$(fzf --zsh)"
 exists 'orb' && source ~/.orbstack/shell/init.zsh
 
 # aws
-exists 'aws' && complete -C "$(brew --prefix)/bin/aws_completer" aws
+exists 'aws' && complete -C "$(type aws_completer)" aws
 exists 'saml2aws' && eval "$(saml2aws --completion-script-zsh)"
 
 # Terraform
