@@ -1,11 +1,10 @@
-;;; init.el --- my init el
+;;; init.el --- my init el -*- lexical-binding: t; -*-
 ;;; commentary:
 
 ;; prerequirements
 ;;   - git for package, magit
 ;;   - mozc for input method
 ;;   - lints for flycheck
-
 
 ;;; Code:
 
@@ -81,9 +80,8 @@
 ;; basics
 ;;----------------------------------------------------------------------------------
 (setq-default tab-width 4 indent-tabs-mode nil)
-(setq completion-ignore-case t)
 (global-auto-revert-mode 1)
-(fset 'yes-or-no-p 'y-or-n-p)
+(setopt use-short-answers t)
 (setq backup-directory-alist            ;backup file dir
       (cons (cons ".*" (expand-file-name "~/.emacs.d/.backup/"))
             backup-directory-alist))
@@ -91,6 +89,18 @@
       `((".*", (expand-file-name "~/.emacs.d/.backup/") t)))
 (setq auto-save-list-file-prefix "~/.emacs.d/.backup/auto-save-list/.saves-")
 (setq backup-by-copying t)
+
+(use-package recentf
+  :straight (:type built-in)
+  :config
+  (setopt recentf-max-saved-items 32)
+  (recentf-mode))
+
+(setopt gc-cons-percentage 0.2
+        gc-cons-threshold (* 128 1024 1024))
+(use-package so-long
+  :init
+  (global-so-long-mode))
 
 ;;----------------------------------------------------------------------------------
 ;; mode line
@@ -141,12 +151,36 @@
 ;;----------------------------------------------------------------------------------
 ;; views
 ;;----------------------------------------------------------------------------------
-(show-paren-mode t)                     ;highlight paren pairs
-(menu-bar-mode -1)                      ;hidden menu bar
-(setq inhibit-startup-message t)        ;hidden startup msg
 (global-set-key (kbd "C-x p") #'(lambda () (interactive)(other-window -1))) ;reverse windo
-(tab-bar-mode 1)
-(which-key-mode 1)
+(show-paren-mode t)
+(use-package elec-pair
+  :straight (:type built-in)
+  :config
+  (electric-pair-mode))
+
+(use-package which-key
+  :straight (:type built-in)
+  :config
+  (which-key-mode))
+
+(use-package tab-bar
+  :after projectile
+  :init
+  (tab-bar-mode 1)
+  :custom
+  (tab-bar-close-button-show nil)
+  (tab-bar-new-button-show nil)
+  (tab-bar-tab-hints t)
+  (tab-bar-tab-name-format-hints (if tab-bar-tab-hints (concat (format "%d:" i) "") name))
+  (tab-bar-auto-width nil)
+  (tab-bar-separator " ")
+  (tab-bar-format '(tab-bar-format-tabs-groups))
+  (tab-bar-tab-group-format-default (propertize
+                                     (concat (funcall tab-bar-tab-group-function tab))
+                                     'face (if current-p 'tab-bar-tab-group-current 'tab-bar-tab-group-inactive)))
+  ;; (tab-bar-new-tab-group (projectile-project-name (projectile-project-root (buffer-file-name (current-buffer)))))
+  ;; (tab-bar-new-tab-choice "*scratch*")
+  )
 
 (use-package window-numbering
   :init
@@ -231,8 +265,11 @@
 ;;----------------------------------------------------------------------------------
 ;; edit
 ;;----------------------------------------------------------------------------------
-(global-set-key (kbd "C-h") 'delete-backward-char)
-(keyboard-translate ?\C-h ?\C-?)
+(use-package simple
+  :straight (:type built-in)
+  :config
+  (normal-erase-is-backspace-mode 1))
+(define-key key-translation-map [?\C-h] [?\C-?])
 (defun one-line-comment ()
   "Toggle comment out."
   (interactive)
@@ -243,7 +280,10 @@
     (comment-or-uncomment-region (region-beginning) (region-end))))
 (global-set-key (kbd "M-/") 'one-line-comment)
 
-(global-subword-mode)
+(use-package subword
+  :straight (:type built-in)
+  :init
+  (global-subword-mode))
 
 (use-package editorconfig
   :init
@@ -639,9 +679,6 @@
   :mode "\\.kts?\\'"
   )
 
-;; (use-package jinja2-mode
-;;   :mode (("\\.tpl\\'" . jinja2-mode)))
-
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("\\.md\\'" . markdown-mode)
@@ -680,49 +717,8 @@
 
 (use-package docker-compose-mode)
 
-(use-package elpy
-  :init
-  (elpy-enable)
-  ;; (elpy-rpc--install-dependencies)
-  :config
-  (remove-hook 'elpy-modules 'elpy-module-flymake)
-  (setq elpy-rpc-python-command "python3")
-  (setq flycheck-python-flake8-executable "flake8")
-  :hook
-  (elpy-mode . flycheck-mode)
-  )
-
-(use-package poetry
-  :hook
-  (elpy-mode . poetry-tracking-mode))
-
-(use-package py-isort
-  :hook
-  (before-save . py-isort-before-save))
-
 (use-package nginx-mode
   :mode (("nginx.conf\\'" . nginx-mode)))
-
-;; TeX mode
-(setq auto-mode-alist
-      (append '(("\\.tex$" . latex-mode)) auto-mode-alist))
-(setq tex-default-mode 'latex-mode)
-(setq tex-start-commands "\\nonstopmode\\input")
-(setq tex-run-command "ptex2pdf -u -e -ot '-synctex=1 -interaction=nonstopmode'")
-(setq latex-run-command "ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode'")
-(setq tex-bibtex-command "latexmk -norc -gg -pdfdvi")
-(setq tex-print-file-extension ".pdf")
-(setq tex-dvi-view-command "open -a /Applications/Skim.app")
-(setq tex-dvi-print-command "open -a /Applications/Preview.app")
-(setq tex-compile-commands
-      '(("ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode' %f" "%f" "%r.pdf")
-        ("latexmk %f" "%f" "%r.pdf")
-        ("latexmk -norc -gg -pdfdvi %f" "%f" "%r.pdf")
-        ("latexmk -norc -gg -pdflua %f" "%f" "%r.pdf")
-        ((concat "\\doc-view" " \"" (car (split-string (format "%s" (tex-main-file)) "\\.")) ".pdf\"") "%r.pdf")
-        ("open -a /Applications/Skim.app %r.pdf" "%r.pdf")
-        ("open -a /Applications/Preview %r.pdf" "%r.pdf")
-        ("open -a \"Google Chrome\" %r.pdf" "%r.pdf")))
 
 (defun skim-forward-search ()
   "Skim search function."
@@ -737,12 +733,29 @@
     (process-=query-on-exit-flag
      (start-process-shell-command "displayline" nil cmd args))))
 
-(add-hook 'latex-mode-hook
-          #'(lambda ()
-             (define-key latex-mode-map (kbd "C-c s") 'skim-forward-search)))
-
-;; RefTeX with TeX mode
-(add-hook 'latex-mode-hook 'turn-on-reftex)
+(use-package tex-mode
+  :straight (:type built-in)
+  :config
+  (setq tex-default-mode 'latex-mode)
+  (setq tex-start-commands "\\nonstopmode\\input")
+  (setq tex-run-command "ptex2pdf -u -e -ot '-synctex=1 -interaction=nonstopmode'")
+  (setq latex-run-command "ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode'")
+  (setq tex-bibtex-command "latexmk -norc -gg -pdfdvi")
+  (setq tex-print-file-extension ".pdf")
+  (setq tex-dvi-view-command "open -a /Applications/Skim.app")
+  (setq tex-dvi-print-command "open -a /Applications/Preview.app")
+  (setq tex-compile-commands
+        '(("ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode' %f" "%f" "%r.pdf")
+          ("latexmk %f" "%f" "%r.pdf")
+          ("latexmk -norc -gg -pdfdvi %f" "%f" "%r.pdf")
+          ("latexmk -norc -gg -pdflua %f" "%f" "%r.pdf")
+          ((concat "\\doc-view" " \"" (car (split-string (format "%s" (tex-main-file)) "\\.")) ".pdf\"") "%r.pdf")
+          ("open -a /Applications/Skim.app %r.pdf" "%r.pdf")
+          ("open -a /Applications/Preview %r.pdf" "%r.pdf")
+          ("open -a \"Google Chrome\" %r.pdf" "%r.pdf")))
+  (define-key latex-mode-map (kbd "C-c s") 'skim-forward-search)
+  :hook (latex-mode . turn-on-reftex)
+  :mode (("\\.tex$" . latex-mode)))
 
 (use-package org
   :bind
@@ -821,79 +834,11 @@
 ;;----------------------------------------------------------------------------------
 ;; shell
 ;;----------------------------------------------------------------------------------
-;; (use-package multi-term
-;;   :bind ("C-c t" . multi-term)
-;;   :config
-;;   (setq multi-term-program "/usr/local/bin/zsh")
-;;   (delete "C-c" term-unbind-key-list)
-;;   (defun term-send-previous-line ()
-;;     (interactive)
-;;     (term-send-raw-string (kbd "C-p")))
-;;   (defun term-send-next-line ()
-;;     (interactive)
-;;     (term-send-raw-string (kbd "C-n")))
-;;   (add-hook 'term-mode-hook
-;;             #'(lambda ()
-;;                (define-key term-raw-map (kbd "C-p") 'term-send-previous-line)
-;;                (define-key term-raw-map (kbd "C-n") 'term-send-next-line))))
+(use-package eat
+  :bind ("C-c t" . eat-project-other-window)
+  :config
+  (eat-eshell-mode))
 
-;;----------------------------------------------------------------------------------
-;; diff
-;;----------------------------------------------------------------------------------
-(defun command-line-diff (switch)
-  "Ediff from command line."
-  (let ((file1 (pop command-line-args-left))
-        (file2 (pop command-line-args-left)))
-    (ediff file1 file2)))
-
-;; Usage: emacs -diff file1 file2
-(add-to-list 'command-switch-alist '("diff" . command-line-diff))
-
-(add-hook 'ediff-load-hook
-          (lambda ()
-            (set-face-foreground
-             ediff-current-diff-face-A "Black")
-            (set-face-background
-             ediff-current-diff-face-A "Green")
-            (set-face-foreground
-             ediff-fine-diff-face-A "White")
-            (make-face-bold
-             ediff-fine-diff-face-A)
-            (set-face-background
-             ediff-fine-diff-face-A "Green")
-            (set-face-background
-             ediff-odd-diff-face-A "PaleGreen")
-            (set-face-foreground
-             ediff-odd-diff-face-A "Black")
-            (set-face-foreground
-             ediff-current-diff-face-B "Black")
-            (set-face-background
-             ediff-current-diff-face-B "Red")
-            (set-face-foreground
-             ediff-fine-diff-face-B "Black")
-            (make-face-bold
-             ediff-fine-diff-face-B)
-            (set-face-background
-             ediff-fine-diff-face-B "Red")
-            (set-face-background
-             ediff-odd-diff-face-B "Pink")
-            (set-face-foreground
-             ediff-odd-diff-face-B "Black")
-            (set-face-background
-             ediff-odd-diff-face-A "PaleGreen")
-            (set-face-foreground
-             ediff-odd-diff-face-A "Black")
-            (set-face-background
-             ediff-even-diff-face-B "Pink")
-            (set-face-foreground
-             ediff-even-diff-face-B "Black")
-            (set-face-background
-             ediff-even-diff-face-A "PaleGreen")
-            (set-face-foreground
-             ediff-even-diff-face-A "Black")
-            ))
-
-(setq ediff-split-window-function 'split-window-horizontally)
 
 (use-package restclient
   :after restclient-jq
