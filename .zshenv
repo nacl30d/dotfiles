@@ -40,6 +40,7 @@ path=(
     $HOME/go/bin(N-/)
     $HOME/Library/Android/sdk/platform-tools(N-/)
     $HOME/.local/bin(N-/)
+    $HOME/.local/share/mise/shims/(N-/)
 )
 
 fpath=(
