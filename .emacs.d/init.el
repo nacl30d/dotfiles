@@ -123,9 +123,7 @@
 (setq vc-follow-symlinks t)
 
 (use-package magit
-  :bind ("C-x g" . magit-status)
-  :config
-  (setq magit-completing-read-function 'ivy-completing-read))
+  :bind ("C-x g" . magit-status))
 
 (use-package forge
   :after magit
