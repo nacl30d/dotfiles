@@ -37,17 +37,7 @@
     defaultBranch = main
 
 [diff]
-        # tool = difftastic
-        external = difft
-
-[difftool]
-        prompt = false
-
-[difftool "difftastic"]
-        cmd = difft "$LOCAL" "$REMOTE"
-
-[pager]
-        difftool = true
+    external = difft
 
 [alias]
     alias = !git config --get-regexp '^alias\\.' | sed 's/alias\\.\\([^ ]*\\) \\(.*\\)/\\1\\\t => \\2/' | sort
