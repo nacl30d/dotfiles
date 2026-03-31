@@ -125,6 +125,10 @@
 (use-package magit
   :bind ("C-x g" . magit-status))
 
+(use-package git-modes
+  :mode (("\\.gitconfig" . gitconfig-mode)
+         ("\\.gitignore" . gitignore-mode)))
+
 (use-package forge
   :after magit
   :config
