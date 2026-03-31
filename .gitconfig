@@ -61,3 +61,6 @@
     d2 = diff HEAD~2
     d3 = diff HEAD~3
     f = '!git ls-files | grep -i'
+
+[include]
+    path = ~/.gitconfig.override
