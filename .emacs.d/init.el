@@ -695,18 +695,18 @@
 
 (use-package toml-ts-mode
   :straight (:type built-in)
-  :mode (("\\.toml$" . toml-ts-mode))
+  :mode (("\\.toml\\'" . toml-ts-mode))
   )
 
 (use-package yaml-ts-mode
   :straight (:type built-in)
-  :mode (("\\.ya?ml$" . yaml-ts-mode))
+  :mode (("\\.ya?ml\\'" . yaml-ts-mode))
   :config
   (define-key yaml-ts-mode-map (kbd "C-m") 'newline-and-indent))
 
 (use-package json-ts-mode
   :straight (:type built-in)
-  :mode (("\\.jsonc?$" . json-ts-mode))
+  :mode (("\\.jsonc?\\'" . json-ts-mode))
   :config
   (setq js-indent-level 4))
 
@@ -757,7 +757,7 @@
           ("open -a \"Google Chrome\" %r.pdf" "%r.pdf")))
   (define-key latex-mode-map (kbd "C-c s") 'skim-forward-search)
   :hook (latex-mode . turn-on-reftex)
-  :mode (("\\.tex$" . latex-mode)))
+  :mode (("\\.tex\\'" . latex-mode)))
 
 (use-package org
   :bind
@@ -780,7 +780,7 @@
                              (?B . (:foreground "yellowgreen"))
                              (?C . (:foreground "brightblue"))))
   ;; Agenda
-  (setq org-agenda-files (directory-files-recursively org-directory "\\.org$")
+  (setq org-agenda-files (directory-files-recursively org-directory "\\.org\\'")
         org-agenda-window-setup 'current-window
         calendar-holidays nil
         org-refile-targets '((org-agenda-files :maxlevel . 2)))
