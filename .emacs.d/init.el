@@ -779,6 +779,12 @@
   (setq org-priority-faces '((?A . (:foreground "orangered" :weight bold))
                              (?B . (:foreground "yellowgreen"))
                              (?C . (:foreground "brightblue"))))
+  ;; Babel
+  (setq org-confirm-babel-evaluate nil)
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t)
+                                 (shell . t)
+                                 (sql . t)))
   )
 
 (use-package org-agenda
