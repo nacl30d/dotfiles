@@ -779,6 +779,10 @@
   (setq org-priority-faces '((?A . (:foreground "orangered" :weight bold))
                              (?B . (:foreground "yellowgreen"))
                              (?C . (:foreground "brightblue"))))
+  ;; Export
+  (setq org-export-with-toc nil
+        org-export-with-date nil
+        org-export-with-author nil)
   ;; Babel
   (setq org-confirm-babel-evaluate nil)
   (org-babel-do-load-languages 'org-babel-load-languages
@@ -846,6 +850,27 @@
            "* %U\n%?\n%i\n"
            :empty-lines 1)
           ))
+  )
+
+(use-package ox-latex
+  :straight (:type built-in)
+  :after org
+  :config
+  (add-to-list 'org-latex-classes
+               '("jlreq"
+                 "\\documentclass{jlreq}
+                  [NO-DEFAULT-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-packages-alist
+               '("normalem" "ulem" t))
+  (setq org-latex-default-class "jlreq"
+        org-latex-compiler "lualatex"
+        org-latex-pdf-process '("lualatex %b")
+        org-latex-with-hyperref nil)
   )
 
 ;;----------------------------------------------------------------------------------
