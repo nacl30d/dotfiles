@@ -344,8 +344,22 @@
   (add-hook 'completion-at-point-functions #'cape-keyword)
   (add-hook 'completion-at-point-functions #'cape-elisp-block)
   (add-hook 'completion-at-point-functions #'cape-tex t)
+  (add-hook 'completion-at-point-functions #'tempel-complete)
   ;; (add-hook 'completion-at-point-functions #'cape-history)
 )
+
+;; Configure Tempel
+(use-package tempel
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+  :init
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  (global-tempel-abbrev-mode)
+)
+
+(use-package tempel-collection
+  :after tempel)
 
 (use-package consult
   :bind
