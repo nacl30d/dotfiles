@@ -816,6 +816,7 @@
 ;; org
 ;;----------------------------------------------------------------------------------
 (use-package org
+  :straight (:type built-in)
   :bind
   ("C-c c" . org-capture)
   ("C-c a" . org-agenda)
