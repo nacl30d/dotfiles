@@ -565,6 +565,44 @@
     :server-id 'kotlin-jb-lsp
     ))
 
+  ;; CloudFormation
+  (defvar cfn-lsp/server-path
+    (expand-file-name "~/.local/share/cfn-lsp/cfn-lsp-server-standalone.js")
+    "Path to CloudFormation Language Server")
+  (defun cfn-lsp/cloudformation-buffer-p (&optional _filename _mode)
+    "現在のバッファが CloudFormation テンプレートかを判定する。
+  バッファ先頭付近に AWSTemplateFormatVersion キーが存在すれば非 nil を返す。"
+    (and (derived-mode-p 'yaml-ts-mode 'yaml-mode 'json-ts-mode 'json-mode)
+         (save-excursion
+           (save-restriction
+             (widen)
+             (goto-char (point-min))
+             ;; 先頭 4KB 以内に YAML/JSON いずれの記法でも一致するよう検索
+             (let ((search-limit (min (point-max) (+ (point-min) 4096))))
+               (re-search-forward
+                "[\"']?AWSTemplateFormatVersion[\"']?[[:space:]]*:"
+                search-limit t))))))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection (lambda ()
+                                            (list "node" cfn-lsp/server-path "--stdio")))
+    :activation-fn #'cfn-lsp/cloudformation-buffer-p
+    :priority 1
+    :server-id 'cfn-lsp
+    :initialization-options
+    (lambda ()
+      (list :aws
+            (list :clientInfo
+                  (list :extension (list :name "emacs" :version emacs-version))
+                  :telemetryEnabled t
+                  :logLevel "info")))))
+
+  (puthash "aws/documents/metadata" #'ignore
+           (lsp--client-notification-handlers
+            (gethash 'cfn-lsp lsp-clients)))
+
+
   ;; ignore laravel's storage directory
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'")
 
@@ -582,6 +620,7 @@
          (terraform-mode . lsp)
          (graphql-mode . lsp)
          (sql-mode . lsp)
+         (markdown-mode . lsp)
          (json-ts-mode . lsp)
          (toml-ts-mode .lsp)
          (yaml-ts-mode . lsp)
