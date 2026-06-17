@@ -513,7 +513,16 @@
   :config
   ;; flycheck の波線と区別するためドット下線 + 別色を使用する
   (set-face-attribute 'jinx-misspelled nil
-                      :underline '(:style dots :color "orange")))
+                      :underline '(:style dots :color "orange"))
+  ;; jinx--timer-handler が update 引数なしの (window-end) を渡すため、
+  ;; 他パッケージによる narrowing・バッファ縮小直後に stale な値が
+  ;; point-max を超え args-out-of-range となる (cf. gh:minad/jinx#266)。
+  ;; upstream は jinx 外の相互作用とみなし修正を入れていないため、
+  ;; ローカル回避策として位置を point-max でクランプする (jinx 2.8)。
+  (advice-add 'jinx--check-pending :filter-args
+              (lambda (args)
+                (list (min (nth 0 args) (point-max))
+                      (min (nth 1 args) (point-max))))))
 
 ;;----------------------------------------------------------------------------------
 ;; Tree-sitter
