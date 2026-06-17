@@ -184,6 +184,16 @@
   ;; (tab-bar-new-tab-choice "*scratch*")
   )
 
+(use-package tab-line
+  :bind
+  ;; (("C-<backtab>" . tab-line-switch-to-prev-tab)
+  ;;  ("C-<tab>" . tab-line-switch-to-next-tab))
+  :init
+  (global-tab-line-mode 1)
+  :config
+  (setq tab-line-new-button-show nil
+        tab-line-close-button-show nil))
+
 (use-package window-numbering
   :init
   (window-numbering-mode 1))
