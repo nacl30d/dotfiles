@@ -92,8 +92,9 @@
 
 (use-package recentf
   :straight (:type built-in)
+  :custom
+  (recentf-max-saved-items 32)
   :config
-  (setopt recentf-max-saved-items 32)
   (recentf-mode))
 
 (setopt gc-cons-percentage 0.2
@@ -107,7 +108,7 @@
 ;;----------------------------------------------------------------------------------
 (defface egoge-display-time
   '((((type tty))
-       (:foreground "blue")))
+     (:foreground "blue")))
   "Face used to display the time in the mode line.")
 (setopt display-time-string-forms
         '((propertize (concat " " monthname " " day " " 24-hours ":" minutes " ")
@@ -169,8 +170,7 @@
   (tab-bar-tab-hints t)
   (tab-bar-auto-width nil)
   (tab-bar-separator " ")
-  (tab-bar-format '(tab-bar-format-tabs-groups))
-  )
+  (tab-bar-format '(tab-bar-format-tabs-groups)))
 
 (use-package tab-line
   :bind
@@ -357,7 +357,8 @@
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package cape
-  :bind ("C-c p" . cape-prefix-map)
+  ;; projectile が C-c p を使うため、cape は C-c P に割り当てて衝突を回避する。
+  :bind ("C-c P" . cape-prefix-map)
   :init
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
@@ -451,7 +452,7 @@
   ;; available in the *Completions* buffer, add it to the
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
+              ("M-A" . marginalia-cycle))
 
   :init
   (marginalia-mode))
@@ -519,6 +520,8 @@
 ;;----------------------------------------------------------------------------------
 (use-package treesit
   :straight (:type built-in)
+  :custom
+  (treesit-font-lock-level 4)
   :config
   (setq treesit-language-source-alist
         '((astro "https://github.com/virchau13/tree-sitter-astro")
@@ -551,8 +554,7 @@
   (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
   (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode))
   (add-to-list 'major-mode-remap-alist '(toml-mode . toml-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
-  (setq treesit-font-lock-level 4))
+  (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode)))
 
 ;;----------------------------------------------------------------------------------
 ;; LSP
@@ -564,7 +566,7 @@
 
   :custom
   (lsp-completion-provider :none) ; with corfu
-  (gc-cons-threshold (* 100 1024 1024))
+  ;; gc-cons-threshold は Basics セクションでグローバルに 128MB を設定済みのためここでは設定しない
   (read-process-output-max (* 1024 1024))
   (lsp-signature-auto-activate nil)
   ;; JS/TS
@@ -583,8 +585,7 @@
     :activation-fn (lsp-activate-on "kotlin")
     :major-modes '(kotlin-mode kotlin-ts-mode)
     :priority -1
-    :server-id 'kotlin-jb-lsp
-    ))
+    :server-id 'kotlin-jb-lsp))
 
   ;; CloudFormation
   (defvar cfn-lsp/server-path
@@ -670,25 +671,6 @@
 (use-package sql-indent
   :hook (sql-mode . sqlind-minor-mode))
 
-(use-package web-mode
-  :mode (("\\.html?\\'" . web-mode))
-  :custom
-  (web-mode-enable-auto-closing t)
-  (web-mode-enable-auto-pairing t)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2)
-  (web-mode-style-padding 2)
-  (web-mode-script-padding 2)
-  (web-mode-block-padding 0)
-  (web-mode-enable-css-colorization t)
-  (web-mode-engines-alist '(("php" . "\\.phtml\\'")
-                            ("blade" . "\\.blade\\.php\\'"))))
-
-(define-derived-mode vue-mode
-  web-mode "vue")
-(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
-
 (use-package js-ts-mode
   :straight (:type built-in)
   :mode (("\\.js\\'" . js-ts-mode)
@@ -731,18 +713,32 @@
 (use-package php-ts-mode
   :straight (:type built-in)
   :mode (("\\.php\\'" . php-ts-mode))
-  :config
-  (subword-mode 1)
-  (setq-local show-trailing-whitespace t)
-  (setq-local ac-disable-faces '(font-lock-comment-face font-lock-string-face))
-  (add-hook 'hack-local-variables-hook 'php-ide-turn-on nil t)
-  (custom-set-variables
-   '(php-mode-coding-style 'psr2)
-   '(php-mode-template-compatibility nil)
-   '(php-imenu-generic-expression 'php-imenu-generic-expression-simple))
-  (setq page-delimiter "\\_<\\(class\\|function\\|namespace\\)\\_>.+$")
-  :hook
-  ((php-mode . php-enable-psr2-coding-style)))
+  :custom
+  (php-ts-mode-indent-style 'psr2))
+
+;; web-mode は php-ts-mode より後に定義すること。use-package の :mode は
+;; auto-mode-alist の先頭に追加するため、後に定義したこの ".blade.php" が
+;; php-ts-mode の ".php" より優先され、Laravel テンプレートが web-mode（blade
+;; エンジン）で開く。順序を入れ替えると blade が php-ts-mode に奪われる。
+(use-package web-mode
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.blade\\.php\\'" . web-mode))
+  :custom
+  (web-mode-enable-auto-closing t)
+  (web-mode-enable-auto-pairing t)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-style-padding 2)
+  (web-mode-script-padding 2)
+  (web-mode-block-padding 0)
+  (web-mode-enable-css-colorization t)
+  (web-mode-engines-alist '(("php" . "\\.phtml\\'")
+                            ("blade" . "\\.blade\\.php\\'"))))
+
+(define-derived-mode vue-mode
+  web-mode "vue")
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 
 (use-package go-ts-mode
   :mode ("\\.go\\'" . go-ts-mode)
@@ -758,25 +754,36 @@
 
 (use-package kotlin-ts-mode
   ;; :straight (:host gitlab :repo "bricka/emacs-kotlin-ts-mode")
-  :mode "\\.kts?\\'"
-  )
+  :mode "\\.kts?\\'")
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("\\.md\\'" . markdown-mode)
          ("README\\.md\\'" . gfm-mode))
-  :config
-  (setq markdown-command "cmark-gfm -e table")
-  (setq markdown-command-needs-filename t)
-  (setq markdown-content-type "application/xhtml+xml")
-  (setq markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css"))
-  (setq markdown-xhtml-body-preamble "<div class='markdown-body'>" )
-  (setq markdown-xhtml-body-epilogue "</div>"))
+  :custom
+  (markdown-command "cmark-gfm -e table")
+  (markdown-command-needs-filename t)
+  (markdown-live-preview-delete-export 'delete-on-export)
+  (markdown-content-type "application/xhtml+xml")
+  (markdown-xhtml-body-preamble "<div class='markdown-body'>")
+  (markdown-xhtml-body-epilogue "</div>")
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css")))
+
+(use-package plantuml-mode
+  :mode (("\\.puml\\'" . plantuml-mode)
+         ("\\.plantuml\\'" . plantuml-mode)
+         ("\\.pu\\'" . plantuml-mode))
+  :custom
+  (plantuml-default-exec-mode 'jar))
+
+(use-package mermaid-mode
+  :mode (("\\.mmd\\'" . mermaid-mode)
+         ("\\.mermaid\\'" . mermaid-mode)))
 
 (use-package toml-ts-mode
   :straight (:type built-in)
-  :mode (("\\.toml\\'" . toml-ts-mode))
-  )
+  :mode (("\\.toml\\'" . toml-ts-mode)))
 
 (use-package yaml-ts-mode
   :straight (:type built-in)
@@ -899,27 +906,27 @@
   :custom
   (org-super-agenda-groups
    '((:name "Overdue"
-                 :deadline past
-                 :deadline today
-                 :order 1)
-          (:name "Scheduled"
-                 :scheduled t
-                 :order 2)
-          (:name "Recursive"
-                 :habit t
-                 :order 110)
-          (:name "NOT Scheduled"
-                 :and (:deadline t :scheduled nil)
-                 :order 3)
-          (:name "Inbox"
-                 :todo "TODO"
-                 :order 100)
-          (:name "Backlog"
-                 :todo "FUTURE"
-                 :order 120)
-          (:name ""
-                 :auto-outline-path t
-                 :order 10)))
+            :deadline past
+            :deadline today
+            :order 1)
+     (:name "Scheduled"
+            :scheduled t
+            :order 2)
+     (:name "Recursive"
+            :habit t
+            :order 110)
+     (:name "NOT Scheduled"
+            :and (:deadline t :scheduled nil)
+            :order 3)
+     (:name "Inbox"
+            :todo "TODO"
+            :order 100)
+     (:name "Backlog"
+            :todo "FUTURE"
+            :order 120)
+     (:name ""
+            :auto-outline-path t
+            :order 10)))
   :config
   (org-super-agenda-mode 1))
 
