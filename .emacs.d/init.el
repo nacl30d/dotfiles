@@ -28,7 +28,7 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
+(setopt straight-use-package-by-default t)
 
 
 ;;----------------------------------------------------------------------------------
@@ -45,7 +45,7 @@
 
 
 ;;----------------------------------------------------------------------------------
-;; Input method
+;; Input Method
 ;;----------------------------------------------------------------------------------
 ;; (use-package mozc
 ;;  :init
@@ -77,18 +77,18 @@
 ;;    (set (make-local-variable 'ac-auto-show-menu) 0.2)))
 
 ;;----------------------------------------------------------------------------------
-;; basics
+;; Basics
 ;;----------------------------------------------------------------------------------
-(setq-default tab-width 4 indent-tabs-mode nil)
+(setopt tab-width 4 indent-tabs-mode nil)
 (global-auto-revert-mode 1)
 (setopt use-short-answers t)
-(setq backup-directory-alist            ;backup file dir
-      (cons (cons ".*" (expand-file-name "~/.emacs.d/.backup/"))
-            backup-directory-alist))
-(setq auto-save-file-name-transforms    ;auto-save file dir
-      `((".*", (expand-file-name "~/.emacs.d/.backup/") t)))
-(setq auto-save-list-file-prefix "~/.emacs.d/.backup/auto-save-list/.saves-")
-(setq backup-by-copying t)
+(setopt backup-directory-alist          ;backup file dir
+        (cons (cons ".*" (expand-file-name "~/.emacs.d/.backup/"))
+              backup-directory-alist))
+(setopt auto-save-file-name-transforms  ;auto-save file dir
+        `((".*", (expand-file-name "~/.emacs.d/.backup/") t)))
+(setopt auto-save-list-file-prefix "~/.emacs.d/.backup/auto-save-list/.saves-")
+(setopt backup-by-copying t)
 
 (use-package recentf
   :straight (:type built-in)
@@ -103,24 +103,23 @@
   (global-so-long-mode))
 
 ;;----------------------------------------------------------------------------------
-;; mode line
+;; Mode Line
 ;;----------------------------------------------------------------------------------
 (defface egoge-display-time
   '((((type tty))
        (:foreground "blue")))
   "Face used to display the time in the mode line.")
-(defvar display-time-string-forms
-      '((propertize (concat " " monthname " " day " " 24-hours ":" minutes " ")
-                    'face 'egoge-display-time)))
+(setopt display-time-string-forms
+        '((propertize (concat " " monthname " " day " " 24-hours ":" minutes " ")
+                      'face 'egoge-display-time)))
 (display-time-mode t)
 (global-display-line-numbers-mode)
-(defvar linum-format "%d ")
 (column-number-mode t)
 
 ;;----------------------------------------------------------------------------------
-;; version control system
+;; Version Control System
 ;;----------------------------------------------------------------------------------
-(setq vc-follow-symlinks t)
+(setopt vc-follow-symlinks t)
 
 (use-package magit
   :bind ("C-x g" . magit-status))
@@ -131,27 +130,25 @@
 
 (use-package forge
   :after magit
-  :config
-  (setq auth-sources '("~/.authinfo.gpg")))
+  :custom
+  (auth-sources '("~/.authinfo.gpg")))
 
 (use-package git-link
   :bind ("C-c i" . git-link)
-  :config
-  (setq git-link-open-in-browser 't))
+  :custom
+  (git-link-open-in-browser t))
 
 (use-package git-gutter
   :init
-  (global-git-gutter-mode t)
-)
+  (global-git-gutter-mode t))
 
 (use-package difftastic
   :defer t
   :config (difftastic-bindings-mode))
 
 ;;----------------------------------------------------------------------------------
-;; views
+;; Views
 ;;----------------------------------------------------------------------------------
-(global-set-key (kbd "C-x p") #'(lambda () (interactive)(other-window -1))) ;reverse windo
 (show-paren-mode t)
 (use-package elec-pair
   :straight (:type built-in)
@@ -171,15 +168,9 @@
   (tab-bar-close-button-show nil)
   (tab-bar-new-button-show nil)
   (tab-bar-tab-hints t)
-  (tab-bar-tab-name-format-hints (if tab-bar-tab-hints (concat (format "%d:" i) "") name))
   (tab-bar-auto-width nil)
   (tab-bar-separator " ")
   (tab-bar-format '(tab-bar-format-tabs-groups))
-  (tab-bar-tab-group-format-default (propertize
-                                     (concat (funcall tab-bar-tab-group-function tab))
-                                     'face (if current-p 'tab-bar-tab-group-current 'tab-bar-tab-group-inactive)))
-  ;; (tab-bar-new-tab-group (projectile-project-name (projectile-project-root (buffer-file-name (current-buffer)))))
-  ;; (tab-bar-new-tab-choice "*scratch*")
   )
 
 (use-package tab-line
@@ -188,9 +179,9 @@
   ;;  ("C-<tab>" . tab-line-switch-to-next-tab))
   :init
   (global-tab-line-mode 1)
-  :config
-  (setq tab-line-new-button-show nil
-        tab-line-close-button-show nil))
+  :custom
+  (tab-line-new-button-show nil)
+  (tab-line-close-button-show nil))
 
 (use-package window-numbering
   :init
@@ -215,12 +206,13 @@
   :bind ("C-x w" . global-whitespace-mode)
   :init
   (global-whitespace-mode 1)
+  :custom
+  (whitespace-style '(face trailing tabs tab-mark spaces space-mark))
+  (whitespace-display-mappings
+   '((space-mark ?\u3000 [?\u25a1])
+     (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])))
+  (whitespace-space-regexp "\\(\u3000+\\)")
   :config
-  (setq whitespace-style '(face trailing tabs tab-mark spaces space-mark))
-  (setq whitespace-display-mappings
-        '((space-mark ?\u3000 [?\u25a1])
-          (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])))
-  (setq whitespace-space-regexp "\\(\u3000+\\)")
   (set-face-attribute 'whitespace-trailing nil
                       :foreground "#7cfc00"
                       :underline t)
@@ -269,11 +261,12 @@
 
 (use-package imenu-list
   :bind ("C-c '" . imenu-list-smart-toggle)
-  :config (setq imenu-list-focus-after-activation t
-                imenu-list-auto-resize t))
+  :custom
+  (imenu-list-focus-after-activation t)
+  (imenu-list-auto-resize t))
 
 ;;----------------------------------------------------------------------------------
-;; edit
+;; Edit
 ;;----------------------------------------------------------------------------------
 (use-package simple
   :straight (:type built-in)
@@ -299,6 +292,34 @@
   :init
   (editorconfig-mode t))
 
+(use-package vundo
+  :commands vundo)
+
+(use-package hl-todo
+  :init
+  (global-hl-todo-mode)
+  :custom
+  (hl-todo-keyword-faces
+   '(("HOLD"   . "#d0bf8f")
+     ("TODO"   . "#cc9393")
+     ("NEXT"   . "#dca3a3")
+     ("THEM"   . "#dc8cc3")
+     ("PROG"   . "#7cb8bb")
+     ("OKAY"   . "#7cb8bb")
+     ("DONT"   . "#5f7f5f")
+     ("FAIL"   . "#8c5353")
+     ("DONE"   . "#afd8af")
+     ("NOTE"   . "#d0bf8f")
+     ("KLUDGE" . "#d0bf8f")
+     ("HACK"   . "#d0bf8f")
+     ("TEMP"   . "#d0bf8f")
+     ("FIXME"  . "#cc9393")
+     ("WATCH"  . "#ff459a")
+     ("XXX+"   . "#cc9393"))))
+
+;;----------------------------------------------------------------------------------
+;; Completion
+;;----------------------------------------------------------------------------------
 (use-package corfu
   ;; TAB-and-Go customizations
   :custom
@@ -363,8 +384,7 @@
   :init
   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
   (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  (global-tempel-abbrev-mode)
-)
+  (global-tempel-abbrev-mode))
 
 (use-package tempel-collection
   :after tempel)
@@ -378,9 +398,9 @@
    ("M-s" . consult-imenu)
    ;; ("C-c o" . consult-outline)
    )
-  :init
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref))
+  :custom
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'consult-xref))
 
 (use-package consult-dir
   :bind (("C-x C-d" . consult-dir)
@@ -437,45 +457,27 @@
   :init
   (marginalia-mode))
 
+;;----------------------------------------------------------------------------------
+;; Project
+;;----------------------------------------------------------------------------------
 (use-package projectile
   :bind (:map projectile-mode-map
               ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map))
-  :config
-  (setq projectile-project-search-path ' (("~/Developer" . 1))))
+  :custom
+  (projectile-project-search-path '(("~/Developer" . 1))))
 
 (use-package consult-projectile)
 
-(use-package vundo)
-
-(use-package hl-todo
-  :init
-  (global-hl-todo-mode)
-  :config
-  (setq hl-todo-keyword-faces
-        '(("HOLD" . "#d0bf8f")
-          ("TODO" . "#cc9393")
-          ("NEXT" . "#dca3a3")
-          ("THEM" . "#dc8cc3")
-          ("PROG" . "#7cb8bb")
-          ("OKAY" . "#7cb8bb")
-          ("DONT" . "#5f7f5f")
-          ("FAIL" . "#8c5353")
-          ("DONE" . "#afd8af")
-          ("NOTE"   . "#d0bf8f")
-          ("KLUDGE" . "#d0bf8f")
-          ("HACK"   . "#d0bf8f")
-          ("TEMP"   . "#d0bf8f")
-          ("FIXME"  . "#cc9393")
-          ("WATCH"  . "#ff459a")
-          ("XXX+"   . "#cc9393")))
-  )
-
 ;; (use-package flycheck-popup-tip)
 
+;;----------------------------------------------------------------------------------
+;; Environment
+;;----------------------------------------------------------------------------------
 (use-package exec-path-from-shell
+  :custom
+  (exec-path-from-shell-arguments nil)
   :config
-  (setq exec-path-from-shell-arguments nil)
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
@@ -483,31 +485,38 @@
   :init
   (global-mise-mode))
 
+;;----------------------------------------------------------------------------------
+;; Syntax Checking
+;;----------------------------------------------------------------------------------
 (use-package flycheck
   :init
   (global-flycheck-mode)
+  :custom
+  (flycheck-display-errors-delay 0.1)
+  (flycheck-disabled-checkers '(javascript-jshint))
+  (flycheck-javascript-standard-executable "semistandard")
+  (flycheck-phpcs-standard "PSR12")
   :config
-  (setq flycheck-display-errors-delay 0.1)
-  (setq-default flycheck-disabled-checkers '(javascript-jshint))
-  (setq flycheck-javascript-standard-executable "semistandard")
-  (setq flycheck-phpcs-standard  "PSR12")
   (flycheck-add-mode 'html-tidy 'web-mode)
   (flycheck-add-mode 'javascript-standard 'web-mode)
-  (flycheck-add-mode 'javascript-standard 'js2-mode))
+  (flycheck-add-mode 'javascript-standard 'js-ts-mode))
   ;; :hook
   ;; (flycheck-mode . flycheck-popup-tip-mode))
 
 (use-package flyspell
+  :custom
+  (ispell-program-name "aspell")
+  (ispell-extra-args '("--camel-case" "--sug-mode=ultra"))
+  (ispell-dictionary "en_US")
   :config
-  (setq-default ispell-program-name "aspell")
-  (setq ispell-extra-args '("--camel-case"
-                            "--sug-mode=ultra"))
-  (setq ispell-dictionary "en_US")
   (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))
   :hook
   (text-mode . flyspell-mode)
   (prog-mode . flyspell-prog-mode))
 
+;;----------------------------------------------------------------------------------
+;; Tree-sitter
+;;----------------------------------------------------------------------------------
 (use-package treesit
   :straight (:type built-in)
   :config
@@ -515,6 +524,7 @@
         '((astro "https://github.com/virchau13/tree-sitter-astro")
           (bash "https://github.com/tree-sitter/tree-sitter-bash")
           (css "https://github.com/tree-sitter/tree-sitter-css")
+          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
           (go "https://github.com/tree-sitter/tree-sitter-go")
           (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
@@ -544,24 +554,27 @@
   (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
   (setq treesit-font-lock-level 4))
 
+;;----------------------------------------------------------------------------------
+;; LSP
+;;----------------------------------------------------------------------------------
 (use-package lsp-mode
   :init
+  ;; Must be set before lsp-mode is loaded so the keymap is built correctly.
   (setq lsp-keymap-prefix "C-c l")
 
+  :custom
+  (lsp-completion-provider :none) ; with corfu
+  (gc-cons-threshold (* 100 1024 1024))
+  (read-process-output-max (* 1024 1024))
+  (lsp-signature-auto-activate nil)
+  ;; JS/TS
+  (lsp-javascript-preferences-import-module-specifier "relative")
+  (lsp-typescript-preferences-import-module-specifier "relative")
+
   :config
-  ;; with corfu
-  (setq lsp-completion-provider :none)
-
   ;; (setq lsp-log-io t)
-  (setq gc-cons-threshold (* 100 1024 1024)
-        read-process-output-max (* 1024 1024))
-  (setq lsp-signature-auto-activate nil)
 
-  ; JS/TS
-  (setq lsp-javascript-preferences-import-module-specifier "relative")
-  (setq lsp-typescript-preferences-import-module-specifier "relative")
-
-  ; Kotlin
+  ;; Kotlin
   (defun kotlin-lsp-server-start-fun (port)
     (list "kotlin-lsp.sh" "--socket" (number-to-string port)))
   (lsp-register-client
@@ -636,40 +649,40 @@
   :commands lsp)
 
 (use-package lsp-ui
-  :config
-  (setq
-   lsp-eldoc-render-all t
-   lsp-ui-sideline-diagnostic-max-lines 3
-   lsp-idle-delay 0.1)
+  :custom
+  (lsp-eldoc-render-all t)
+  (lsp-ui-sideline-diagnostic-max-lines 3)
+  (lsp-idle-delay 0.1)
   :commands lsp-ui-mode)
 
 (use-package dap-mode
-  :after
-  (lsp-mode)
-  :config
-  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
+  :after (lsp-mode)
+  :custom
+  (dap-auto-configure-features '(sessions locals controls tooltip)))
 
-(use-package csv-mode)
+;;----------------------------------------------------------------------------------
+;; Languages
+;;----------------------------------------------------------------------------------
+(use-package csv-mode
+  :mode (("\\.csv\\'" . csv-mode)
+         ("\\.tsv\\'" . tsv-mode)))
 
 (use-package sql-indent)
 
 (use-package web-mode
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.blade\\.php\\." . web-mode)
-         ("\\.astro\\'" . web-mode))
-  :config
-  (setq web-mode-enable-auto-closing t)
-  (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-style-padding 2)
-  (setq web-mode-script-padding 2)
-  (setq web-mode-block-padding 0)
-  (setq web-mode-enable-css-colorization t)
-  (setq web-mode-engines-alist
-        ' (("php" . "\\.phtml\\'")
-           ("blade" . "\\.blade\\.php\\."))))
+  :mode (("\\.html?\\'" . web-mode))
+  :custom
+  (web-mode-enable-auto-closing t)
+  (web-mode-enable-auto-pairing t)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-style-padding 2)
+  (web-mode-script-padding 2)
+  (web-mode-block-padding 0)
+  (web-mode-enable-css-colorization t)
+  (web-mode-engines-alist '(("php" . "\\.phtml\\'")
+                            ("blade" . "\\.blade\\.php\\'"))))
 
 (define-derived-mode vue-mode
   web-mode "vue")
@@ -680,10 +693,10 @@
   :mode (("\\.js\\'" . js-ts-mode)
          ("\\.cjs\\'" . js-ts-mode)
          ("\\.mjs\\'" . js-ts-mode))
-  :config
-  ;; (setq js2-strict-missing-semi-warning nil)
-  ;; (setq js2-missing-semi-one-line-override nil)
-  (setq js2-basic-offset 2))
+  :custom
+  ;; (js2-strict-missing-semi-warning nil)
+  ;; (js2-missing-semi-one-line-override nil)
+  (js2-basic-offset 2))
 
 ;; (use-package rjsx-mode
 ;;   :mode (("\\.js\\'" . rjsx-mode))
@@ -695,8 +708,8 @@
   :straight (:type built-in)
   :mode (("\\.ts\\'" . typescript-ts-mode)
          ("\\.tsx\\'" . tsx-ts-mode))
-  :config
-  (setq-default typescript-indent-level 2))
+  :custom
+  (typescript-indent-level 2))
 
 (use-package prisma-mode
   :straight (:host github :repo "pimeys/emacs-prisma-mode" :branch "main"))
@@ -728,10 +741,10 @@
   ((php-mode . php-enable-psr2-coding-style)))
 
 (use-package go-ts-mode
-  :config (setq gofmt-command "goimports"))
+  :custom (gofmt-command "goimports"))
 
 (use-package go-eldoc
-  :config (setq go-eldoc-gocode "gopls")
+  :custom (go-eldoc-gocode "gopls")
   :hook ((go-ts-mode . go-eldoc-setup)))
 
 (use-package terraform-mode)
@@ -761,14 +774,14 @@
 (use-package yaml-ts-mode
   :straight (:type built-in)
   :mode (("\\.ya?ml\\'" . yaml-ts-mode))
-  :config
-  (define-key yaml-ts-mode-map (kbd "C-m") 'newline-and-indent))
+  :bind (:map yaml-ts-mode-map
+              ("C-m" . newline-and-indent)))
 
 (use-package json-ts-mode
   :straight (:type built-in)
   :mode (("\\.jsonc?\\'" . json-ts-mode))
-  :config
-  (setq js-indent-level 4))
+  :custom
+  (js-indent-level 4))
 
 (use-package docker
   :bind ("C-c d" . docker))
@@ -780,7 +793,7 @@
 (use-package docker-compose-mode)
 
 (use-package nginx-mode
-  :mode (("nginx.conf\\'" . nginx-mode)))
+  :mode (("nginx\\.conf\\'" . nginx-mode)))
 
 (defun skim-forward-search ()
   "Skim search function."
@@ -793,91 +806,89 @@
          (args (concat ln " " pf " " ctf)))
     (message (concat cmd " " args))
     (set-process-query-on-exit-flag
-     (start-process-shell-command "displayline" nil cmd args) nil)))
+     (start-process-shell-command "displayline" nil (concat cmd " " args)) nil)))
 
 (use-package tex-mode
   :straight (:type built-in)
-  :config
-  (setq tex-default-mode 'latex-mode)
-  (setq tex-start-commands "\\nonstopmode\\input")
-  (setq tex-run-command "ptex2pdf -u -e -ot '-synctex=1 -interaction=nonstopmode'")
-  (setq latex-run-command "ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode'")
-  (setq tex-bibtex-command "latexmk -norc -gg -pdfdvi")
-  (setq tex-print-file-extension ".pdf")
-  (setq tex-dvi-view-command "open -a /Applications/Skim.app")
-  (setq tex-dvi-print-command "open -a /Applications/Preview.app")
-  (setq tex-compile-commands
-        '(("ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode' %f" "%f" "%r.pdf")
-          ("latexmk %f" "%f" "%r.pdf")
-          ("latexmk -norc -gg -pdfdvi %f" "%f" "%r.pdf")
-          ("latexmk -norc -gg -pdflua %f" "%f" "%r.pdf")
-          ((concat "\\doc-view" " \"" (car (split-string (format "%s" (tex-main-file)) "\\.")) ".pdf\"") "%r.pdf")
-          ("open -a /Applications/Skim.app %r.pdf" "%r.pdf")
-          ("open -a /Applications/Preview %r.pdf" "%r.pdf")
-          ("open -a \"Google Chrome\" %r.pdf" "%r.pdf")))
-  (define-key latex-mode-map (kbd "C-c s") 'skim-forward-search)
+  :custom
+  (tex-default-mode 'latex-mode)
+  (tex-start-commands "\\nonstopmode\\input")
+  (tex-run-command "ptex2pdf -u -e -ot '-synctex=1 -interaction=nonstopmode'")
+  (latex-run-command "ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode'")
+  (tex-bibtex-command "latexmk -norc -gg -pdfdvi")
+  (tex-print-file-extension ".pdf")
+  (tex-dvi-view-command "open -a /Applications/Skim.app")
+  (tex-dvi-print-command "open -a /Applications/Preview.app")
+  (tex-compile-commands
+   '(("ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode' %f" "%f" "%r.pdf")
+     ("latexmk %f" "%f" "%r.pdf")
+     ("latexmk -norc -gg -pdfdvi %f" "%f" "%r.pdf")
+     ("latexmk -norc -gg -pdflua %f" "%f" "%r.pdf")
+     ((concat "\\doc-view" " \"" (car (split-string (format "%s" (tex-main-file)) "\\.")) ".pdf\"") "%r.pdf")
+     ("open -a /Applications/Skim.app %r.pdf" "%r.pdf")
+     ("open -a /Applications/Preview %r.pdf" "%r.pdf")
+     ("open -a \"Google Chrome\" %r.pdf" "%r.pdf")))
+  :bind (:map latex-mode-map
+              ("C-c s" . skim-forward-search))
   :hook (latex-mode . turn-on-reftex)
   :mode (("\\.tex\\'" . latex-mode)))
 
 ;;----------------------------------------------------------------------------------
-;; org
+;; Org
 ;;----------------------------------------------------------------------------------
 (use-package org
   :straight (:type built-in)
   :bind
   ("C-c c" . org-capture)
   ("C-c a" . org-agenda)
-  :config
+  :custom
   ;; Basics
-  (setq org-directory "~/org/"
-        org-default-notes-file (concat org-directory "index.org")
-        org-use-speed-commands t)
+  (org-directory "~/org/")
+  (org-default-notes-file (concat org-directory "index.org"))
+  (org-use-speed-commands t)
   ;; Task Managements
-  (setq org-todo-keywords '((sequence
-                             "TODO(!)" "NOT STARTED(n!)" "IN PROGRESS(p!)" "WAITING(w!)" "FUTURE(f!)"
-                             "|" "DONE(d!)" "DECLINED(x!)"))
-        org-todo-keyword-faces '(("TODO" . (:foreground "brightyellow" :weight bold)) ("NOT STARTED" . (:foreground "deeppink" :weight bold))
-                                 ("IN PROGRESS" . (:foreground "paleturquoise" :weight bold)) ("WAITING" . (:foreground "lightcyan" :weight bold))
-                                 ("FUTURE" . (:foreground "palegoldenrod" :background "darkgray" :weight bold))
-                                 ("DONE" . (:foreground "palegreen" :weight bold)) ("DECLINED" . (:foreground "palegreen" :background "darkgray" :weight bold))))
-  (setq org-priority-faces '((?A . (:foreground "orangered" :weight bold))
-                             (?B . (:foreground "yellowgreen"))
-                             (?C . (:foreground "brightblue"))))
+  (org-todo-keywords '((sequence
+                        "TODO(!)" "NOT STARTED(n!)" "IN PROGRESS(p!)" "WAITING(w!)" "FUTURE(f!)"
+                        "|" "DONE(d!)" "DECLINED(x!)")))
+  (org-todo-keyword-faces '(("TODO" . (:foreground "brightyellow" :weight bold)) ("NOT STARTED" . (:foreground "deeppink" :weight bold))
+                            ("IN PROGRESS" . (:foreground "paleturquoise" :weight bold)) ("WAITING" . (:foreground "lightcyan" :weight bold))
+                            ("FUTURE" . (:foreground "palegoldenrod" :background "darkgray" :weight bold))
+                            ("DONE" . (:foreground "palegreen" :weight bold)) ("DECLINED" . (:foreground "palegreen" :background "darkgray" :weight bold))))
+  (org-priority-faces '((?A . (:foreground "orangered" :weight bold))
+                        (?B . (:foreground "yellowgreen"))
+                        (?C . (:foreground "brightblue"))))
   ;; Export
-  (setq org-export-with-toc nil
-        org-export-with-date nil
-        org-export-with-author nil)
+  (org-export-with-toc nil)
+  (org-export-with-date nil)
+  (org-export-with-author nil)
   ;; Babel
-  (setq org-confirm-babel-evaluate nil)
+  (org-confirm-babel-evaluate nil)
+  :config
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
                                  (shell . t)
-                                 (sql . t)))
-  )
+                                 (sql . t))))
 
 (use-package org-agenda
   :straight (:type built-in)
   :after org
-  :config
-  (setq org-agenda-files (directory-files-recursively org-directory "\\.org\\'")
-        org-agenda-window-setup 'current-window
-        calendar-holidays nil
-        org-refile-targets '((org-agenda-files :maxlevel . 2)))
-  (setq org-agenda-sorting-strategy
-        '(deadline-up scheduled-up todo-state-up priority-down))
-  (setq org-agenda-skip-timestamp-if-done t
-        org-agenda-skip-deadline-if-done t
-        org-agenda-skip-scheduled-if-done t
-        org-agenda-skip-scheduled-if-deadline-is-shown t
-        org-agenda-skip-timestamp-if-deadline-is-shown t)
-)
+  :custom
+  (org-agenda-files (directory-files-recursively org-directory "\\.org\\'"))
+  (org-agenda-window-setup 'current-window)
+  (calendar-holidays nil)
+  (org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (org-agenda-sorting-strategy '(deadline-up scheduled-up todo-state-up priority-down))
+  (org-agenda-skip-timestamp-if-done t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (org-agenda-skip-timestamp-if-deadline-is-shown t))
 
 (use-package org-super-agenda
   :after org-agenda
-  :config
-  (org-super-agenda-mode 1)
-  (setq org-super-agenda-groups
-        '((:name "Overdue"
+  :custom
+  (org-super-agenda-groups
+   '((:name "Overdue"
                  :deadline past
                  :deadline today
                  :order 1)
@@ -899,22 +910,20 @@
           (:name ""
                  :auto-outline-path t
                  :order 10)))
-  )
+  :config
+  (org-super-agenda-mode 1))
 
 (use-package org-capture
   :straight (:type built-in)
   :after org
-  :config
-  (setq org-capture-templates
-        '(
-          ("t" "Task" entry (file+headline "" "Tasks")
-           "* TODO %?\n  %u\n  %a"
-           :empty-lines 1)
-          ("s" "Sticky note" entry (file+datetree org-default-notes-file)
-           "* %U\n%?\n%i\n"
-           :empty-lines 1)
-          ))
-  )
+  :custom
+  (org-capture-templates
+   '(("t" "Task" entry (file+headline "" "Tasks")
+      "* TODO %?\n  %u\n  %a"
+      :empty-lines 1)
+     ("s" "Sticky note" entry (file+datetree org-default-notes-file)
+      "* %U\n%?\n%i\n"
+      :empty-lines 1))))
 
 (use-package ox-md
   :straight (:type built-in)
@@ -923,6 +932,11 @@
 (use-package ox-latex
   :straight (:type built-in)
   :after org
+  :custom
+  (org-latex-default-class "jlreq")
+  (org-latex-compiler "lualatex")
+  (org-latex-pdf-process '("lualatex %b"))
+  (org-latex-with-hyperref nil)
   :config
   (add-to-list 'org-latex-classes
                '("jlreq"
@@ -934,31 +948,32 @@
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
   (add-to-list 'org-latex-packages-alist
-               '("normalem" "ulem" t))
-  (setq org-latex-default-class "jlreq"
-        org-latex-compiler "lualatex"
-        org-latex-pdf-process '("lualatex %b")
-        org-latex-with-hyperref nil)
-  )
+               '("normalem" "ulem" t)))
+
+(use-package ob-http
+  :config
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((http . t))))
 
 ;;----------------------------------------------------------------------------------
-;; shell
+;; Shell
 ;;----------------------------------------------------------------------------------
 (use-package eat
-  :bind ("C-c t" . eat-project-other-window)
+  :bind ("C-c C-t" . eat-project-other-window)
   :config
   (eat-eshell-mode))
 
 
 (use-package restclient
   :after restclient-jq
-  :config
-  (setq restclient-enable-eval t)
+  :custom
+  (restclient-enable-eval t)
   :mode ("\\.http\\'" . restclient-mode))
 (use-package restclient-jq)
 
 (use-package graphql-mode
   :after request)
+(use-package request)
 
 (provide 'init)
 ;;; init.el ends here
