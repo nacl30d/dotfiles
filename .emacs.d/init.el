@@ -775,7 +775,7 @@
 
 (use-package dockerfile-ts-mode
   :straight (:type built-in)
-  :mode (("Dockefile\\'" . dockerfile-mode)))
+  :mode (("Dockerfile\\'" . dockerfile-ts-mode)))
 
 (use-package docker-compose-mode)
 
@@ -792,8 +792,8 @@
          (cmd "/Applications/Skim.app/Contents/SharedSupport/displayline")
          (args (concat ln " " pf " " ctf)))
     (message (concat cmd " " args))
-    (process-=query-on-exit-flag
-     (start-process-shell-command "displayline" nil cmd args))))
+    (set-process-query-on-exit-flag
+     (start-process-shell-command "displayline" nil cmd args) nil)))
 
 (use-package tex-mode
   :straight (:type built-in)
