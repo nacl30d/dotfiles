@@ -161,7 +161,6 @@
   (which-key-mode))
 
 (use-package tab-bar
-  :after projectile
   :init
   (tab-bar-mode 1)
   :custom
@@ -467,7 +466,8 @@
   :custom
   (projectile-project-search-path '(("~/Developer" . 1))))
 
-(use-package consult-projectile)
+(use-package consult-projectile
+  :commands consult-projectile)
 
 ;; (use-package flycheck-popup-tip)
 
@@ -667,7 +667,8 @@
   :mode (("\\.csv\\'" . csv-mode)
          ("\\.tsv\\'" . tsv-mode)))
 
-(use-package sql-indent)
+(use-package sql-indent
+  :hook (sql-mode . sqlind-minor-mode))
 
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode))
@@ -702,7 +703,8 @@
 ;;   :mode (("\\.js\\'" . rjsx-mode))
 ;;   )
 
-(use-package pnpm-mode)
+(use-package pnpm-mode
+  :commands pnpm-mode)
 
 (use-package typescript-ts-mode
   :straight (:type built-in)
@@ -712,9 +714,11 @@
   (typescript-indent-level 2))
 
 (use-package prisma-mode
-  :straight (:host github :repo "pimeys/emacs-prisma-mode" :branch "main"))
+  :straight (:host github :repo "pimeys/emacs-prisma-mode" :branch "main")
+  :mode ("\\.prisma\\'" . prisma-mode))
 
-(use-package astro-ts-mode)
+(use-package astro-ts-mode
+  :mode ("\\.astro\\'" . astro-ts-mode))
 
 ;; (use-package tide
 ;;   :after (typescript-mode company flycheck)
@@ -741,13 +745,16 @@
   ((php-mode . php-enable-psr2-coding-style)))
 
 (use-package go-ts-mode
+  :mode ("\\.go\\'" . go-ts-mode)
   :custom (gofmt-command "goimports"))
 
 (use-package go-eldoc
   :custom (go-eldoc-gocode "gopls")
   :hook ((go-ts-mode . go-eldoc-setup)))
 
-(use-package terraform-mode)
+(use-package terraform-mode
+  :mode (("\\.tf\\'" . terraform-mode)
+         ("\\.tfvars\\'" . terraform-mode)))
 
 (use-package kotlin-ts-mode
   ;; :straight (:host gitlab :repo "bricka/emacs-kotlin-ts-mode")
@@ -790,7 +797,9 @@
   :straight (:type built-in)
   :mode (("Dockerfile\\'" . dockerfile-ts-mode)))
 
-(use-package docker-compose-mode)
+(use-package docker-compose-mode
+  :mode (("docker-compose[^/]*\\.ya?ml\\'" . docker-compose-mode)
+         ("compose[^/]*\\.ya?ml\\'" . docker-compose-mode)))
 
 (use-package nginx-mode
   :mode (("nginx\\.conf\\'" . nginx-mode)))
@@ -867,7 +876,8 @@
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
                                  (shell . t)
-                                 (sql . t))))
+                                 (sql . t)
+                                 (http . t))))
 
 (use-package org-agenda
   :straight (:type built-in)
@@ -951,9 +961,7 @@
                '("normalem" "ulem" t)))
 
 (use-package ob-http
-  :config
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((http . t))))
+  :after org)
 
 ;;----------------------------------------------------------------------------------
 ;; Shell
@@ -965,15 +973,17 @@
 
 
 (use-package restclient
-  :after restclient-jq
+  :mode ("\\.http\\'" . restclient-mode)
   :custom
-  (restclient-enable-eval t)
-  :mode ("\\.http\\'" . restclient-mode))
-(use-package restclient-jq)
+  (restclient-enable-eval t))
+(use-package restclient-jq
+  :after restclient)
 
 (use-package graphql-mode
-  :after request)
-(use-package request)
+  :mode (("\\.graphql\\'" . graphql-mode)
+         ("\\.gql\\'" . graphql-mode)))
+(use-package request
+  :defer t)
 
 (provide 'init)
 ;;; init.el ends here
