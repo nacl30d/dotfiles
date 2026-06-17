@@ -502,10 +502,10 @@
 (use-package flyspell
   :config
   (setq-default ispell-program-name "aspell")
-  (setq ispell-extra-args '("--camel-case"))
+  (setq ispell-extra-args '("--camel-case"
+                            "--sug-mode=ultra"))
   (setq ispell-dictionary "en_US")
-  (with-eval-after-load "ispell"
-    (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
+  (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))
   :hook
   (text-mode . flyspell-mode)
   (prog-mode . flyspell-prog-mode))
