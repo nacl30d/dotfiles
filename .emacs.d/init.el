@@ -140,8 +140,7 @@
   (git-link-open-in-browser t))
 
 (use-package git-gutter
-  :init
-  (global-git-gutter-mode t))
+  :hook (find-file-hook . git-gutter-mode))
 
 (use-package difftastic
   :defer t
@@ -158,6 +157,7 @@
 
 (use-package which-key
   :straight (:type built-in)
+  :defer 1
   :config
   (which-key-mode))
 
@@ -295,8 +295,7 @@
   :commands vundo)
 
 (use-package hl-todo
-  :init
-  (global-hl-todo-mode)
+  :defer 1
   :custom
   (hl-todo-keyword-faces
    '(("HOLD"   . "#d0bf8f")
@@ -314,7 +313,9 @@
      ("TEMP"   . "#d0bf8f")
      ("FIXME"  . "#cc9393")
      ("WATCH"  . "#ff459a")
-     ("XXX+"   . "#cc9393"))))
+     ("XXX+"   . "#cc9393")))
+  :config
+  (global-hl-todo-mode))
 
 ;;----------------------------------------------------------------------------------
 ;; Completion
@@ -381,9 +382,8 @@
 (use-package tempel
   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
          ("M-*" . tempel-insert))
-  :init
-  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
-  (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  :defer 1
+  :config
   (global-tempel-abbrev-mode))
 
 (use-package tempel-collection
