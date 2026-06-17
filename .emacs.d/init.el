@@ -134,8 +134,6 @@
   :config
   (setq auth-sources '("~/.authinfo.gpg")))
 
-(use-package git-modes)
-
 (use-package git-link
   :bind ("C-c i" . git-link)
   :config
@@ -632,9 +630,8 @@
          (sql-mode . lsp)
          (markdown-mode . lsp)
          (json-ts-mode . lsp)
-         (toml-ts-mode .lsp)
-         (yaml-ts-mode . lsp)
          (toml-ts-mode . lsp)
+         (yaml-ts-mode . lsp)
          (dockerfile-ts-mode . lsp))
   :commands lsp)
 
