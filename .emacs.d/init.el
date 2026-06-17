@@ -677,9 +677,7 @@
          ("\\.cjs\\'" . js-ts-mode)
          ("\\.mjs\\'" . js-ts-mode))
   :custom
-  ;; (js2-strict-missing-semi-warning nil)
-  ;; (js2-missing-semi-one-line-override nil)
-  (js2-basic-offset 2))
+  (js-indent-level 2))
 
 ;; (use-package rjsx-mode
 ;;   :mode (("\\.js\\'" . rjsx-mode))
@@ -693,7 +691,7 @@
   :mode (("\\.ts\\'" . typescript-ts-mode)
          ("\\.tsx\\'" . tsx-ts-mode))
   :custom
-  (typescript-indent-level 2))
+  (typescript-ts-mode-indent-offset 2))
 
 (use-package prisma-mode
   :straight (:host github :repo "pimeys/emacs-prisma-mode" :branch "main")
@@ -795,7 +793,7 @@
   :straight (:type built-in)
   :mode (("\\.jsonc?\\'" . json-ts-mode))
   :custom
-  (js-indent-level 4))
+  (json-ts-mode-indent-offset 4))
 
 (use-package docker
   :bind ("C-c d" . docker))
