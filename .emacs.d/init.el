@@ -182,9 +182,9 @@
   (tab-line-new-button-show nil)
   (tab-line-close-button-show nil))
 
-(use-package window-numbering
+(use-package winum
   :init
-  (window-numbering-mode 1))
+  (winum-mode))
 
 (use-package dracula-theme               ;theme
   :init
