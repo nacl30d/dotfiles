@@ -504,16 +504,16 @@
   ;; :hook
   ;; (flycheck-mode . flycheck-popup-tip-mode))
 
-(use-package flyspell
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages))
   :custom
-  (ispell-program-name "aspell")
-  (ispell-extra-args '("--camel-case" "--sug-mode=ultra"))
-  (ispell-dictionary "en_US")
+  (jinx-languages "en_US")
   :config
-  (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))
-  :hook
-  (text-mode . flyspell-mode)
-  (prog-mode . flyspell-prog-mode))
+  ;; flycheck の波線と区別するためドット下線 + 別色を使用する
+  (set-face-attribute 'jinx-misspelled nil
+                      :underline '(:style dots :color "orange")))
 
 ;;----------------------------------------------------------------------------------
 ;; Tree-sitter
