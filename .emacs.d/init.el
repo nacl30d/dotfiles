@@ -919,6 +919,10 @@
           ))
   )
 
+(use-package ox-md
+  :straight (:type built-in)
+  :after org)
+
 (use-package ox-latex
   :straight (:type built-in)
   :after org
