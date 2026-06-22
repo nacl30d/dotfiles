@@ -580,6 +580,7 @@
   ;; gc-cons-threshold は Basics セクションでグローバルに 128MB を設定済みのためここでは設定しない
   (read-process-output-max (* 1024 1024))
   (lsp-signature-auto-activate nil)
+  (lsp-auto-guess-root t)
   ;; JS/TS
   (lsp-javascript-preferences-import-module-specifier "relative")
   (lsp-typescript-preferences-import-module-specifier "relative")
