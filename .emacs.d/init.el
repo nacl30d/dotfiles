@@ -511,6 +511,8 @@
   :custom
   (jinx-languages "en_US")
   :config
+  ;; Ignore non-English words.
+  (add-to-list 'jinx-exclude-regexps '(t ".*[^[:ascii:]].*"))
   ;; flycheck の波線と区別するためドット下線 + 別色を使用する
   (set-face-attribute 'jinx-misspelled nil
                       :underline '(:style dots :color "orange"))
