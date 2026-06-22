@@ -636,6 +636,14 @@
            (lsp--client-notification-handlers
             (gethash 'cfn-lsp lsp-clients)))
 
+  ;; Docker Compose
+  ;; https://github.com/microsoft/compose-language-service
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection '("docker-compose-langserver" "--stdio"))
+    :activation-fn (lsp-activate-on "docker-compose")
+    :priority 1
+    :server-id 'compose-ls))
 
   ;; ignore laravel's storage directory
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'")
@@ -659,7 +667,8 @@
          (json-ts-mode . lsp)
          (toml-ts-mode . lsp)
          (yaml-ts-mode . lsp)
-         (dockerfile-ts-mode . lsp))
+         (dockerfile-ts-mode . lsp)
+         (docker-compose-mode . lsp))
   :commands lsp)
 
 (use-package lsp-ui
@@ -819,7 +828,10 @@
 
 (use-package docker-compose-mode
   :mode (("docker-compose[^/]*\\.ya?ml\\'" . docker-compose-mode)
-         ("compose[^/]*\\.ya?ml\\'" . docker-compose-mode)))
+         ("compose[^/]*\\.ya?ml\\'" . docker-compose-mode))
+  :config
+  (add-to-list 'lsp-language-id-configuration
+               '(docker-compose-mode . "docker-compose")))
 
 (use-package nginx-mode
   :mode (("nginx\\.conf\\'" . nginx-mode)))
