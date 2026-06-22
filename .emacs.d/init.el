@@ -645,6 +645,26 @@
     :priority 1
     :server-id 'compose-ls))
 
+  ;; Laravel (laravel-ls)
+  ;; https://github.com/laravel-ls/laravel-ls
+  (defun laravel-ls/buffer-p (&optional _filename _mode)
+    "現在のバッファが Laravel プロジェクトの PHP もしくは Blade かを判定する。
+上位に artisan を持つディレクトリ木の配下にあれば Laravel プロジェクトとみなす。"
+    (and buffer-file-name
+         (not (file-remote-p buffer-file-name)) ; TRAMP では stat が高コストなため除外
+         (or (derived-mode-p 'php-ts-mode)
+             (and (derived-mode-p 'web-mode)
+                  (string-match-p "\\.blade\\.php\\'" buffer-file-name)))
+         (locate-dominating-file buffer-file-name "artisan")
+         t))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection '("laravel-ls"))
+    :activation-fn #'laravel-ls/buffer-p
+    :add-on? t
+    :server-id 'laravel-ls))
+
   ;; ignore laravel's storage directory
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'")
 
