@@ -650,6 +650,7 @@
          (php-ts-mode . lsp)
          (python-ts-mode . lsp)
          (vue-mode . lsp)
+         (web-mode . lsp)
          (bash-ts-mode . lsp)
          (terraform-mode . lsp)
          (graphql-mode . lsp)
@@ -744,7 +745,9 @@
   (web-mode-block-padding 0)
   (web-mode-enable-css-colorization t)
   (web-mode-engines-alist '(("php" . "\\.phtml\\'")
-                            ("blade" . "\\.blade\\.php\\'"))))
+                            ("blade" . "\\.blade\\.php\\'")))
+  :config
+  (add-to-list 'lsp-language-id-configuration '(web-mode . "html")))
 
 (define-derived-mode vue-mode
   web-mode "vue")
