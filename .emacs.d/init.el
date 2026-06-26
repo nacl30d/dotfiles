@@ -645,6 +645,59 @@
     :priority 1
     :server-id 'compose-ls))
 
+  ;; GitHub Actions
+  ;; https://github.com/actions/languageservices/tree/main/languageserver
+  (defun actions-ls/buffer-p (&optional _filename _mode)
+    (and buffer-file-name
+         (not (file-remote-p buffer-file-name))
+         (derived-mode-p 'yaml-ts-mode 'yaml-mode)
+         (string-match-p "\\.github/workflows/[^/]+\\.ya?ml\\'" buffer-file-name)))
+
+  (defun actions-ls/init-options ()
+    (let* ((token (string-trim (shell-command-to-string "gh auth token 2>/dev/null")))
+           ;; sessionToken: uses: のアクション入力補完・runs-on ラベル補完・アクション参照バリデーションを有効化
+           (git-root (string-trim (shell-command-to-string "git rev-parse --show-toplevel 2>/dev/null")))
+           (remote-url (string-trim (shell-command-to-string "git remote get-url origin 2>/dev/null")))
+           (owner-repo (or (and (string-match "github\\.com[:/]\\([^/]+\\)/\\([^/\\.]+\\)" remote-url)
+                                (list (match-string 1 remote-url) (match-string 2 remote-url)))
+                           nil))
+           ;; repos: secrets.* / vars.* の実名補完・ローカル再利用ワークフローの解決を追加で有効化
+           (repos (when (and owner-repo (not (string-empty-p git-root)))
+                    (let* ((owner (car owner-repo))
+                           (name (cadr owner-repo))
+                           (repo-info (string-trim (shell-command-to-string
+                                                    (format "gh repo view %s/%s --json id,owner --template '{{.id}}\t{{.owner.type}}' 2>/dev/null"
+                                                            owner name))))
+                           (parts (split-string repo-info "\t")))
+                      (list (list :id (if (and (= (length parts) 2) (string-match-p "^[0-9]+$" (car parts)))
+                                          (string-to-number (car parts)) 0)
+                                  :owner owner
+                                  :name name
+                                  :organizationOwned (equal (cadr parts) "Organization")
+                                  :workspaceUri (concat "file://" git-root)))))))
+      (append (unless (string-empty-p token) (list :sessionToken token))
+              (when repos (list :repos (vconcat repos))))))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection '("actions-languageserver" "--stdio"))
+    :activation-fn #'actions-ls/buffer-p
+    :add-on? t
+    :server-id 'actions-ls
+    :initialization-options #'actions-ls/init-options))
+
+  ;; repos の workspaceUri に基づいてローカルワークフローファイルを返すサーバー起点リクエスト
+  (puthash "actions/readFile"
+           (lambda (_workspace params)
+             (let* ((path (gethash "path" params))
+                    (file-path (lsp--uri-to-path path)))
+               (when (file-readable-p file-path)
+                 (with-temp-buffer
+                   (insert-file-contents file-path)
+                   (buffer-string)))))
+           (lsp--client-request-handlers
+            (gethash 'actions-ls lsp-clients)))
+
   ;; Laravel (laravel-ls)
   ;; https://github.com/laravel-ls/laravel-ls
   (defun laravel-ls/buffer-p (&optional _filename _mode)
