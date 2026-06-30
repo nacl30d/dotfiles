@@ -702,7 +702,7 @@
                      (lambda ()
                        `(,(lsp-package-path 'actions-languageserver) "--stdio")))
     :activation-fn #'actions-ls/buffer-p
-    :add-on? t
+    :priority 1
     :server-id 'actions-ls
     :initialization-options #'actions-ls/init-options
     :download-server-fn (lsp/ensure-server 'actions-languageserver)))
