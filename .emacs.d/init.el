@@ -461,6 +461,7 @@
 ;; Project
 ;;----------------------------------------------------------------------------------
 (use-package projectile
+  :hook (emacs-startup . projectile-mode)
   :bind (:map projectile-mode-map
               ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map))
@@ -468,7 +469,9 @@
   (projectile-project-search-path '(("~/Developer" . 1))))
 
 (use-package consult-projectile
-  :commands consult-projectile)
+  :after projectile
+  :bind (:map projectile-command-map
+              ("p" . consult-projectile)))
 
 ;; (use-package flycheck-popup-tip)
 
