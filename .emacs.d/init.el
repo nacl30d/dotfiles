@@ -591,6 +591,10 @@
   :config
   ;; (setq lsp-log-io t)
 
+  (defun lsp/ensure-server (package)
+    (lambda (_client callback error-callback _update?)
+      (lsp-package-ensure package callback error-callback)))
+
   ;; Kotlin
   (defun kotlin-lsp-server-start-fun (port)
     (list "kotlin-lsp.sh" "--socket" (number-to-string port)))
@@ -641,12 +645,19 @@
 
   ;; Docker Compose
   ;; https://github.com/microsoft/compose-language-service
+  (lsp-dependency 'compose-ls
+                  '(:npm :package "@microsoft/compose-language-service"
+                         :path "docker-compose-langserver"))
+
   (lsp-register-client
    (make-lsp-client
-    :new-connection (lsp-stdio-connection '("docker-compose-langserver" "--stdio"))
+    :new-connection (lsp-stdio-connection
+                     (lambda ()
+                       `(,(lsp-package-path 'compose-ls) "--stdio")))
     :activation-fn (lsp-activate-on "docker-compose")
     :priority 1
-    :server-id 'compose-ls))
+    :server-id 'compose-ls
+    :download-server-fn (lsp/ensure-server 'compose-ls)))
 
   ;; GitHub Actions
   ;; https://github.com/actions/languageservices/tree/main/languageserver
@@ -681,13 +692,20 @@
       (append (unless (string-empty-p token) (list :sessionToken token))
               (when repos (list :repos (vconcat repos))))))
 
+  (lsp-dependency 'actions-languageserver
+                  '(:npm :package "@actions/languageserver"
+                         :path "actions-languageserver"))
+
   (lsp-register-client
    (make-lsp-client
-    :new-connection (lsp-stdio-connection '("actions-languageserver" "--stdio"))
+    :new-connection (lsp-stdio-connection
+                     (lambda ()
+                       `(,(lsp-package-path 'actions-languageserver) "--stdio")))
     :activation-fn #'actions-ls/buffer-p
     :add-on? t
     :server-id 'actions-ls
-    :initialization-options #'actions-ls/init-options))
+    :initialization-options #'actions-ls/init-options
+    :download-server-fn (lsp/ensure-server 'actions-languageserver)))
 
   ;; repos の workspaceUri に基づいてローカルワークフローファイルを返すサーバー起点リクエスト
   (puthash "actions/readFile"
