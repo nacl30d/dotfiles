@@ -743,6 +743,20 @@
   ;; ignore laravel's storage directory
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'")
 
+  ;; lsp-graphql.el は TS/JS も activation-fn の対象として登録するため、
+  ;; graphql-mode 以外では graphql-lsp を起動しないよう除外する。
+  (defun lsp/disable-graphql-lsp ()
+    (setq-local lsp-disabled-clients '(graphql-lsp)))
+  (dolist (hook '(typescript-ts-mode-hook tsx-ts-mode-hook js-ts-mode-hook))
+    (add-hook hook #'lsp/disable-graphql-lsp))
+
+  (defun lsp/enable-graphql ()
+    "graphql-lsp を現在のバッファで手動起動する。gql`` を使うファイルで呼ぶ。"
+    (interactive)
+    (setq-local lsp-disabled-clients
+                (remove 'graphql-lsp lsp-disabled-clients))
+    (lsp))
+
   :hook (
          (astro-ts-mode . lsp)
          (go-ts-mode . lsp)
