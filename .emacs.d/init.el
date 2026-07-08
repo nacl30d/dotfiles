@@ -757,6 +757,8 @@
                 (remove 'graphql-lsp lsp-disabled-clients))
     (lsp))
 
+  (add-to-list 'lsp-language-id-configuration '(web-mode . "html"))
+
   :hook (
          (astro-ts-mode . lsp)
          (go-ts-mode . lsp)
@@ -844,10 +846,6 @@
   :custom
   (php-ts-mode-indent-style 'psr2))
 
-;; web-mode は php-ts-mode より後に定義すること。use-package の :mode は
-;; auto-mode-alist の先頭に追加するため、後に定義したこの ".blade.php" が
-;; php-ts-mode の ".php" より優先され、Laravel テンプレートが web-mode（blade
-;; エンジン）で開く。順序を入れ替えると blade が php-ts-mode に奪われる。
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
          ("\\.blade\\.php\\'" . web-mode))
@@ -862,9 +860,13 @@
   (web-mode-block-padding 0)
   (web-mode-enable-css-colorization t)
   (web-mode-engines-alist '(("php" . "\\.phtml\\'")
-                            ("blade" . "\\.blade\\.php\\'")))
+                            ("blade" . "\\.blade\\.php\\'"))))
+
+(use-package lsp-php
+  :straight nil
   :config
-  (add-to-list 'lsp-language-id-configuration '(web-mode . "html")))
+  ;; web-mode の :mode を lsp-php.el が上書きするため、ロード後に再 push する。
+  (push '("\\.blade\\.php\\'" . web-mode) auto-mode-alist))
 
 (define-derived-mode vue-mode
   web-mode "vue")
