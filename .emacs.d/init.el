@@ -365,9 +365,7 @@
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
-  (advice-add 'lsp-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'lsp-completion-at-point :around #'cape-wrap-nonexclusive)
-  (advice-add 'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
 
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
@@ -582,8 +580,11 @@
   (lsp-completion-provider :none) ; with corfu
   ;; gc-cons-threshold は Basics セクションでグローバルに 128MB を設定済みのためここでは設定しない
   (read-process-output-max (* 1024 1024))
+  (lsp-idle-delay 0.1)
   (lsp-signature-auto-activate nil)
   (lsp-auto-guess-root t)
+  (lsp-lens-enable nil)
+  (lsp-modeline-code-actions-enable nil)
   ;; JS/TS
   (lsp-javascript-preferences-import-module-specifier "relative")
   (lsp-typescript-preferences-import-module-specifier "relative")
@@ -769,7 +770,6 @@
   :custom
   (lsp-eldoc-render-all t)
   (lsp-ui-sideline-diagnostic-max-lines 3)
-  (lsp-idle-delay 0.1)
   :commands lsp-ui-mode)
 
 (use-package dap-mode
