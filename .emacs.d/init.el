@@ -1081,6 +1081,9 @@
   :straight (:type built-in)
   :after org)
 
+(use-package ox-gfm
+  :after org)
+
 (use-package ox-latex
   :straight (:type built-in)
   :after org
