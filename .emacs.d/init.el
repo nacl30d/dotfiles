@@ -900,7 +900,12 @@
   (markdown-xhtml-body-preamble "<div class='markdown-body'>")
   (markdown-xhtml-body-epilogue "</div>")
   (markdown-fontify-code-blocks-natively t)
-  (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css")))
+  (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css"))
+  (markdown-xhtml-header-content
+   (concat
+    "<script src=\"https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js\"></script>\n"
+    "<script>document.addEventListener('DOMContentLoaded', () => mermaid.run({ querySelector: 'code.language-mermaid' }))</script>\n"
+    )))
 
 (use-package plantuml-mode
   :mode (("\\.puml\\'" . plantuml-mode)
