@@ -927,12 +927,17 @@
   (markdown-xhtml-body-preamble "<div class='markdown-body'>")
   (markdown-xhtml-body-epilogue "</div>"))
 
+(use-package markdown-plantuml
+  :straight nil
+  :after markdown-mode)
+
 (use-package plantuml-mode
   :mode (("\\.puml\\'" . plantuml-mode)
          ("\\.plantuml\\'" . plantuml-mode)
          ("\\.pu\\'" . plantuml-mode))
   :custom
-  (plantuml-default-exec-mode 'jar))
+  (plantuml-default-exec-mode 'jar)
+  (plantuml-jar-path (locate-user-emacs-file "plantuml.jar")))
 
 (use-package mermaid-mode
   :mode (("\\.mmd\\'" . mermaid-mode)
