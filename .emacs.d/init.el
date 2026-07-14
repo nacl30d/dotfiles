@@ -913,6 +913,7 @@
   :custom
   (markdown-command "cmark-gfm -e table")
   (markdown-command-needs-filename t)
+  (markdown-open-command 'browse-url)
   (markdown-live-preview-delete-export 'delete-on-export)
   (markdown-indent-on-enter 'indent-and-new-item)
   (markdown-header-scaling t)
