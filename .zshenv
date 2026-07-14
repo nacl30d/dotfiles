@@ -61,4 +61,4 @@ pkg_config_path=(
     $BREW_PREFIX/opt/zlib/lib/pkgconfig(N-/)
 )
 
-export EDITOR="emacsclient"
+export EDITOR="emacs"
