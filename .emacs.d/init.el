@@ -723,6 +723,21 @@
            (lsp--client-request-handlers
             (gethash 'actions-ls lsp-clients)))
 
+  ;; OpenAPI
+  (require 'openapi-project)
+  (lsp-dependency 'vacuum
+                  '(:npm :package "@quobix/vacuum"
+                         :path "vacuum"))
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection
+                     (lambda ()
+                       `(,(lsp-package-path 'vacuum) "language-server" "--skip-check")))
+    :activation-fn #'openapi/openapi-buffer-p
+    :add-on? t
+    :server-id 'oapi-ls
+    :download-server-fn (lsp/ensure-server 'vacuum)))
+
   ;; Laravel (laravel-ls)
   ;; https://github.com/laravel-ls/laravel-ls
   (defun laravel-ls/buffer-p (&optional _filename _mode)
