@@ -30,6 +30,9 @@
 (straight-use-package 'use-package)
 (setopt straight-use-package-by-default t)
 
+;; 自作 elisp の置き場
+(add-to-list 'load-path (locate-user-emacs-file "lisp"))
+
 
 ;;----------------------------------------------------------------------------------
 ;; Encoding and Language
@@ -929,6 +932,10 @@
   :mode (("\\.ya?ml\\'" . yaml-ts-mode))
   :bind (:map yaml-ts-mode-map
               ("C-m" . newline-and-indent)))
+
+(use-package openapi-ref
+  :straight nil
+  :after yaml-ts-mode)
 
 (use-package json-ts-mode
   :straight (:type built-in)
