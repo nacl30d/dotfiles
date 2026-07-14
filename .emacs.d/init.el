@@ -1165,5 +1165,8 @@
 (use-package request
   :defer t)
 
+(setq custom-file (locate-user-emacs-file "local.el"))
+(load custom-file 'noerror)
+
 (provide 'init)
 ;;; init.el ends here
