@@ -62,3 +62,5 @@ pkg_config_path=(
 )
 
 export EDITOR="emacs"
+
+[ -s "$HOME/.zshenv.local" ] && source "$HOME/.zshenv.local"
