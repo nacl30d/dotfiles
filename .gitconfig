@@ -56,6 +56,7 @@
     ll = log --pretty=format:'%C(yellow)%h %C(red)%d %Creset%s %C(blue)[%cn]' --decorate --numstat
     d = diff
     dc = diff --cached
+    dp = diff --no-ext-diff
     ds = diff --stat
     d1 = diff HEAD~
     d2 = diff HEAD~2
