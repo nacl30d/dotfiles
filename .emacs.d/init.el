@@ -99,6 +99,7 @@
 (setopt gc-cons-percentage 0.2
         gc-cons-threshold (* 128 1024 1024))
 (use-package so-long
+  :straight (:type built-in)
   :init
   (global-so-long-mode))
 
@@ -287,6 +288,7 @@
   (global-subword-mode))
 
 (use-package editorconfig
+  :straight (:type built-in)
   :init
   (editorconfig-mode t))
 
