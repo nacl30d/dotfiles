@@ -30,10 +30,6 @@
 (straight-use-package 'use-package)
 (setopt straight-use-package-by-default t)
 
-;; 自作 elisp の置き場
-(add-to-list 'load-path (locate-user-emacs-file "lisp"))
-
-
 ;;----------------------------------------------------------------------------------
 ;; Encoding and Language
 ;;----------------------------------------------------------------------------------
