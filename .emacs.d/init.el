@@ -535,6 +535,7 @@
   :straight (:type built-in)
   :custom
   (treesit-font-lock-level 4)
+  (treesit-auto-install-grammar 'always)
   :config
   (setq treesit-language-source-alist
         '((astro "https://github.com/virchau13/tree-sitter-astro")
@@ -556,10 +557,6 @@
           (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
           (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
           (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-  (mapc (lambda (lang)
-          (unless (treesit-language-available-p lang nil)
-            (treesit-install-language-grammar lang)))
-        (mapcar #'car treesit-language-source-alist))
   (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
   (add-to-list 'major-mode-remap-alist '(css-mode . css-ts-mode))
   (add-to-list 'major-mode-remap-alist '(js-mode . javascript-ts-mode))
@@ -846,7 +843,11 @@
   :mode ("\\.prisma\\'" . prisma-mode))
 
 (use-package astro-ts-mode
-  :mode ("\\.astro\\'" . astro-ts-mode))
+  :mode ("\\.astro\\'" . astro-ts-mode)
+  ;; astro-ts-mode は treesit-ready-p のみで treesit-ensure-installed を呼ばないため、
+  ;; treesit-auto-install-grammar だけでは grammar が自動取得されない
+  :init
+  (mapc #'treesit-ensure-installed '(astro css tsx)))
 
 ;; (use-package tide
 ;;   :after (typescript-mode company flycheck)
@@ -902,7 +903,10 @@
 
 (use-package kotlin-ts-mode
   ;; :straight (:host gitlab :repo "bricka/emacs-kotlin-ts-mode")
-  :mode "\\.kts?\\'")
+  :mode "\\.kts?\\'"
+  ;; astro-ts-mode と同様 treesit-ensure-installed を呼ばないため明示的に取得する
+  :init
+  (treesit-ensure-installed 'kotlin))
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
