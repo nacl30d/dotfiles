@@ -116,6 +116,7 @@
 (display-time-mode t)
 (global-display-line-numbers-mode)
 (column-number-mode t)
+(setopt mode-line-collapse-minor-modes t)
 
 ;;----------------------------------------------------------------------------------
 ;; Version Control System
