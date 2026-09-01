@@ -486,15 +486,13 @@
     (exec-path-from-shell-initialize)))
 
 (use-package mise
-  :init
-  (global-mise-mode))
+  :hook (emacs-startup . global-mise-mode))
 
 ;;----------------------------------------------------------------------------------
 ;; Syntax Checking
 ;;----------------------------------------------------------------------------------
 (use-package flycheck
-  :init
-  (global-flycheck-mode)
+  :hook (emacs-startup . global-flycheck-mode)
   :custom
   (flycheck-display-errors-delay 0.1)
   (flycheck-disabled-checkers '(javascript-jshint))
@@ -882,6 +880,7 @@
 
 (use-package lsp-php
   :straight nil
+  :after lsp-mode
   :config
   ;; web-mode の :mode を lsp-php.el が上書きするため、ロード後に再 push する。
   (push '("\\.blade\\.php\\'" . web-mode) auto-mode-alist))
