@@ -605,9 +605,20 @@
     :server-id 'kotlin-jb-lsp))
 
   ;; CloudFormation
-  (defvar cfn-lsp/server-path
-    (expand-file-name "~/.local/share/cfn-lsp/cfn-lsp-server-standalone.js")
-    "Path to CloudFormation Language Server")
+  ;; Auto-install the server from GitHub releases via lsp-mode's :download.
+  (defun cfn-lsp/download-url ()
+    "Resolve the latest release zip URL for the current platform."
+    (let ((os   (pcase system-type ('darwin "darwin") ('windows-nt "win32") (_ "linux")))
+          (arch (symbol-name (lsp-resolve-value lsp--system-arch))))
+      (lsp--find-latest-gh-release-url
+       "https://api.github.com/repos/aws-cloudformation/cloudformation-languageserver/releases/latest"
+       (format "%s-%s-node22\\.zip$" os arch))))
+  (lsp-dependency 'cfn-lsp
+                  `(:download :url cfn-lsp/download-url
+                              :decompress :zip
+                              :store-path ,(f-join lsp-server-install-dir "cfn-lsp" "cfn-lsp")
+                              :binary-path ,(f-join lsp-server-install-dir "cfn-lsp"
+                                                    "cfn-lsp-server-standalone.js")))
   (defun cfn-lsp/cloudformation-buffer-p (&optional _filename _mode)
     "現在のバッファが CloudFormation テンプレートかを判定する。
   バッファ先頭付近に AWSTemplateFormatVersion キーが存在すれば非 nil を返す。"
@@ -624,11 +635,13 @@
 
   (lsp-register-client
    (make-lsp-client
-    :new-connection (lsp-stdio-connection (lambda ()
-                                            (list "node" cfn-lsp/server-path "--stdio")))
+    :new-connection (lsp-stdio-connection
+                     (lambda () (list "node" (lsp-package-path 'cfn-lsp) "--stdio"))
+                     (lambda () (f-exists? (lsp-package-path 'cfn-lsp))))
     :activation-fn #'cfn-lsp/cloudformation-buffer-p
     :priority 1
     :server-id 'cfn-lsp
+    :download-server-fn (lsp/ensure-server 'cfn-lsp)
     :initialization-options
     (lambda ()
       (list :aws
