@@ -1162,12 +1162,43 @@
 ;;----------------------------------------------------------------------------------
 ;; Shell
 ;;----------------------------------------------------------------------------------
-(use-package eat
-  :bind ("C-c C-t" . eat-project-other-window)
+(use-package ghostel
+  :demand t
+  :bind (:map ghostel-semi-char-mode-map
+         ("C-s" . consult-line))
+)
+(use-package ghostel-eshell
+  :straight nil
+  :hook (eshell-load . ghostel-eshell-visual-command-mode))
+
+(use-package ghostel-comint
+  :straight nil
+  :hook (after-init . ghostel-comint-global-mode))
+
+(use-package consult-ghostel
+  :straight (:type git :host github :repo "dakra/ghostel"
+             :files ("extensions/consult-ghostel/*.el"))
+  :after (ghostel consult)
+  :demand t
+  :bind (("C-c C-t" . consult-ghostel-project)
+         :map ghostel-semi-char-mode-map
+         ("C-c h" . consult-ghostel-history)))
+
+;;----------------------------------------------------------------------------------
+;; Coding Agents
+;;----------------------------------------------------------------------------------
+(use-package claude-code-ide
+  :straight (:type git :host github :repo "manzaltu/claude-code-ide.el")
+  :bind ("C-c C-s" . claude-code-ide-menu)
+  :custom
+  (claude-code-ide-terminal-backend 'ghostel)
   :config
-  (eat-eshell-mode))
+  (claude-code-ide-emacs-tools-setup))
 
 
+;;----------------------------------------------------------------------------------
+;; API Clients
+;;----------------------------------------------------------------------------------
 (use-package restclient
   :mode ("\\.http\\'" . restclient-mode)
   :custom
