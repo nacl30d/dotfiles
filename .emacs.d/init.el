@@ -511,6 +511,7 @@
          ("C-M-$" . jinx-languages))
   :custom
   (jinx-languages "en_US")
+  (jinx-camel-modes t)
   :config
   ;; Ignore non-English words.
   (add-to-list 'jinx-exclude-regexps '(t ".*[^[:ascii:]].*"))
