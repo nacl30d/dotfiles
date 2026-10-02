@@ -751,6 +751,26 @@
     :server-id 'oapi-ls
     :download-server-fn (lsp/ensure-server 'vacuum)))
 
+  ;; PHPantom (phpantom_lsp)
+  ;; https://phpantom-dev.github.io/phpantom_lsp/
+  (lsp-dependency 'phpantom-lsp
+                  '(:system "phpantom_lsp")
+                  `(:download :url ,(format "https://github.com/PHPantom-dev/phpantom_lsp/releases/latest/download/phpantom_lsp-%s-%s.tar.gz"
+                                            (if (string-prefix-p "aarch64-" system-configuration) "aarch64" "x86_64")
+                                            (if (eq system-type 'darwin) "apple-darwin" "unknown-linux-gnu"))
+                              :decompress :targz
+                              :store-path ,(f-join lsp-server-install-dir "phpantom-lsp" "phpantom_lsp")))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection
+                     (lambda () (lsp-package-path 'phpantom-lsp))
+                     (lambda () (lsp-package-path 'phpantom-lsp)))
+    :activation-fn (lsp-activate-on "php" "php-ts")
+    :priority 0
+    :server-id 'phpantom-lsp
+    :download-server-fn (lsp/ensure-server 'phpantom-lsp)))
+
   ;; Laravel (laravel-ls)
   ;; https://github.com/laravel-ls/laravel-ls
   (defun laravel-ls/buffer-p (&optional _filename _mode)
