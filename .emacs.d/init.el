@@ -963,6 +963,7 @@
   (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css"))
   (markdown-xhtml-header-content
    (concat
+    "<style>body{background:#f6f8fa}.markdown-body{box-sizing:border-box;max-width:980px;margin:0 auto;padding:45px;background:#fff;border-radius:6px;font-size:17px}</style>\n"
     "<script src=\"https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js\"></script>\n"
     "<script>document.addEventListener('DOMContentLoaded', () => mermaid.run({ querySelector: 'code.language-mermaid' }))</script>\n"
     ))
