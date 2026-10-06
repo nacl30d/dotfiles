@@ -960,15 +960,12 @@
   (markdown-header-scaling t)
   (markdown-fontify-code-blocks-natively t)
   (markdown-content-type "application/xhtml+xml")
-  (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css"))
+  (markdown-css-paths (list (expand-file-name "etc/markdown-academic.css" user-emacs-directory)))
   (markdown-xhtml-header-content
    (concat
-    "<style>body{background:#f6f8fa}.markdown-body{box-sizing:border-box;max-width:980px;margin:0 auto;padding:45px;background:#fff;border-radius:6px;font-size:17px}</style>\n"
     "<script src=\"https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js\"></script>\n"
     "<script>document.addEventListener('DOMContentLoaded', () => mermaid.run({ querySelector: 'code.language-mermaid' }))</script>\n"
-    ))
-  (markdown-xhtml-body-preamble "<div class='markdown-body'>")
-  (markdown-xhtml-body-epilogue "</div>"))
+    )))
 
 (use-package markdown-plantuml
   :straight nil

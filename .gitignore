@@ -2,5 +2,6 @@
 !.emacs.d/init.el
 !.emacs.d/early-init.el
 !.emacs.d/lisp
+!.emacs.d/etc
 log
 .gitconfig.*
