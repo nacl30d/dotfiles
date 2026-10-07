@@ -952,14 +952,13 @@
   :mode (("\\.md\\'" . markdown-mode)
          ("README\\.md\\'" . gfm-mode))
   :custom
-  (markdown-command "cmark-gfm -e table")
+  (markdown-command "cmark-gfm -e table -e strikethrough -e autolink -e tasklist -e footnotes --table-prefer-style-attributes --validate-utf8 --unsafe -e tagfilter")
   (markdown-command-needs-filename t)
   (markdown-open-command 'browse-url)
   (markdown-live-preview-delete-export 'delete-on-export)
   (markdown-indent-on-enter 'indent-and-new-item)
   (markdown-header-scaling t)
   (markdown-fontify-code-blocks-natively t)
-  (markdown-content-type "application/xhtml+xml")
   (markdown-css-paths (list (expand-file-name "etc/markdown-academic.css" user-emacs-directory)))
   (markdown-xhtml-header-content
    (concat
