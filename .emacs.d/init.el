@@ -949,8 +949,7 @@
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
-  :mode (("\\.md\\'" . markdown-mode)
-         ("README\\.md\\'" . gfm-mode))
+  :mode (("\\.md\\'" . gfm-mode))
   :custom
   (markdown-command "cmark-gfm -e table -e strikethrough -e autolink -e tasklist -e footnotes --table-prefer-style-attributes --validate-utf8 --unsafe -e tagfilter")
   (markdown-command-needs-filename t)
