@@ -1,7 +1,9 @@
 .emacs.d/*
 !.emacs.d/init.el
 !.emacs.d/early-init.el
-!.emacs.d/lisp
 !.emacs.d/etc
+!.emacs.d/user-lisp
+.emacs.d/user-lisp/*.elc
+.emacs.d/user-lisp/.user-lisp-autoloads.el
 log
 .gitconfig.*

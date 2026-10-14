@@ -135,10 +135,14 @@
   :mode (("\\.gitconfig" . gitconfig-mode)
          ("\\.gitignore" . gitignore-mode)))
 
+(use-package auth-source-forge-cli
+  :straight nil
+  :demand t)
+
 (use-package forge
   :after magit
   :custom
-  (auth-sources '("~/.authinfo.gpg")))
+  (auth-sources '(gh-cli glab-cli "~/.authinfo.gpg")))
 
 (use-package git-link
   :bind ("C-c i" . git-link)
