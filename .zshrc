@@ -29,6 +29,7 @@ bindkey -e
 
 # Alias
 alias e='emacsclient -t -a ""'
+alias emacs='emacsclient -t -a ""'
 alias ls='ls --color'
 alias la='ls -la'
 alias ll='ls -l'

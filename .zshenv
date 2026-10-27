@@ -61,6 +61,6 @@ pkg_config_path=(
     $BREW_PREFIX/opt/zlib/lib/pkgconfig(N-/)
 )
 
-export EDITOR="emacs"
+export EDITOR='emacsclient -t -a ""'
 
 [ -s "$HOME/.zshenv.local" ] && source "$HOME/.zshenv.local"

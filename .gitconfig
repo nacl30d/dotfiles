@@ -5,7 +5,6 @@
 
 [core]
     excludesfile = ~/.gitignore.global
-    editor = emacs
     ignorecase = false          # distinct lower and capital on filename
     safecrlf = true             # do not convert crlf if various crlf exist
 
