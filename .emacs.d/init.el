@@ -101,6 +101,11 @@
   :config
   (recentf-mode))
 
+(use-package dired
+  :straight (:type built-in)
+  :custom
+  (dired-kill-when-opening-new-dired-buffer t))
+
 (setopt gc-cons-percentage 0.2
         gc-cons-threshold (* 128 1024 1024))
 (use-package so-long
@@ -295,6 +300,22 @@
   (imenu-list-focus-after-activation t)
   (imenu-list-auto-resize t))
 
+(use-package popper
+  :bind (("C-c z" . popper-toggle)
+         ("C-c Z" . popper-cycle))
+  :custom
+  (popper-reference-buffers
+   '("\\*Messages\\*"
+     "\\*Warnings\\*"
+     "Output\\*$"
+     "\\*Async Shell Command\\*"
+     help-mode
+     compilation-mode
+     magit-process-mode))
+  :init
+  (popper-mode)
+  (popper-echo-mode))
+
 ;;----------------------------------------------------------------------------------
 ;; Edit
 ;;----------------------------------------------------------------------------------
@@ -422,13 +443,15 @@
 (use-package consult
   :bind
   (("C-s" . consult-line)
-   ("C-x b" . consult-buffer)
+   ("C-x B" . consult-buffer)
+   ("C-x b" . consult-project-buffer)
    ("C-c g" . consult-goto-line)
    ("C-c j" . consult-git-grep)
    ("M-s" . consult-imenu)
    ;; ("C-c o" . consult-outline)
    )
   :custom
+  (consult-project-function (lambda (_) (projectile-project-root)))
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref))
 
