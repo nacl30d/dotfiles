@@ -11,8 +11,12 @@
 ;; bootstrap ロード前に評価される必要があるため early-init に置く。
 (setq straight-check-for-modifications '(check-on-save find-when-checking))
 
+(setq native-comp-async-report-warnings-errors 'silent)
+
 (setq inhibit-startup-message t)        ;hidden startup msg
 (menu-bar-mode -1)                      ;hidden menu bar
+(tool-bar-mode -1)                      ;hidden tool bar
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 
 (provide 'early-init)
 ;;; early-init.el ends here
