@@ -85,6 +85,11 @@
 ;;----------------------------------------------------------------------------------
 (setopt tab-width 4 indent-tabs-mode nil)
 (global-auto-revert-mode 1)
+(repeat-mode 1)
+(keymap-global-set "C-x ," #'previous-buffer)
+(keymap-global-set "C-x ." #'next-buffer)
+(keymap-set buffer-navigation-repeat-map "," #'previous-buffer)
+(keymap-set buffer-navigation-repeat-map "." #'next-buffer)
 (setopt use-short-answers t)
 (setopt backup-directory-alist          ;backup file dir
         (cons (cons ".*" (expand-file-name "~/.emacs.d/.backup/"))
@@ -179,7 +184,13 @@
 (use-package tab-bar
   :init
   (tab-bar-mode 1)
+  :bind
+  (("s-t" . tab-new)
+   ("s-w" . tab-close)
+   ("s-{" . tab-previous)
+   ("s-}" . tab-next))
   :custom
+  (tab-bar-select-tab-modifiers '(meta))
   (tab-bar-close-button-show nil)
   (tab-bar-new-button-show nil)
   (tab-bar-tab-hints t)
@@ -261,12 +272,12 @@
 (use-package treemacs
   :bind
   (:map global-map
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t d"   . treemacs-select-directory)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag))
+        ("C-c t 1"   . treemacs-delete-other-windows)
+        ("C-c t t"   . treemacs)
+        ("C-c t d"   . treemacs-select-directory)
+        ("C-c t B"   . treemacs-bookmark)
+        ("C-c t C-t" . treemacs-find-file)
+        ("C-c t M-t" . treemacs-find-tag))
 
   :config
   (treemacs-follow-mode t)
