@@ -519,12 +519,26 @@
               ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map))
   :custom
-  (projectile-project-search-path '(("~/Developer" . 1))))
+  (projectile-project-search-path '(("~/Developer" . 1)))
+  :config
+  (defun my/projectile-switch-project-in-tab (switch project &rest args)
+    ;; `projectile-project-name' は dir-locals の `projectile-project-name' を優先し、
+    ;; 切り替え元のプロジェクト名を返すことがあるため、name function を直接呼ぶ。
+    (let* ((name (funcall projectile-project-name-function project))
+           (exists (seq-find (lambda (tab) (equal (alist-get 'name tab) name))
+                             (tab-bar-tabs))))
+      (tab-bar-switch-to-tab name)
+      (unless exists
+        (apply switch project args))))
+  (advice-add 'projectile-switch-project-by-name :around
+              #'my/projectile-switch-project-in-tab))
 
 (use-package consult-projectile
   :after projectile
   :bind (:map projectile-command-map
-              ("p" . consult-projectile)))
+              ("p" . consult-projectile))
+  :config
+  (setq consult-projectile-use-projectile-switch-project t))
 
 ;; (use-package flycheck-popup-tip)
 
