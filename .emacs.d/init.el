@@ -198,7 +198,28 @@
 
 (use-package dracula-theme               ;theme
   :init
-  (load-theme 'dracula t))
+  (load-theme 'dracula t)
+  ;; TTY フレームでは :family は無視され、端末側のフォント設定が使われる。
+  (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 180)
+  (set-face-attribute 'fixed-pitch nil :family "FiraCode Nerd Font Mono")
+  ;; daemon 起動時は GUI が無く set-fontset-font が効かないため、GUI フレーム作成時にも設定する。
+  (defun my/set-japanese-fontset (&optional frame)
+    (when (display-graphic-p frame)
+      (dolist (script '(han kana cjk-misc))
+        (set-fontset-font t script (font-spec :family "Noto Sans JP")))))
+  (my/set-japanese-fontset)
+  (add-hook 'after-make-frame-functions #'my/set-japanese-fontset)
+  ;; Fira Code の半角幅は 0.6em (18px で 11px に丸められる) のため、全角 1em の Noto Sans JP を
+  ;; 半角 2 文字分 (22px) に揃える。1.2 倍では 21px に切り捨てられ 1px ずれる。
+  (setopt face-font-rescale-alist '(("Noto Sans JP" . 1.23)))
+  (setq ns-use-thin-smoothing t)
+  (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
+  (set-face-attribute 'font-lock-doc-face nil :slant 'italic))
+
+(use-package nerd-icons
+  :custom
+  ;; FiraCode Nerd Font は Nerd Fonts のグリフを含むため、Symbols Nerd Font を別途入れない。
+  (nerd-icons-font-family "FiraCode Nerd Font Mono"))
 
 (use-package hiwin                      ;change background color if active window or not
   :init
