@@ -16,7 +16,11 @@
 (setq inhibit-startup-message t)        ;hidden startup msg
 (menu-bar-mode -1)                      ;hidden menu bar
 (tool-bar-mode -1)                      ;hidden tool bar
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(scroll-bar-mode -1)
+(horizontal-scroll-bar-mode -1)
+;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(setq ns-use-native-fullscreen nil)
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
 (provide 'early-init)
 ;;; early-init.el ends here
