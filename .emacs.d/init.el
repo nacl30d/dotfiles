@@ -276,6 +276,7 @@
 
   :config
   (treemacs-follow-mode t)
+  (treemacs-project-follow-mode t)
   (treemacs-filewatch-mode t)
   (treemacs-fringe-indicator-mode 'always))
 
@@ -288,10 +289,6 @@
   :after (treemacs dired)
   :config
   (treemacs-icons-dired-mode))
-
-(use-package treemacs-projectile
-  :after (treemacs projectile)
-  :config (treemacs-project-follow-mode))
 
 (use-package treemacs-magit
   :after (treemacs magit))
@@ -417,8 +414,7 @@
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package cape
-  ;; projectile が C-c p を使うため、cape は C-c P に割り当てて衝突を回避する。
-  :bind ("C-c P" . cape-prefix-map)
+  :bind ("C-c p" . cape-prefix-map)
   :init
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
@@ -457,7 +453,6 @@
    ;; ("C-c o" . consult-outline)
    )
   :custom
-  (consult-project-function (lambda (_) (projectile-project-root)))
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref))
 
@@ -519,37 +514,42 @@
 ;;----------------------------------------------------------------------------------
 ;; Project
 ;;----------------------------------------------------------------------------------
-(use-package projectile
-  :hook (emacs-startup . projectile-mode)
-  :bind (:map projectile-mode-map
-              ("C-c p" . projectile-command-map))
+;; ELPA 版が依存として straight で導入済みのため、:straight (:type built-in) にはしない。
+(use-package project
+  :demand t
   :custom
-  (projectile-project-search-path '(("~/Developer" . 1)))
+  (project-vc-extra-root-markers '(".project"))
   :config
-  (defun my/projectile-switch-project-in-tab (switch project &rest args)
-    ;; `projectile-project-name' は dir-locals の `projectile-project-name' を優先し、
-    ;; 切り替え元のプロジェクト名を返すことがあるため、name function を直接呼ぶ。
-    (let* ((name (funcall projectile-project-name-function project))
-           (exists (seq-find (lambda (tab) (equal (alist-get 'name tab) name))
-                             (tab-bar-tabs))))
-      (tab-bar-switch-to-tab name)
-      (unless exists
-        (apply switch project args))))
-  (advice-add 'projectile-switch-project-by-name :around
-              #'my/projectile-switch-project-in-tab)
-  (defun my/tab-bar-tab-name-projectile ()
+  (keymap-set project-prefix-map "v" #'magit-project-status)
+  (keymap-set project-prefix-map "e" #'ghostel-project)
+  (keymap-set project-prefix-map "a" #'claude-code-ide)
+  ;; claude-code-ide-menu は transient のため、suffix 実行時には project-switch-project の
+  ;; 動的束縛が切れており、切り替え先ではなく元のバッファのプロジェクトで起動してしまう。
+  (setopt project-switch-commands
+          '((project-find-file "Find file")
+            (project-find-regexp "Find regexp")
+            (project-find-dir "Find directory")
+            (magit-project-status "Magit")
+            (ghostel-project "Ghostel")
+            (claude-code-ide "Claude Code")
+            (project-any-command "Other")))
+  (defun my/project-switch-project-in-tab (switch dir)
+    (if-let* ((pr (project-current nil dir)))
+        (let* ((name (project-name pr))
+               (exists (seq-find (lambda (tab) (equal (alist-get 'name tab) name))
+                                 (tab-bar-tabs))))
+          (tab-bar-switch-to-tab name)
+          (unless exists
+            (funcall switch dir)))
+      (funcall switch dir)))
+  (advice-add 'project-switch-project :around
+              #'my/project-switch-project-in-tab)
+  (defun my/tab-bar-tab-name-project ()
     (with-current-buffer (window-buffer (minibuffer-selected-window))
-      (if (projectile-project-root)
-          (projectile-project-name)
+      (if-let* ((pr (project-current)))
+          (project-name pr)
         (tab-bar-tab-name-current))))
-  (setq tab-bar-tab-name-function #'my/tab-bar-tab-name-projectile))
-
-(use-package consult-projectile
-  :after projectile
-  :bind (:map projectile-command-map
-              ("p" . consult-projectile))
-  :config
-  (setq consult-projectile-use-projectile-switch-project t))
+  (setq tab-bar-tab-name-function #'my/tab-bar-tab-name-project))
 
 ;; (use-package flycheck-popup-tip)
 
