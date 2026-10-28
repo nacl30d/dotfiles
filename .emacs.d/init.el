@@ -535,7 +535,13 @@
       (unless exists
         (apply switch project args))))
   (advice-add 'projectile-switch-project-by-name :around
-              #'my/projectile-switch-project-in-tab))
+              #'my/projectile-switch-project-in-tab)
+  (defun my/tab-bar-tab-name-projectile ()
+    (with-current-buffer (window-buffer (minibuffer-selected-window))
+      (if (projectile-project-root)
+          (projectile-project-name)
+        (tab-bar-tab-name-current))))
+  (setq tab-bar-tab-name-function #'my/tab-bar-tab-name-projectile))
 
 (use-package consult-projectile
   :after projectile
