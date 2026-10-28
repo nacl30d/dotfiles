@@ -185,23 +185,15 @@
   :init
   (tab-bar-mode 1)
   :bind
-  (("s-t" . tab-new)
-   ("s-w" . tab-close)
-   ("s-{" . tab-previous)
-   ("s-}" . tab-next))
+  ("M-0" . tab-recent)
   :custom
-  (tab-bar-select-tab-modifiers '(meta))
   (tab-bar-close-button-show nil)
   (tab-bar-new-button-show nil)
-  (tab-bar-tab-hints t)
   (tab-bar-auto-width nil)
   (tab-bar-separator " ")
   (tab-bar-format '(tab-bar-format-tabs-groups)))
 
 (use-package tab-line
-  :bind
-  ;; (("C-<backtab>" . tab-line-switch-to-prev-tab)
-  ;;  ("C-<tab>" . tab-line-switch-to-next-tab))
   :init
   (global-tab-line-mode 1)
   :custom
@@ -211,6 +203,14 @@
 (use-package winum
   :init
   (winum-mode))
+
+(defun my/select-window-by-number (n)
+  (let ((win (nth (1- n) (window-list nil 'no-minibuf (frame-first-window)))))
+    (if win (select-window win) (user-error "No window %d" n))))
+
+(dolist (n (number-sequence 1 9))
+  (keymap-global-set (format "M-%d" n)
+                     (lambda () (interactive) (my/select-window-by-number n))))
 
 (use-package dracula-theme               ;theme
   :init
@@ -520,7 +520,6 @@
 (use-package projectile
   :hook (emacs-startup . projectile-mode)
   :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map))
   :custom
   (projectile-project-search-path '(("~/Developer" . 1)))
@@ -1260,7 +1259,11 @@
   :bind (("C-c t" . ghostel-project)
          :map ghostel-semi-char-mode-map
          ("C-s" . consult-line))
-)
+  :config
+  ;; `add-to-list' では defcustom の :set が走らず、semi-char のキーマップが再構築されない。
+  (setopt ghostel-keymap-exceptions
+          (append ghostel-keymap-exceptions
+                  (mapcar (lambda (n) (format "M-%d" n)) (number-sequence 0 9)))))
 (use-package ghostel-eshell
   :straight nil
   :hook (eshell-load . ghostel-eshell-visual-command-mode))
