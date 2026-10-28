@@ -265,12 +265,12 @@
 (use-package treemacs
   :bind
   (:map global-map
-        ("C-c t 1"   . treemacs-delete-other-windows)
-        ("C-c t t"   . treemacs)
-        ("C-c t d"   . treemacs-select-directory)
-        ("C-c t B"   . treemacs-bookmark)
-        ("C-c t C-t" . treemacs-find-file)
-        ("C-c t M-t" . treemacs-find-tag))
+        ("C-c e 1"   . treemacs-delete-other-windows)
+        ("C-c e e"   . treemacs)
+        ("C-c e d"   . treemacs-select-directory)
+        ("C-c e B"   . treemacs-bookmark)
+        ("C-c e C-t" . treemacs-find-file)
+        ("C-c e M-t" . treemacs-find-tag))
 
   :config
   (treemacs-follow-mode t)
@@ -1251,7 +1251,8 @@
 ;;----------------------------------------------------------------------------------
 (use-package ghostel
   :demand t
-  :bind (:map ghostel-semi-char-mode-map
+  :bind (("C-c t" . ghostel-project)
+         :map ghostel-semi-char-mode-map
          ("C-s" . consult-line))
 )
 (use-package ghostel-eshell
@@ -1267,7 +1268,7 @@
              :files ("extensions/consult-ghostel/*.el"))
   :after (ghostel consult)
   :demand t
-  :bind (("C-c C-t" . consult-ghostel-project)
+  :bind (("C-c T" . consult-ghostel-project)
          :map ghostel-semi-char-mode-map
          ("C-c h" . consult-ghostel-history)))
 
