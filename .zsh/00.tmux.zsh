@@ -2,10 +2,15 @@ is_exists() { type "$1" >/dev/null 2>&1; return $?; }
 is_screen_running() { [ ! -z "$STY" ]; }
 is_tmux_running() { [ ! -z "$TMUX" ]; }
 is_interactive_shell() { [ ! -z "$PS1" ]; }
+is_inside_emacs() { [ ! -z "$INSIDE_EMACS" ]; }
 
 automaticcaly_attach_tmux_session() {
     if ! is_interactive_shell; then
         return 1
+    fi
+
+    if is_inside_emacs; then
+        return 0
     fi
 
     if is_screen_running; then
