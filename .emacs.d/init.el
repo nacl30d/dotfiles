@@ -218,19 +218,15 @@
   :init
   (load-theme 'dracula t)
   ;; TTY フレームでは :family は無視され、端末側のフォント設定が使われる。
-  ;; Fira Code と日本語フォントを fontset で組み合わせると幅が 0.6em:1em となり、
-  ;; face-font-rescale-alist で補正しても丸め誤差で環境により崩れるため、半角:全角 = 1:2 の合成フォントを使う。
-  ;; Console 版を選ぶのは、罫線等の East Asian Ambiguous 文字を Emacs の char-width (1) と同じ半角幅で描くため。
-  (set-face-attribute 'default nil :family "Firge Console" :height 180)
-  (set-face-attribute 'fixed-pitch nil :family "Firge Console")
+  (set-face-attribute 'default nil :family "FirgeNerd Console" :height 180)
+  (set-face-attribute 'fixed-pitch nil :family "FirgeNerd Console")
   (setq ns-use-thin-smoothing t)
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
   (set-face-attribute 'font-lock-doc-face nil :slant 'italic))
 
 (use-package nerd-icons
   :custom
-  ;; FiraCode Nerd Font は Nerd Fonts のグリフを含むため、Symbols Nerd Font を別途入れない。
-  (nerd-icons-font-family "FiraCode Nerd Font Mono"))
+  (nerd-icons-font-family "FirgeNerd Console"))
 
 (use-package hiwin                      ;change background color if active window or not
   :init
