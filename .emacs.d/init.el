@@ -3,7 +3,6 @@
 
 ;; prerequirements
 ;;   - git for package, magit
-;;   - mozc for input method
 ;;   - lints for flycheck
 
 ;;; Code:
@@ -32,53 +31,12 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'use-package)
 (setopt straight-use-package-by-default t)
 
 ;;----------------------------------------------------------------------------------
 ;; Encoding and Language
 ;;----------------------------------------------------------------------------------
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-buffer-file-coding-system 'utf-8)
-(set-file-name-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
-(set-locale-environment nil)
-(set-language-environment 'utf-8)
-
-
-;;----------------------------------------------------------------------------------
-;; Input Method
-;;----------------------------------------------------------------------------------
-;; (use-package mozc
-;;  :init
-;;  (defvar mozc-helper-program-name "mozc_emacs_helper")
-;;  (setq default-input-method "japanese-mozc")
-;;  (custom-set-variables '(mozc-leim-title "あ"))
-;;  :config
-;;  (set-cursor-color "cyan")
-;;  (add-hook 'input-method-activate-hook
-;;            (lambda () (set-cursor-color "masenta")))
-;;  (add-hook 'input-method-inactivate-hook
-;;            (lambda () (set-cursor-color "cyan"))))
-
-;; (use-package mozc-popup
-;;  :config
-;;  (defvar mozc-candidate-style 'popup))
-;; (use-package ac-mozc
-;;  :init
-;;  (bind-keys :map ac-mode-map
-;;             ("C-c C-SPC" . ac-complete-mozc))
-;;  (add-hook 'after-change-major-mode-hook 'ac-mozc-mode)
-;;  :config
-;;  (defun ac-mozc-mode ()                ; Enable ac-mozc-mode if not latex mode.
-;;    (unless (eq major-mode 'latex-mode)
-;;      (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p nil t)))
-;;  (defun ac-mozc-setup ()               ; See <https://github.com/igjit/ac-mozc>
-;;    (setq ac-sources
-;;          '(ac-source-mozc ac-source-ascii-words-in-same-mode-buffers))
-;;    (set (make-local-variable 'ac-auto-show-menu) 0.2)))
 
 ;;----------------------------------------------------------------------------------
 ;; Basics
@@ -92,27 +50,33 @@
 (keymap-set buffer-navigation-repeat-map "." #'next-buffer)
 (setopt use-short-answers t)
 (setopt backup-directory-alist          ;backup file dir
-        (cons (cons ".*" (expand-file-name "~/.emacs.d/.backup/"))
+        (cons (cons ".*" (locate-user-emacs-file ".backup/"))
               backup-directory-alist))
 (setopt auto-save-file-name-transforms  ;auto-save file dir
-        `((".*", (expand-file-name "~/.emacs.d/.backup/") t)))
-(setopt auto-save-list-file-prefix "~/.emacs.d/.backup/auto-save-list/.saves-")
+        `((".*" ,(locate-user-emacs-file ".backup/") t)))
+(setopt auto-save-list-file-prefix (locate-user-emacs-file ".backup/auto-save-list/.saves-"))
 (setopt backup-by-copying t)
+(setopt require-final-newline t)
 
 (use-package recentf
   :straight (:type built-in)
   :custom
   (recentf-max-saved-items 32)
+  ;; daemon は終了しないため、kill-emacs-hook による保存だけでは異常終了時に履歴が失われる。
+  (recentf-autosave-interval 300)
   :config
   (recentf-mode))
+
+(use-package savehist
+  :straight (:type built-in)
+  :init
+  (savehist-mode))
 
 (use-package dired
   :straight (:type built-in)
   :custom
   (dired-kill-when-opening-new-dired-buffer t))
 
-(setopt gc-cons-percentage 0.2
-        gc-cons-threshold (* 128 1024 1024))
 (use-package so-long
   :straight (:type built-in)
   :init
@@ -123,17 +87,35 @@
 ;;----------------------------------------------------------------------------------
 ;; Mode Line
 ;;----------------------------------------------------------------------------------
-(defface egoge-display-time
-  '((((type tty))
-     (:foreground "blue")))
-  "Face used to display the time in the mode line.")
-(setopt display-time-string-forms
-        '((propertize (concat " " monthname " " day " " 24-hours ":" minutes " ")
-                      'face 'egoge-display-time)))
-(display-time-mode t)
-(global-display-line-numbers-mode)
-(column-number-mode t)
-(setopt mode-line-collapse-minor-modes t)
+(use-package time
+  :straight (:type built-in)
+  :custom
+  (display-time-default-load-average nil)
+  (display-time-24hr-format t)
+  (display-time-day-and-date t)
+  :config
+  (display-time-mode t))
+
+(use-package display-line-numbers
+  :straight (:type built-in)
+  :hook ((prog-mode text-mode conf-mode) . display-line-numbers-mode)
+  :config
+  (setq display-line-numbers-width-start t))
+
+(use-package simple
+  :straight (:type built-in)
+  :config
+  (column-number-mode t))
+
+(use-package emacs
+  :straight (:type built-in)
+  :custom
+  (mode-line-collapse-minor-modes '(eldoc-mode
+                                    git-gutter-mode
+                                    jinx-mode
+                                    mise-mode
+                                    subword-mode
+                                    which-key-mode)))
 
 ;;----------------------------------------------------------------------------------
 ;; Version Control System
@@ -149,12 +131,12 @@
 
 (use-package auth-source-forge-cli
   :straight nil
-  :demand t)
-
-(use-package forge
-  :after magit
+  :demand t
   :custom
   (auth-sources '(gh-cli glab-cli "~/.authinfo.gpg")))
+
+(use-package forge
+  :after magit)
 
 (use-package git-link
   :bind ("C-c i" . git-link)
@@ -164,14 +146,13 @@
 (use-package git-gutter
   :hook (find-file-hook . git-gutter-mode))
 
-(use-package difftastic
-  :defer t
+(use-package difftastic-bindings
+  :straight difftastic
   :config (difftastic-bindings-mode))
 
 ;;----------------------------------------------------------------------------------
 ;; Views
 ;;----------------------------------------------------------------------------------
-(show-paren-mode t)
 (use-package elec-pair
   :straight (:type built-in)
   :config
@@ -204,21 +185,19 @@
 
 (use-package winum
   :init
-  (winum-mode))
-
-(defun my/select-window-by-number (n)
-  (let ((win (nth (1- n) (window-list nil 'no-minibuf (frame-first-window)))))
-    (if win (select-window win) (user-error "No window %d" n))))
-
-(dolist (n (number-sequence 1 9))
-  (keymap-global-set (format "M-%d" n)
-                     (lambda () (interactive) (my/select-window-by-number n))))
+  ;; 既定の winum-keymap は C-x w を winum-base-map で覆い、組み込みの window-prefix-map を隠す。
+  (setq winum-keymap (make-sparse-keymap))
+  (winum-mode)
+  :config
+  ;; window-list の順で数えると、winum が番号を振らない treemacs なども数えてしまい表示とずれる。
+  (dolist (n (number-sequence 1 9))
+    (keymap-global-set (format "M-%d" n) (intern (format "winum-select-window-%d" n)))))
 
 (use-package dracula-theme               ;theme
   :init
   (load-theme 'dracula t)
   ;; TTY フレームでは :family は無視され、端末側のフォント設定が使われる。
-  (set-face-attribute 'default nil :family "FirgeNerd Console" :height 180)
+  (set-face-attribute 'default nil :family "FirgeNerd Console" :height 190)
   (set-face-attribute 'fixed-pitch nil :family "FirgeNerd Console")
   (setq ns-use-thin-smoothing t)
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
@@ -234,31 +213,10 @@
   :config
   (set-face-background 'hiwin-face "gray50"))
 
-;; (use-package hl-line+                   ;flash cursor line
-;;   :bind ("C-x C-h" . flash-line-highlight)
-;;   :config
-;;   (set-face-background 'hl-line "yellow"))
-
-(use-package whitespace                ;white spaces
-  :bind ("C-x w" . global-whitespace-mode)
-  :init
-  (global-whitespace-mode 1)
-  :custom
-  (whitespace-style '(face trailing tabs tab-mark spaces space-mark))
-  (whitespace-display-mappings
-   '((space-mark ?\u3000 [?\u25a1])
-     (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])))
-  (whitespace-space-regexp "\\(\u3000+\\)")
-  :config
-  (set-face-attribute 'whitespace-trailing nil
-                      :foreground "#7cfc00"
-                      :underline t)
-  (set-face-attribute 'whitespace-space nil
-                      :foreground "#7cfc00"
-                      :weight 'bold)
-  (set-face-attribute 'whitespace-tab nil
-                      :foreground "#adff2f"
-                      :underline t))
+;; 全角スペースはフォント (Firge) が可視化するため whitespace-mode は使わない。
+;; 行末スペースは Markdown の改行に使うため、保存時に削除せず表示のみとする。
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook (lambda () (setq-local show-trailing-whitespace t))))
 
 (use-package treemacs
   :bind
@@ -318,20 +276,8 @@
 ;;----------------------------------------------------------------------------------
 ;; Edit
 ;;----------------------------------------------------------------------------------
-(use-package simple
-  :straight (:type built-in)
-  :config
-  (normal-erase-is-backspace-mode 1))
-(define-key key-translation-map [?\C-h] [?\C-?])
-(defun one-line-comment ()
-  "Toggle comment out."
-  (interactive)
-  (save-excursion
-    (beginning-of-line)
-    (set-mark (point))
-    (end-of-line)
-    (comment-or-uncomment-region (region-beginning) (region-end))))
-(global-set-key (kbd "M-/") 'one-line-comment)
+(keymap-set key-translation-map "C-h" "DEL")
+(keymap-global-set "M-/" #'comment-line)
 
 (use-package subword
   :straight (:type built-in)
@@ -394,20 +340,10 @@
   :init
   (global-corfu-mode))
 
-(use-package corfu-terminal
-  :if (version< emacs-version "31")
+(use-package nerd-icons-corfu
   :after corfu
-  :unless (display-graphic-p)
   :config
-  (corfu-terminal-mode))
-
-(use-package kind-icon
-  :after corfu
-  ;:custom
-  ; (kind-icon-blend-background t)
-  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package cape
   :bind ("C-c p" . cape-prefix-map)
@@ -445,7 +381,8 @@
    ("C-x b" . consult-project-buffer)
    ("C-c g" . consult-goto-line)
    ("C-c j" . consult-git-grep)
-   ("M-s" . consult-imenu)
+   ("M-g i" . consult-imenu)
+   ("C-c A" . consult-org-agenda)
    ;; ("C-c o" . consult-outline)
    )
   :custom
@@ -547,8 +484,6 @@
         (tab-bar-tab-name-current))))
   (setq tab-bar-tab-name-function #'my/tab-bar-tab-name-project))
 
-;; (use-package flycheck-popup-tip)
-
 ;;----------------------------------------------------------------------------------
 ;; Environment
 ;;----------------------------------------------------------------------------------
@@ -568,16 +503,7 @@
 (use-package flycheck
   :hook (emacs-startup . global-flycheck-mode)
   :custom
-  (flycheck-display-errors-delay 0.1)
-  (flycheck-disabled-checkers '(javascript-jshint))
-  (flycheck-javascript-standard-executable "semistandard")
-  (flycheck-phpcs-standard "PSR12")
-  :config
-  (flycheck-add-mode 'html-tidy 'web-mode)
-  (flycheck-add-mode 'javascript-standard 'web-mode)
-  (flycheck-add-mode 'javascript-standard 'js-ts-mode))
-  ;; :hook
-  ;; (flycheck-mode . flycheck-popup-tip-mode))
+  (flycheck-display-errors-delay 0.1))
 
 (use-package jinx
   :hook (emacs-startup . global-jinx-mode)
@@ -610,35 +536,18 @@
   :custom
   (treesit-font-lock-level 4)
   (treesit-auto-install-grammar 'always)
+  ;; t は mhtml-ts-mode など使わないモードまで有効にするため、列挙する。
+  (treesit-enabled-modes '(bash-ts-mode css-ts-mode js-ts-mode typescript-ts-mode tsx-ts-mode
+                           python-ts-mode json-ts-mode toml-ts-mode yaml-ts-mode
+                           go-ts-mode go-mod-ts-mode php-ts-mode dockerfile-ts-mode))
   :config
-  (setq treesit-language-source-alist
-        '((astro "https://github.com/virchau13/tree-sitter-astro")
-          (bash "https://github.com/tree-sitter/tree-sitter-bash")
-          (css "https://github.com/tree-sitter/tree-sitter-css")
-          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-          (go "https://github.com/tree-sitter/tree-sitter-go")
-          (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
-          (graphql "https://github.com/bkegley/tree-sitter-graphql")
-          (html "https://github.com/tree-sitter/tree-sitter-html")
-          (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
-          (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
-          (json "https://github.com/tree-sitter/tree-sitter-json")
-          (make "https://github.com/alemuller/tree-sitter-make")
-          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-          (python "https://github.com/tree-sitter/tree-sitter-python")
-          (toml "https://github.com/tree-sitter/tree-sitter-toml")
-          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-  (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(css-mode . css-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(js-mode . javascript-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(toml-mode . toml-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode)))
+  ;; 組み込み ts-mode や astro-ts-mode などのパッケージが登録する :commit 固定のエントリは
+  ;; 各モードのクエリに合わせてあるため、setq で上書きせず、どこにも登録されない言語だけを追加する。
+  (dolist (source '((elisp "https://github.com/Wilfred/tree-sitter-elisp")
+                    (graphql "https://github.com/bkegley/tree-sitter-graphql")
+                    (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
+                    (make "https://github.com/alemuller/tree-sitter-make")))
+    (add-to-list 'treesit-language-source-alist source)))
 
 ;;----------------------------------------------------------------------------------
 ;; LSP
@@ -648,9 +557,17 @@
   ;; Must be set before lsp-mode is loaded so the keymap is built correctly.
   (setq lsp-keymap-prefix "C-c l")
 
+  ;; lsp-graphql.el は TS/JS も activation-fn の対象として登録するため、
+  ;; graphql-mode 以外では graphql-lsp を起動しないよう除外する。
+  ;; :config に置くと、lsp-mode を読み込んだ最初のバッファではモードフックの実行中に追加されて効かない。
+  (defun lsp/disable-graphql-lsp ()
+    (setq-local lsp-disabled-clients '(graphql-lsp)))
+  (dolist (hook '(typescript-ts-mode-hook tsx-ts-mode-hook js-ts-mode-hook))
+    (add-hook hook #'lsp/disable-graphql-lsp))
+
   :custom
   (lsp-completion-provider :none) ; with corfu
-  ;; gc-cons-threshold は Basics セクションでグローバルに 128MB を設定済みのためここでは設定しない
+  ;; gc-cons-threshold は early-init.el でグローバルに 128MB を設定済みのためここでは設定しない
   (read-process-output-max (* 1024 1024))
   (lsp-idle-delay 0.1)
   (lsp-signature-auto-activate nil)
@@ -863,13 +780,6 @@
   ;; ignore laravel's storage directory
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]storage\\'")
 
-  ;; lsp-graphql.el は TS/JS も activation-fn の対象として登録するため、
-  ;; graphql-mode 以外では graphql-lsp を起動しないよう除外する。
-  (defun lsp/disable-graphql-lsp ()
-    (setq-local lsp-disabled-clients '(graphql-lsp)))
-  (dolist (hook '(typescript-ts-mode-hook tsx-ts-mode-hook js-ts-mode-hook))
-    (add-hook hook #'lsp/disable-graphql-lsp))
-
   (defun lsp/enable-graphql ()
     "graphql-lsp を現在のバッファで手動起動する。gql`` を使うファイルで呼ぶ。"
     (interactive)
@@ -878,28 +788,29 @@
     (lsp))
 
   (add-to-list 'lsp-language-id-configuration '(web-mode . "html"))
+  (add-to-list 'lsp-language-id-configuration '(docker-compose-mode . "docker-compose"))
 
   :hook (
-         (astro-ts-mode . lsp)
-         (go-ts-mode . lsp)
-         (js-ts-mode . lsp)
-         (kotlin-ts-mode . lsp)
-         (typescript-ts-mode . lsp)
-         (tsx-ts-mode . lsp)
-         (php-ts-mode . lsp)
-         (python-ts-mode . lsp)
-         (vue-mode . lsp)
-         (web-mode . lsp)
-         (bash-ts-mode . lsp)
-         (terraform-mode . lsp)
-         (graphql-mode . lsp)
-         (sql-mode . lsp)
-         (markdown-mode . lsp)
-         (json-ts-mode . lsp)
-         (toml-ts-mode . lsp)
-         (yaml-ts-mode . lsp)
-         (dockerfile-ts-mode . lsp)
-         (docker-compose-mode . lsp))
+         (astro-ts-mode . lsp-deferred)
+         (go-ts-mode . lsp-deferred)
+         (js-ts-mode . lsp-deferred)
+         (kotlin-ts-mode . lsp-deferred)
+         (typescript-ts-mode . lsp-deferred)
+         (tsx-ts-mode . lsp-deferred)
+         (php-ts-mode . lsp-deferred)
+         (python-ts-mode . lsp-deferred)
+         (vue-mode . lsp-deferred)
+         (web-mode . lsp-deferred)
+         (bash-ts-mode . lsp-deferred)
+         (terraform-mode . lsp-deferred)
+         (graphql-mode . lsp-deferred)
+         (sql-mode . lsp-deferred)
+         (markdown-mode . lsp-deferred)
+         (json-ts-mode . lsp-deferred)
+         (toml-ts-mode . lsp-deferred)
+         (yaml-ts-mode . lsp-deferred)
+         (dockerfile-ts-mode . lsp-deferred)
+         (docker-compose-mode . lsp-deferred))
   :commands lsp)
 
 (use-package lsp-ui
@@ -925,23 +836,17 @@
 
 (use-package js-ts-mode
   :straight (:type built-in)
-  :mode (("\\.js\\'" . js-ts-mode)
-         ("\\.cjs\\'" . js-ts-mode)
+  :mode (("\\.cjs\\'" . js-ts-mode)
          ("\\.mjs\\'" . js-ts-mode))
   :custom
   (js-indent-level 2))
-
-;; (use-package rjsx-mode
-;;   :mode (("\\.js\\'" . rjsx-mode))
-;;   )
 
 (use-package pnpm-mode
   :commands pnpm-mode)
 
 (use-package typescript-ts-mode
   :straight (:type built-in)
-  :mode (("\\.ts\\'" . typescript-ts-mode)
-         ("\\.tsx\\'" . tsx-ts-mode))
+  :defer t
   :custom
   (typescript-ts-mode-indent-offset 2))
 
@@ -952,21 +857,13 @@
 (use-package astro-ts-mode
   :mode ("\\.astro\\'" . astro-ts-mode)
   ;; astro-ts-mode は treesit-ready-p のみで treesit-ensure-installed を呼ばないため、
-  ;; treesit-auto-install-grammar だけでは grammar が自動取得されない
-  :init
-  (mapc #'treesit-ensure-installed '(astro css tsx)))
-
-;; (use-package tide
-;;   :after (typescript-mode company flycheck)
-;;   :config
-;;   :hook ((typescript-mode . tide-setup)
-;;          (typescript-mode . tide-hl-identifier-mode)
-;;          (tide-mode . eldoc-mode)
-;;          (before-save . tide-format-before-save)))
+  ;; treesit-auto-install-grammar だけでは grammar が自動取得されない。
+  :config
+  (mapc #'treesit-ensure-installed '(astro css typescript)))
 
 (use-package php-ts-mode
   :straight (:type built-in)
-  :mode (("\\.php\\'" . php-ts-mode))
+  :defer t
   :custom
   (php-ts-mode-indent-style 'psr2))
 
@@ -996,14 +893,6 @@
 (define-derived-mode vue-mode
   web-mode "vue")
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
-
-(use-package go-ts-mode
-  :mode ("\\.go\\'" . go-ts-mode)
-  :custom (gofmt-command "goimports"))
-
-(use-package go-eldoc
-  :custom (go-eldoc-gocode "gopls")
-  :hook ((go-ts-mode . go-eldoc-setup)))
 
 (use-package terraform-mode
   :mode (("\\.tf\\'" . terraform-mode)
@@ -1050,13 +939,8 @@
   :mode (("\\.mmd\\'" . mermaid-mode)
          ("\\.mermaid\\'" . mermaid-mode)))
 
-(use-package toml-ts-mode
-  :straight (:type built-in)
-  :mode (("\\.toml\\'" . toml-ts-mode)))
-
 (use-package yaml-ts-mode
   :straight (:type built-in)
-  :mode (("\\.ya?ml\\'" . yaml-ts-mode))
   :bind (:map yaml-ts-mode-map
               ("C-m" . newline-and-indent)))
 
@@ -1066,23 +950,16 @@
 
 (use-package json-ts-mode
   :straight (:type built-in)
-  :mode (("\\.jsonc?\\'" . json-ts-mode))
+  :mode (("\\.jsonc\\'" . json-ts-mode))
   :custom
   (json-ts-mode-indent-offset 4))
 
 (use-package docker
   :bind ("C-c d" . docker))
 
-(use-package dockerfile-ts-mode
-  :straight (:type built-in)
-  :mode (("Dockerfile\\'" . dockerfile-ts-mode)))
-
 (use-package docker-compose-mode
   :mode (("docker-compose[^/]*\\.ya?ml\\'" . docker-compose-mode)
-         ("compose[^/]*\\.ya?ml\\'" . docker-compose-mode))
-  :config
-  (add-to-list 'lsp-language-id-configuration
-               '(docker-compose-mode . "docker-compose")))
+         ("compose[^/]*\\.ya?ml\\'" . docker-compose-mode)))
 
 (use-package nginx-mode
   :mode (("nginx\\.conf\\'" . nginx-mode)))

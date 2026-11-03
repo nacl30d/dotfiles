@@ -13,6 +13,9 @@
 
 (setq native-comp-async-report-warnings-errors 'silent)
 
+(setq gc-cons-percentage 0.2
+      gc-cons-threshold (* 128 1024 1024))
+
 (setq inhibit-startup-message t)        ;hidden startup msg
 (menu-bar-mode -1)                      ;hidden menu bar
 (tool-bar-mode -1)                      ;hidden tool bar
