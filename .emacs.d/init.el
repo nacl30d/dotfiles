@@ -1135,7 +1135,7 @@
   :custom
   (org-latex-default-class "jlreq")
   (org-latex-compiler "lualatex")
-  (org-latex-pdf-process '("lualatex %b"))
+  (org-latex-pdf-process '("latexmk -lualatex %b"))
   (org-latex-with-hyperref nil)
   :config
   (add-to-list 'org-latex-classes
@@ -1147,8 +1147,20 @@
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("beamer"
+                 "\\documentclass{beamer}
+                  \\usepackage[hiragino-pron,deluxe]{luatexja-preset}
+                  \\renewcommand{\\kanjifamilydefault}{\\gtdefault}
+                  [NO-DEFAULT-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
   (add-to-list 'org-latex-packages-alist
-               '("normalem" "ulem" t)))
+               '("normalem" "ulem" t))
+  (add-to-list 'org-latex-logfiles-extensions "tex"))
 
 (use-package ob-http
   :after org)
