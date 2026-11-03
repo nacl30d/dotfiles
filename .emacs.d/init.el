@@ -1013,19 +1013,22 @@
   :custom
   ;; Basics
   (org-directory "~/org/")
-  (org-default-notes-file (concat org-directory "index.org"))
+  (org-default-notes-file (concat org-directory "projects/inbox.org"))
   (org-use-speed-commands t)
   ;; Task Managements
-  (org-todo-keywords '((sequence
-                        "TODO(!)" "NOT STARTED(n!)" "IN PROGRESS(p!)" "WAITING(w!)" "FUTURE(f!)"
-                        "|" "DONE(d!)" "DECLINED(x!)")))
-  (org-todo-keyword-faces '(("TODO" . (:foreground "brightyellow" :weight bold)) ("NOT STARTED" . (:foreground "deeppink" :weight bold))
-                            ("IN PROGRESS" . (:foreground "paleturquoise" :weight bold)) ("WAITING" . (:foreground "lightcyan" :weight bold))
-                            ("FUTURE" . (:foreground "palegoldenrod" :background "darkgray" :weight bold))
-                            ("DONE" . (:foreground "palegreen" :weight bold)) ("DECLINED" . (:foreground "palegreen" :background "darkgray" :weight bold))))
-  (org-priority-faces '((?A . (:foreground "orangered" :weight bold))
-                        (?B . (:foreground "yellowgreen"))
-                        (?C . (:foreground "brightblue"))))
+  (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                       (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+  (org-todo-keyword-faces '(("TODO" . (:foreground "brightyellow" :weight bold))
+                            ("NEXT" . (:foreground "paleturquoise" :weight bold))
+                            ("WAITING" . (:foreground "lightcyan" :weight bold))
+                            ("HOLD" . (:foreground "palegoldenrod" :background "darkgray" :weight bold))
+                            ("DONE" . (:foreground "palegreen" :weight bold))
+                            ("CANCELLED" . (:foreground "palegreen" :background "darkgray" :weight bold))))
+  (org-log-done 'time)
+  (org-log-into-drawer t)
+  ;; 既定の .org_archive は auto-mode-alist に対応付けがなく、開いても org-mode にならない。
+  ;; 相対パスは元ファイルのディレクトリが基準になり、projects/ にサブディレクトリを作るとずれる。
+  (org-archive-location (concat (expand-file-name org-directory) "archive/%s::"))
   ;; Export
   (org-export-with-toc nil)
   (org-export-with-date nil)
@@ -1043,57 +1046,81 @@
   :straight (:type built-in)
   :after org
   :custom
-  (org-agenda-files (directory-files-recursively org-directory "\\.org\\'"))
+  ;; ファイルを列挙して渡すと起動時の一覧に固定され、後から追加したファイルが対象外になる。
+  ;; ディレクトリを渡せば org が参照のたびに中のファイルを列挙する。
+  ;; ただしサブディレクトリの一覧は読み込み時に固定され、追加した場合は再起動が必要になる。
+  (org-agenda-files
+   (let ((dir (expand-file-name "projects" org-directory)))
+     (cons dir (seq-filter #'file-directory-p (directory-files-recursively dir "" t)))))
   (org-agenda-window-setup 'current-window)
   (calendar-holidays nil)
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (org-refile-use-outline-path 'file)
+  (org-outline-path-complete-in-steps nil)
+  (org-refile-allow-creating-parent-nodes 'confirm)
   (org-agenda-sorting-strategy '(deadline-up scheduled-up todo-state-up priority-down))
   (org-agenda-skip-timestamp-if-done t)
   (org-agenda-skip-deadline-if-done t)
   (org-agenda-skip-scheduled-if-done t)
   (org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (org-agenda-skip-timestamp-if-deadline-is-shown t))
-
-(use-package org-super-agenda
-  :after org-agenda
-  :custom
-  (org-super-agenda-groups
-   '((:name "Overdue"
-            :deadline past
-            :deadline today
-            :order 1)
-     (:name "Scheduled"
-            :scheduled t
-            :order 2)
-     (:name "Recursive"
-            :habit t
-            :order 110)
-     (:name "NOT Scheduled"
-            :and (:deadline t :scheduled nil)
-            :order 3)
-     (:name "Inbox"
-            :todo "TODO"
-            :order 100)
-     (:name "Backlog"
-            :todo "FUTURE"
-            :order 120)
-     (:name ""
-            :auto-outline-path t
-            :order 10)))
+  (org-agenda-skip-timestamp-if-deadline-is-shown t)
+  (org-agenda-custom-commands
+   '(("d" "Daily"
+      ((agenda "" ((org-agenda-span 'day)))
+       (tags "LEVEL=1" ((org-agenda-overriding-header "Inbox")
+                        (org-agenda-files (list org-default-notes-file))))
+       (todo "NEXT" ((org-agenda-overriding-header "Next")))
+       (todo "WAITING|HOLD" ((org-agenda-overriding-header "Waiting / Hold")))
+       (todo "TODO|NEXT" ((org-agenda-overriding-header "Stuck Projects")
+                          (org-agenda-skip-function #'my/org-skip-unless-stuck-project)))
+       (tags-todo "SCHEDULED=\"\"/TODO" ((org-agenda-overriding-header "Unplanned Tasks")
+                                         (org-agenda-skip-function #'my/org-skip-unless-single-task)))))))
   :config
-  (org-super-agenda-mode 1))
+  ;; 組み込みの org-stuck-projects は子を持たない単発タスクも停滞扱いにする。
+  (defun my/org-skip-unless-stuck-project ()
+    (let ((states (delq nil (cdr (org-map-entries #'org-get-todo-state nil 'tree)))))
+      (when (or (null states) (member "NEXT" states))
+        (save-excursion (or (outline-next-heading) (point-max))))))
+  ;; プロジェクトの子の TODO は兄弟の NEXT 待ちとして正当なので、祖先に TODO を持つ見出しも除く。
+  (defun my/org-skip-unless-single-task ()
+    (when (or (cdr (delq nil (org-map-entries #'org-get-todo-state nil 'tree)))
+              (save-excursion
+                (cl-loop while (org-up-heading-safe) thereis (org-get-todo-state))))
+      (save-excursion (or (outline-next-heading) (point-max))))))
 
 (use-package org-capture
   :straight (:type built-in)
   :after org
   :custom
   (org-capture-templates
-   '(("t" "Task" entry (file+headline "" "Tasks")
-      "* TODO %?\n  %u\n  %a"
+   '(("t" "Task" entry (file "")
+      "* TODO %?\n%U\n%a"
       :empty-lines 1)
-     ("s" "Sticky note" entry (file+datetree org-default-notes-file)
-      "* %U\n%?\n%i\n"
+     ("m" "Meeting" entry (file "")
+      "* %? %t"
+      :clock-in t :clock-resume t :empty-lines 1)
+     ("n" "Note" entry (file "")
+      "* %?\n%U"
       :empty-lines 1))))
+
+(use-package org-clock
+  :straight (:type built-in)
+  :after org
+  :custom
+  (org-clock-persist t)
+  (org-clock-persist-query-resume nil)
+  (org-clock-in-resume t)
+  (org-clock-into-drawer t)
+  (org-clock-out-remove-zero-time-clocks t)
+  (org-clock-out-when-done t)
+  :config
+  (org-clock-persistence-insinuate))
+
+(use-package org-timesheet
+  :straight nil
+  :commands org-timesheet-weekly-report
+  :bind (("C-c I" . org-timesheet-punch-in)
+         ("C-c O" . org-timesheet-punch-out)))
 
 (use-package ox-md
   :straight (:type built-in)
