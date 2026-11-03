@@ -7,3 +7,4 @@
 .emacs.d/user-lisp/.user-lisp-autoloads.el
 log
 .gitconfig.*
+*.local
