@@ -69,6 +69,7 @@
 
 (use-package dired
   :straight (:type built-in)
+  :defer t
   :custom
   (dired-kill-when-opening-new-dired-buffer t))
 
@@ -121,7 +122,7 @@
 
 (use-package auth-source-forge-cli
   :straight nil
-  :demand t
+  :after auth-source
   :custom
   (auth-sources '(gh-cli glab-cli "~/.authinfo.gpg")))
 
@@ -138,6 +139,7 @@
 
 (use-package difftastic-bindings
   :straight difftastic
+  :after (:any magit dired)
   :config (difftastic-bindings-mode))
 
 ;;----------------------------------------------------------------------------------
@@ -196,6 +198,7 @@
   (set-face-attribute 'font-lock-doc-face nil :slant 'italic))
 
 (use-package nerd-icons
+  :defer t
   :custom
   (nerd-icons-font-family "FirgeNerd Console"))
 
@@ -1166,10 +1169,10 @@
 ;; Shell
 ;;----------------------------------------------------------------------------------
 (use-package ghostel
-  :demand t
   :bind (("C-c T" . ghostel-project)
          :map ghostel-semi-char-mode-map
-         ("C-s" . consult-line))
+         ("C-s" . consult-line)
+         ("C-c h" . consult-ghostel-history))
   :config
   ;; `add-to-list' では defcustom の :set が走らず、semi-char のキーマップが再構築されない。
   (setopt ghostel-keymap-exceptions
@@ -1181,16 +1184,12 @@
 
 (use-package ghostel-comint
   :straight nil
-  :hook (after-init . ghostel-comint-global-mode))
+  :hook (comint-mode . ghostel-comint-mode))
 
 (use-package consult-ghostel
   :straight (:type git :host github :repo "dakra/ghostel"
              :files ("extensions/consult-ghostel/*.el"))
-  :after (ghostel consult)
-  :demand t
-  :bind (("C-c t" . consult-ghostel-project)
-         :map ghostel-semi-char-mode-map
-         ("C-c h" . consult-ghostel-history)))
+  :bind ("C-c t" . consult-ghostel-project))
 
 ;;----------------------------------------------------------------------------------
 ;; Coding Agents
