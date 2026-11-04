@@ -145,6 +145,35 @@
 ;;----------------------------------------------------------------------------------
 ;; Views
 ;;----------------------------------------------------------------------------------
+(use-package faces
+  :straight (:type built-in)
+  :init
+  ;; TTY フレームでは :family は無視され、端末側のフォント設定が使われる。
+  (set-fontset-font t 'unicode (font-spec :family "FirgeNerd Console") nil 'prepend)
+  (set-face-attribute 'default nil :family "FirgeNerd Console" :height 190)
+  (set-face-attribute 'fixed-pitch nil :family "FirgeNerd Console")
+  (setq ns-use-thin-smoothing t))
+
+(use-package dracula-theme
+  :init
+  (load-theme 'dracula t)
+  (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
+  (set-face-attribute 'font-lock-doc-face nil :slant 'italic))
+
+(use-package nerd-icons
+  :defer t
+  :custom
+  (nerd-icons-font-family "FirgeNerd Console"))
+
+;; 全角スペースはフォント (Firge) が可視化するため、whitespace-mode の対象は行末スペースに限る。
+;; 行末スペースは Markdown の改行に使うため、保存時に削除せず表示のみとする。
+(use-package whitespace
+  :straight (:type built-in)
+  :custom
+  (whitespace-style '(face trailing))
+  ;; 端末 (ghostel) 等で行末の埋め草が目立つため、全モードでは有効にしない。
+  :hook ((prog-mode text-mode conf-mode) . whitespace-mode))
+
 (use-package elec-pair
   :straight (:type built-in)
   :config
@@ -187,31 +216,11 @@
   (dolist (n (number-sequence 1 9))
     (keymap-global-set (format "M-%d" n) (intern (format "winum-select-window-%d" n)))))
 
-(use-package dracula-theme               ;theme
-  :init
-  (load-theme 'dracula t)
-  ;; TTY フレームでは :family は無視され、端末側のフォント設定が使われる。
-  (set-face-attribute 'default nil :family "FirgeNerd Console" :height 190)
-  (set-face-attribute 'fixed-pitch nil :family "FirgeNerd Console")
-  (setq ns-use-thin-smoothing t)
-  (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-doc-face nil :slant 'italic))
-
-(use-package nerd-icons
-  :defer t
-  :custom
-  (nerd-icons-font-family "FirgeNerd Console"))
-
 (use-package hiwin                      ;change background color if active window or not
   :init
   (hiwin-activate)
   :config
   (set-face-background 'hiwin-face "gray50"))
-
-;; 全角スペースはフォント (Firge) が可視化するため whitespace-mode は使わない。
-;; 行末スペースは Markdown の改行に使うため、保存時に削除せず表示のみとする。
-(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-  (add-hook hook (lambda () (setq-local show-trailing-whitespace t))))
 
 (use-package treemacs
   :bind
