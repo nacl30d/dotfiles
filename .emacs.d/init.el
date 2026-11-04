@@ -34,11 +34,6 @@
 (setopt straight-use-package-by-default t)
 
 ;;----------------------------------------------------------------------------------
-;; Encoding and Language
-;;----------------------------------------------------------------------------------
-(prefer-coding-system 'utf-8)
-
-;;----------------------------------------------------------------------------------
 ;; Basics
 ;;----------------------------------------------------------------------------------
 (setopt tab-width 4 indent-tabs-mode nil)
@@ -102,11 +97,6 @@
   :config
   (setq display-line-numbers-width-start t))
 
-(use-package simple
-  :straight (:type built-in)
-  :config
-  (column-number-mode t))
-
 (use-package emacs
   :straight (:type built-in)
   :custom
@@ -165,6 +155,7 @@
   (which-key-mode))
 
 (use-package tab-bar
+  :straight (:type built-in)
   :init
   (tab-bar-mode 1)
   :bind
@@ -177,6 +168,7 @@
   (tab-bar-format '(tab-bar-format-tabs-groups)))
 
 (use-package tab-line
+  :straight (:type built-in)
   :init
   (global-tab-line-mode 1)
   :custom
@@ -276,7 +268,13 @@
 ;;----------------------------------------------------------------------------------
 ;; Edit
 ;;----------------------------------------------------------------------------------
+(use-package simple
+  :straight (:type built-in)
+  :config
+  (column-number-mode t)
+  (normal-erase-is-backspace-mode 1))
 (keymap-set key-translation-map "C-h" "DEL")
+
 (keymap-global-set "M-/" #'comment-line)
 
 (use-package subword
@@ -340,10 +338,13 @@
   :init
   (global-corfu-mode))
 
-(use-package nerd-icons-corfu
+(use-package kind-icon
   :after corfu
+  ;:custom
+  ; (kind-icon-blend-background t)
+  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
   :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package cape
   :bind ("C-c p" . cape-prefix-map)
@@ -503,7 +504,11 @@
 (use-package flycheck
   :hook (emacs-startup . global-flycheck-mode)
   :custom
-  (flycheck-display-errors-delay 0.1))
+  (flycheck-display-errors-delay 0.1)
+  (flycheck-textlint-plugin-alist
+   '((org-mode . "textlint-plugin-org")
+     (markdown-ts-mode . "@textlint/markdown")
+     (t . "@textlint/text"))))
 
 (use-package jinx
   :hook (emacs-startup . global-jinx-mode)
@@ -538,16 +543,12 @@
   (treesit-auto-install-grammar 'always)
   ;; t は mhtml-ts-mode など使わないモードまで有効にするため、列挙する。
   (treesit-enabled-modes '(bash-ts-mode css-ts-mode js-ts-mode typescript-ts-mode tsx-ts-mode
-                           python-ts-mode json-ts-mode toml-ts-mode yaml-ts-mode
-                           go-ts-mode go-mod-ts-mode php-ts-mode dockerfile-ts-mode))
+                           json-ts-mode toml-ts-mode yaml-ts-mode go-ts-mode go-mod-ts-mode
+                           python-ts-mode php-ts-mode dockerfile-ts-mode))
   :config
-  ;; 組み込み ts-mode や astro-ts-mode などのパッケージが登録する :commit 固定のエントリは
-  ;; 各モードのクエリに合わせてあるため、setq で上書きせず、どこにも登録されない言語だけを追加する。
-  (dolist (source '((elisp "https://github.com/Wilfred/tree-sitter-elisp")
-                    (graphql "https://github.com/bkegley/tree-sitter-graphql")
-                    (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
-                    (make "https://github.com/alemuller/tree-sitter-make")))
-    (add-to-list 'treesit-language-source-alist source)))
+  ;; 標準の ts-mode と astro-ts-mode は commit 固定で取得元を自己登録するため、それ以外の言語のみ追加する。
+  (add-to-list 'treesit-language-source-alist
+               '(kotlin "https://github.com/fwcd/tree-sitter-kotlin")))
 
 ;;----------------------------------------------------------------------------------
 ;; LSP
@@ -574,6 +575,7 @@
   (lsp-auto-guess-root t)
   (lsp-lens-enable nil)
   (lsp-modeline-code-actions-enable nil)
+  (lsp-eldoc-render-all t)
   ;; JS/TS
   (lsp-javascript-preferences-import-module-specifier "relative")
   (lsp-typescript-preferences-import-module-specifier "relative")
@@ -614,7 +616,7 @@
   (defun cfn-lsp/cloudformation-buffer-p (&optional _filename _mode)
     "現在のバッファが CloudFormation テンプレートかを判定する。
   バッファ先頭付近に AWSTemplateFormatVersion キーが存在すれば非 nil を返す。"
-    (and (derived-mode-p 'yaml-ts-mode 'yaml-mode 'json-ts-mode 'json-mode)
+    (and (derived-mode-p 'yaml-ts-mode 'json-ts-mode)
          (save-excursion
            (save-restriction
              (widen)
@@ -667,7 +669,7 @@
   (defun actions-ls/buffer-p (&optional _filename _mode)
     (and buffer-file-name
          (not (file-remote-p buffer-file-name))
-         (derived-mode-p 'yaml-ts-mode 'yaml-mode)
+         (derived-mode-p 'yaml-ts-mode)
          (string-match-p "\\.github/workflows/[^/]+\\.ya?ml\\'" buffer-file-name)))
 
   (defun actions-ls/init-options ()
@@ -805,7 +807,7 @@
          (terraform-mode . lsp-deferred)
          (graphql-mode . lsp-deferred)
          (sql-mode . lsp-deferred)
-         (markdown-mode . lsp-deferred)
+         (markdown-ts-mode . lsp-deferred)
          (json-ts-mode . lsp-deferred)
          (toml-ts-mode . lsp-deferred)
          (yaml-ts-mode . lsp-deferred)
@@ -815,7 +817,6 @@
 
 (use-package lsp-ui
   :custom
-  (lsp-eldoc-render-all t)
   (lsp-ui-sideline-diagnostic-max-lines 3)
   :commands lsp-ui-mode)
 
@@ -828,13 +829,12 @@
 ;; Languages
 ;;----------------------------------------------------------------------------------
 (use-package csv-mode
-  :mode (("\\.csv\\'" . csv-mode)
-         ("\\.tsv\\'" . tsv-mode)))
+  :defer t)
 
 (use-package sql-indent
   :hook (sql-mode . sqlind-minor-mode))
 
-(use-package js-ts-mode
+(use-package js
   :straight (:type built-in)
   :mode (("\\.cjs\\'" . js-ts-mode)
          ("\\.mjs\\'" . js-ts-mode))
@@ -852,7 +852,7 @@
 
 (use-package prisma-mode
   :straight (:host github :repo "pimeys/emacs-prisma-mode" :branch "main")
-  :mode ("\\.prisma\\'" . prisma-mode))
+  :defer t)
 
 (use-package astro-ts-mode
   :mode ("\\.astro\\'" . astro-ts-mode)
@@ -895,8 +895,7 @@
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 
 (use-package terraform-mode
-  :mode (("\\.tf\\'" . terraform-mode)
-         ("\\.tfvars\\'" . terraform-mode)))
+  :defer t)
 
 (use-package kotlin-ts-mode
   ;; :straight (:host gitlab :repo "bricka/emacs-kotlin-ts-mode")
@@ -905,17 +904,16 @@
   :init
   (treesit-ensure-installed 'kotlin))
 
+;; 編集は markdown-ts-mode で行うが、markdown-ts-mode には書き出し・プレビュー機能がないため、
+;; markdown-export と markdown-live-preview-mode を使う目的で残す。
 (use-package markdown-mode
-  :commands (markdown-mode gfm-mode)
-  :mode (("\\.md\\'" . gfm-mode))
+  :defer t
   :custom
   (markdown-command "cmark-gfm -e table -e strikethrough -e autolink -e tasklist -e footnotes --table-prefer-style-attributes --validate-utf8 --unsafe -e tagfilter")
   (markdown-command-needs-filename t)
   (markdown-open-command 'browse-url)
   (markdown-live-preview-delete-export 'delete-on-export)
-  (markdown-indent-on-enter 'indent-and-new-item)
   (markdown-header-scaling t)
-  (markdown-fontify-code-blocks-natively t)
   (markdown-css-paths (list (expand-file-name "etc/markdown-academic.css" user-emacs-directory)))
   (markdown-xhtml-header-content
    (concat
@@ -923,21 +921,25 @@
     "<script>document.addEventListener('DOMContentLoaded', () => mermaid.run({ querySelector: 'code.language-mermaid' }))</script>\n"
     )))
 
+(use-package markdown-ts-mode
+  :straight (:type built-in)
+  :commands markdown-ts-mode
+  :init
+  ;; treesit-major-mode-remap-alist に未登録のため、treesit-enabled-modes では有効にならない。
+  (add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode)))
+
 (use-package markdown-plantuml
   :straight nil
   :after markdown-mode)
 
 (use-package plantuml-mode
-  :mode (("\\.puml\\'" . plantuml-mode)
-         ("\\.plantuml\\'" . plantuml-mode)
-         ("\\.pu\\'" . plantuml-mode))
+  :mode ("\\.puml\\'" . plantuml-mode)
   :custom
   (plantuml-default-exec-mode 'jar)
   (plantuml-jar-path (locate-user-emacs-file "plantuml.jar")))
 
 (use-package mermaid-mode
-  :mode (("\\.mmd\\'" . mermaid-mode)
-         ("\\.mermaid\\'" . mermaid-mode)))
+  :mode ("\\.mermaid\\'" . mermaid-mode))
 
 (use-package yaml-ts-mode
   :straight (:type built-in)
@@ -957,12 +959,8 @@
 (use-package docker
   :bind ("C-c d" . docker))
 
-(use-package docker-compose-mode
-  :mode (("docker-compose[^/]*\\.ya?ml\\'" . docker-compose-mode)
-         ("compose[^/]*\\.ya?ml\\'" . docker-compose-mode)))
-
 (use-package nginx-mode
-  :mode (("nginx\\.conf\\'" . nginx-mode)))
+  :defer t)
 
 (defun skim-forward-search ()
   "Skim search function."
@@ -980,7 +978,6 @@
 (use-package tex-mode
   :straight (:type built-in)
   :custom
-  (tex-default-mode 'latex-mode)
   (tex-start-commands "\\nonstopmode\\input")
   (tex-run-command "ptex2pdf -u -e -ot '-synctex=1 -interaction=nonstopmode'")
   (latex-run-command "ptex2pdf -u -l -ot '-synctex=1 -interaction=nonstopmode'")
@@ -1170,7 +1167,7 @@
 ;;----------------------------------------------------------------------------------
 (use-package ghostel
   :demand t
-  :bind (("C-c t" . ghostel-project)
+  :bind (("C-c T" . ghostel-project)
          :map ghostel-semi-char-mode-map
          ("C-s" . consult-line))
   :config
@@ -1191,7 +1188,7 @@
              :files ("extensions/consult-ghostel/*.el"))
   :after (ghostel consult)
   :demand t
-  :bind (("C-c T" . consult-ghostel-project)
+  :bind (("C-c t" . consult-ghostel-project)
          :map ghostel-semi-char-mode-map
          ("C-c h" . consult-ghostel-history)))
 
@@ -1218,8 +1215,7 @@
   :after restclient)
 
 (use-package graphql-mode
-  :mode (("\\.graphql\\'" . graphql-mode)
-         ("\\.gql\\'" . graphql-mode)))
+  :defer t)
 (use-package request
   :defer t)
 
