@@ -1,0 +1,11 @@
+#!/bin/sh
+# Detach from git's pipes; otherwise git waits for EOF until sleep exits.
+( sleep 1
+  osascript -e 'display notification "Touch your YubiKey to sign" with title "git"'
+) </dev/null >/dev/null 2>&1 &
+notifier=$!
+
+gpg "$@"
+status=$?
+kill "$notifier" 2>/dev/null
+exit $status

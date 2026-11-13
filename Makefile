@@ -2,6 +2,8 @@ DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES := $(wildcard .??*)
 EXCLUSIONS := .DS_Store .git .gitignore .gitmodules
 DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
+BINFILES   := $(wildcard bin/*)
+BINDIR     := $(HOME)/.local/bin
 
 .DEFAULT_GOAL := help
 
@@ -12,6 +14,8 @@ deploy: ## Create symbolic link to home dir
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
 	@$(foreach file, $(DOTFILES), ln -snfv $(abspath $(file)) $(HOME)/$(file);)
+	@mkdir -p $(BINDIR)
+	@$(foreach file, $(BINFILES), ln -snfv $(abspath $(file)) $(BINDIR)/$(notdir $(file));)
 
 update: ## Fetch changes fot this repo
 	git pull origin master

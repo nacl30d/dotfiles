@@ -28,6 +28,9 @@
 [tag]
     gpgsign = true
 
+[gpg]
+    program = ~/.local/bin/git-gpg-touch-notify
+
 [grep]
     lineNumber = true
 
