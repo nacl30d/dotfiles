@@ -1182,6 +1182,13 @@
          :map ghostel-semi-char-mode-map
          ("C-s" . consult-line)
          ("C-c h" . consult-ghostel-history))
+  :custom
+  (ghostel-notification-function
+   (lambda (title body)
+     (ns-do-applescript
+      (format "display notification %S with title %S"
+              body
+              (if (string-empty-p title) (buffer-name) title)))))
   :config
   ;; `add-to-list' では defcustom の :set が走らず、semi-char のキーマップが再構築されない。
   (setopt ghostel-keymap-exceptions
