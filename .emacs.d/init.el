@@ -1024,6 +1024,7 @@
   (org-directory "~/org/")
   (org-default-notes-file (concat org-directory "projects/inbox.org"))
   (org-use-speed-commands t)
+  (org-startup-folded 'content)
   ;; Task Managements
   (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                        (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
