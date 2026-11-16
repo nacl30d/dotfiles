@@ -400,6 +400,7 @@
    ;; ("C-c o" . consult-outline)
    )
   :custom
+  (consult-buffer-list-function #'tabspaces-local-buffer-list)
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref))
 
@@ -479,24 +480,22 @@
             (magit-project-status "Magit")
             (ghostel-project "Ghostel")
             (claude-code-ide "Claude Code")
-            (project-any-command "Other")))
-  (defun my/project-switch-project-in-tab (switch dir)
-    (if-let* ((pr (project-current nil dir)))
-        (let* ((name (project-name pr))
-               (exists (seq-find (lambda (tab) (equal (alist-get 'name tab) name))
-                                 (tab-bar-tabs))))
-          (tab-bar-switch-to-tab name)
-          (unless exists
-            (funcall switch dir)))
-      (funcall switch dir)))
-  (advice-add 'project-switch-project :around
-              #'my/project-switch-project-in-tab)
-  (defun my/tab-bar-tab-name-project ()
-    (with-current-buffer (window-buffer (minibuffer-selected-window))
-      (if-let* ((pr (project-current)))
-          (project-name pr)
-        (tab-bar-tab-name-current))))
-  (setq tab-bar-tab-name-function #'my/tab-bar-tab-name-project))
+            (project-any-command "Other"))))
+
+(use-package tabspaces
+  :demand t
+  :after project
+  :custom
+  (tabspaces-project-switch-opens-workspace t)
+  (tabspaces-initialize-project-with-todo nil)
+  (tabspaces-session-auto-restore t)
+  ;; daemon は終了しないため、kill-emacs-hook による保存だけでは異常終了時にセッションが失われる。
+  (tabspaces-session-auto-save-delay 300)
+  ;; 既定の 'project はプロジェクトルートにセッションファイルを作り、各リポジトリの作業ツリーを汚す。
+  (tabspaces-session-project-session-store
+   (locate-user-emacs-file "tabspaces-sessions/"))
+  :config
+  (tabspaces-mode 1))
 
 ;;----------------------------------------------------------------------------------
 ;; Environment
