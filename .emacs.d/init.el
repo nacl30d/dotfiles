@@ -106,7 +106,8 @@
                                     jinx-mode
                                     mise-mode
                                     subword-mode
-                                    which-key-mode)))
+                                    which-key-mode
+                                    whitespace-mode)))
 
 ;;----------------------------------------------------------------------------------
 ;; Version Control System
@@ -1076,8 +1077,8 @@
   (org-agenda-custom-commands
    '(("d" "Daily"
       ((agenda "" ((org-agenda-span 'day)))
-       (tags "LEVEL=1" ((org-agenda-overriding-header "Inbox")
-                        (org-agenda-files (list org-default-notes-file))))
+       (tags "LEVEL=1-source" ((org-agenda-overriding-header "Inbox")
+                               (org-agenda-files (list org-default-notes-file))))
        (todo "NEXT" ((org-agenda-overriding-header "Next")))
        (todo "WAITING|HOLD" ((org-agenda-overriding-header "Waiting / Hold")))
        (todo "TODO|NEXT" ((org-agenda-overriding-header "Stuck Projects")
