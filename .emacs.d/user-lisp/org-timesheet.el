@@ -41,10 +41,37 @@ Time is clocked here whenever no other task is clocked."
   (when (org-clocking-p)
     (org-clock-out)))
 
-;; clocktable の :step day は日ごとに表を分けて出力し、ファイル×曜日の一覧にならない。
+;; clocktable の :step day は日ごとに表を分けて出力し、カテゴリ×曜日の一覧にならない。
+;; org-clock-sum は見出し単位で合算するため、見出しごとに異なるカテゴリを区別できない。
+(defun org-timesheet--clock-ranges ()
+  "Return (CATEGORY START END LINE) for each clock in the current buffer.
+START and END are float times.  The running clock ends now; other
+unclosed clocks are skipped."
+  (org-with-wide-buffer
+   (goto-char (point-min))
+   (let (ranges)
+     (while (re-search-forward org-clock-line-re nil t)
+       (let ((element (org-element-at-point)))
+         (when (eq (org-element-type element) 'clock)
+           (let ((ts (org-element-property :value element))
+                 (running (and (org-clocking-p)
+                               (eq (marker-buffer org-clock-marker) (current-buffer))
+                               (<= (org-element-property :begin element)
+                                   org-clock-marker
+                                   (org-element-property :end element)))))
+             (when (or running (eq (org-element-property :status element) 'closed))
+               (push (list (org-get-category)
+                           (float-time (org-timestamp-to-time ts))
+                           (if running (float-time) (float-time (org-timestamp-to-time ts t)))
+                           (line-number-at-pos))
+                     ranges))))))
+     ranges)))
+
 ;;;###autoload
 (defun org-timesheet-weekly-report (&optional weeks-ago)
-  "Show clock minutes per agenda file and weekday for this week.
+  "Show clock minutes per category and weekday for this week.
+Categories come from `org-get-category' at each clock line, so a
+heading's CATEGORY property overrides the file's #+CATEGORY.
 With prefix argument WEEKS-AGO, show the week that many weeks before."
   (interactive "P")
   (let* ((weeks-ago (if weeks-ago (prefix-numeric-value weeks-ago) 0))
@@ -53,33 +80,44 @@ With prefix argument WEEKS-AGO, show the week that many weeks before."
                     (mod (1- (decoded-time-weekday now)) 7)
                     (* 7 weeks-ago)))
          (days (mapcar (lambda (i)
-                         (encode-time (list 0 0 0 (+ monday i)
-                                            (decoded-time-month now) (decoded-time-year now)
-                                            nil -1 nil)))
+                         (float-time
+                          (encode-time (list 0 0 0 (+ monday i)
+                                             (decoded-time-month now) (decoded-time-year now)
+                                             nil -1 nil))))
                        (number-sequence 0 7)))
          (fmt (lambda (minutes) (org-duration-from-minutes minutes 'h:mm)))
-         (rows (mapcar
-                (lambda (file)
-                  (with-current-buffer (find-file-noselect file)
-                    (cons (file-name-base file)
-                          (cl-loop for (start end) on days while end
-                                   collect (progn (org-clock-sum (float-time start) (float-time end))
-                                                  org-clock-file-total-minutes)))))
-                (org-agenda-files)))
-         (totals (apply #'cl-mapcar #'+ (mapcar #'cdr rows))))
-    (with-current-buffer (get-buffer-create "*Weekly Clock*")
-      (erase-buffer)
-      (org-mode)
-      (insert "| | " (mapconcat (lambda (d) (format-time-string "%m/%d %a" d)) (butlast days) " | ")
-              " | Total |\n|-\n")
-      (dolist (row (append rows '(hline) (list (cons "Total" totals))))
-        (if (eq row 'hline)
-            (insert "|-\n")
-          (insert "| " (car row) " | "
-                  (mapconcat fmt (cdr row) " | ")
-                  " | " (funcall fmt (apply #'+ (cdr row))) " |\n")))
-      (org-table-align)
-      (pop-to-buffer (current-buffer)))))
+         (table nil)
+         (invalid nil))
+    (dolist (file (org-agenda-files))
+      (with-current-buffer (find-file-noselect file)
+        (pcase-dolist (`(,category ,start ,end ,line) (org-timesheet--clock-ranges))
+          (if (< end start)
+              (push (format "%s:%d" (file-name-nondirectory file) line) invalid)
+            (let ((row (or (assoc category table)
+                           (car (push (cons category (make-list 7 0)) table)))))
+              (cl-loop for (dstart dend) on days while dend
+                       for cell on (cdr row)
+                       do (cl-incf (car cell) (max 0 (floor (- (min end dend) (max start dstart)) 60)))))))))
+    (let* ((rows (sort (cl-remove-if (lambda (row) (zerop (apply #'+ (cdr row)))) table)
+                       (lambda (a b) (string< (car a) (car b)))))
+           (totals (if rows (apply #'cl-mapcar #'+ (mapcar #'cdr rows)) (make-list 7 0))))
+      (with-current-buffer (get-buffer-create "*Weekly Clock*")
+        (erase-buffer)
+        (org-mode)
+        (insert "| | " (mapconcat (lambda (d) (format-time-string "%m/%d %a" d)) (butlast days) " | ")
+                " | Total |\n|-\n")
+        (dolist (row (append rows '(hline) (list (cons "Total" totals))))
+          (if (eq row 'hline)
+              (insert "|-\n")
+            (insert "| " (car row) " | "
+                    (mapconcat fmt (cdr row) " | ")
+                    " | " (funcall fmt (apply #'+ (cdr row))) " |\n")))
+        (org-table-align)
+        (pop-to-buffer (current-buffer))))
+    (when invalid
+      (display-warning 'org-timesheet
+                       (format "Clocks ending before they start were ignored: %s"
+                               (string-join (nreverse invalid) ", "))))))
 
 (add-hook 'org-clock-out-hook #'org-timesheet--clock-in-default-task-maybe)
 
