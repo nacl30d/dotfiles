@@ -940,6 +940,10 @@
   ;; treesit-major-mode-remap-alist に未登録のため、treesit-enabled-modes では有効にならない。
   (add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode)))
 
+(use-package markdown-ts-cjk-fix
+  :straight nil
+  :after markdown-ts-mode)
+
 (use-package markdown-plantuml
   :straight nil
   :after markdown-mode)
