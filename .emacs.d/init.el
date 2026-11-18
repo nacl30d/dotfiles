@@ -159,7 +159,11 @@
   :init
   (load-theme 'dracula t)
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-doc-face nil :slant 'italic))
+  (set-face-attribute 'font-lock-doc-face nil :slant 'italic)
+  ;; active window の mode-line を強調する
+  (set-face-attribute 'mode-line-active nil
+                      :overline "#bd93f9" :underline '(:color "#bd93f9" :position t))
+  (set-face-attribute 'mode-line-inactive nil :foreground "#6272a4"))
 
 (use-package nerd-icons
   :defer t
@@ -216,12 +220,6 @@
   ;; window-list の順で数えると、winum が番号を振らない treemacs なども数えてしまい表示とずれる。
   (dolist (n (number-sequence 1 9))
     (keymap-global-set (format "M-%d" n) (intern (format "winum-select-window-%d" n)))))
-
-(use-package hiwin                      ;change background color if active window or not
-  :init
-  (hiwin-activate)
-  :config
-  (set-face-background 'hiwin-face "gray50"))
 
 (use-package treemacs
   :bind
