@@ -452,8 +452,8 @@
 ;;----------------------------------------------------------------------------------
 ;; Project
 ;;----------------------------------------------------------------------------------
-;; ELPA 版が依存として straight で導入済みのため、:straight (:type built-in) にはしない。
 (use-package project
+  :straight (:type built-in)
   :demand t
   :custom
   (project-vc-extra-root-markers '(".project"))
@@ -478,13 +478,9 @@
   :custom
   (tabspaces-project-switch-opens-workspace t)
   (tabspaces-initialize-project-with-todo nil)
-  (tabspaces-session-auto-restore t)
-  ;; daemon は終了しないため、kill-emacs-hook による保存だけでは異常終了時にセッションが失われる。
-  (tabspaces-session-auto-save-delay 300)
-  ;; 既定の 'project はプロジェクトルートにセッションファイルを作り、各リポジトリの作業ツリーを汚す。
-  (tabspaces-session-project-session-store
-   (locate-user-emacs-file "tabspaces-sessions/"))
-  :config
+  (tabspaces-default-tab "home")
+  (tabspaces-session nil)
+  (tabspaces-session-auto-restore nil)
   (tabspaces-mode 1))
 
 ;;----------------------------------------------------------------------------------
