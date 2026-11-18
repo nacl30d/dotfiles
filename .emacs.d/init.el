@@ -203,14 +203,6 @@
   (tab-bar-separator " ")
   (tab-bar-format '(tab-bar-format-tabs-groups)))
 
-(use-package tab-line
-  :straight (:type built-in)
-  :init
-  (global-tab-line-mode 1)
-  :custom
-  (tab-line-new-button-show nil)
-  (tab-line-close-button-show nil))
-
 (use-package winum
   :init
   ;; 既定の winum-keymap は C-x w を winum-base-map で覆い、組み込みの window-prefix-map を隠す。
