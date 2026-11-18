@@ -453,14 +453,15 @@
   :custom
   (project-vc-extra-root-markers '(".project"))
   :config
-  (keymap-set project-prefix-map "v" #'magit-project-status)
-  (keymap-set project-prefix-map "e" #'ghostel-project)
+  (keymap-set project-prefix-map "g" #'magit-project-status)
+  (keymap-set project-prefix-map "s" #'ghostel-project)
+  (keymap-set project-prefix-map "j" #'consult-ripgrep)
   (keymap-set project-prefix-map "a" #'claude-code-ide)
   ;; claude-code-ide-menu は transient のため、suffix 実行時には project-switch-project の
   ;; 動的束縛が切れており、切り替え先ではなく元のバッファのプロジェクトで起動してしまう。
   (setopt project-switch-commands
           '((project-find-file "Find file")
-            (project-find-regexp "Find regexp")
+            (consult-ripgrep "Ripgrep")
             (project-find-dir "Find directory")
             (magit-project-status "Magit")
             (ghostel-project "Ghostel")
