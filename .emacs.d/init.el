@@ -926,6 +926,10 @@
   :straight nil
   :after markdown-ts-mode)
 
+(use-package markdown-ts-table-pad
+  :straight nil
+  :after markdown-ts-mode)
+
 (use-package markdown-plantuml
   :straight nil
   :after markdown-mode)
