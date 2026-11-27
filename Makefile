@@ -4,6 +4,8 @@ EXCLUSIONS := .DS_Store .git .gitignore .gitmodules
 DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 BINFILES   := $(wildcard bin/*)
 BINDIR     := $(HOME)/.local/bin
+SWIFTSRCS  := $(wildcard src/*.swift)
+SWIFTBINS  := $(patsubst src/%.swift, $(BINDIR)/%, $(SWIFTSRCS))
 
 .DEFAULT_GOAL := help
 
@@ -17,10 +19,16 @@ deploy: ## Create symbolic link to home dir
 	@mkdir -p $(BINDIR)
 	@$(foreach file, $(BINFILES), ln -snfv $(abspath $(file)) $(BINDIR)/$(notdir $(file));)
 
+build: $(SWIFTBINS) ## Build Swift sources in src/ into ~/.local/bin
+
+$(BINDIR)/%: src/%.swift
+	@mkdir -p $(BINDIR)
+	swiftc -O -o $@ $<
+
 update: ## Fetch changes fot this repo
 	git pull origin master
 
-install: update deploy #init ## Run make update, deploy, init
+install: update build deploy ## Run make update, build, deploy
 	@exec $$SHELL
 
 # test: ## Test dotfiles and init scripts
