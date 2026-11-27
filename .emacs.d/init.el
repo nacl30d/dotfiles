@@ -490,7 +490,16 @@
     (exec-path-from-shell-initialize)))
 
 (use-package mise
-  :hook (emacs-startup . global-mise-mode))
+  ;; FIXME: upstream はバッファごとに mise を 5 回同期起動する (eki3z/mise.el#23)。
+  ;; 修正 PR (eki3z/mise.el#26、#25 を含む) が未マージのための暫定措置で、マージ後は
+  ;; :straight 指定を外して upstream に戻す。
+  :straight (:type git :host github :repo "DivineDominion/mise.el"
+             :branch "fix/ensure-experimental-once")
+  :hook (emacs-startup . global-mise-mode)
+  :config
+  ;; mise-mode は有効化のたびに mise を数回同期起動する。agenda は org ファイルを
+  ;; まとめて開くため、その分だけ表示が遅れる。
+  (setq mise-exclude-modes '(fundamental-mode org-mode org-agenda-mode help-mode)))
 
 ;;----------------------------------------------------------------------------------
 ;; Syntax Checking
@@ -557,8 +566,43 @@
   ;; :config に置くと、lsp-mode を読み込んだ最初のバッファではモードフックの実行中に追加されて効かない。
   (defun lsp/disable-graphql-lsp ()
     (setq-local lsp-disabled-clients '(graphql-lsp)))
-  (dolist (hook '(typescript-ts-mode-hook tsx-ts-mode-hook js-ts-mode-hook))
+  (dolist (hook '(typescript-ts-mode-hook tsx-ts-mode-hook js-ts-mode-hook vue-mode-hook))
     (add-hook hook #'lsp/disable-graphql-lsp))
+
+  ;; 既定では最初の lsp 起動時に lsp-client-packages の約 150 個をすべて読み込み、1.3 秒以上かかる。
+  ;; client の対応 mode はソースから静的に決まらない (lsp-javascript 等は独自の関数で判定する) ため、
+  ;; mode ごとに読み込む client を列挙する。:config で登録する独自 client は列挙不要。
+  (defconst lsp/mode-clients
+    '(((astro-ts-mode) lsp-astro)
+      ((go-ts-mode) lsp-go lsp-golangci-lint)
+      ((go-mod-ts-mode) lsp-go)
+      ((js-ts-mode typescript-ts-mode tsx-ts-mode) lsp-javascript)
+      ((kotlin-ts-mode))
+      ((php-ts-mode))
+      ((python-ts-mode) lsp-python-ty lsp-ruff)
+      ((vue-mode) lsp-javascript lsp-volar)
+      ((web-mode) lsp-html)
+      ((css-ts-mode) lsp-css)
+      ((bash-ts-mode) lsp-bash)
+      ((terraform-mode) lsp-terraform)
+      ((graphql-mode) lsp-graphql)
+      ((sql-mode) lsp-sql lsp-sqls lsp-postgres)
+      ((markdown-ts-mode) lsp-marksman)
+      ((json-ts-mode) lsp-json)
+      ((toml-ts-mode) lsp-toml lsp-toml-tombi lsp-crates)
+      ((yaml-ts-mode) lsp-yaml)
+      ((dockerfile-ts-mode) lsp-dockerfile)
+      ((docker-compose-mode)))
+    "lsp を起動する major mode と、その mode で読み込む client パッケージ。")
+
+  (defun lsp/require-clients-and-start ()
+    (dolist (client (cdr (seq-find (lambda (entry) (memq major-mode (car entry)))
+                                   lsp/mode-clients)))
+      (require client nil t))
+    (lsp-deferred))
+  (pcase-dolist (`(,modes . ,_) lsp/mode-clients)
+    (dolist (mode modes)
+      (add-hook (intern (format "%s-hook" mode)) #'lsp/require-clients-and-start)))
 
   :custom
   (lsp-completion-provider :none) ; with corfu
@@ -570,6 +614,11 @@
   (lsp-lens-enable nil)
   (lsp-modeline-code-actions-enable nil)
   (lsp-eldoc-render-all t)
+  ;; 有効だと LSP を使う最初のバッファで dap-ui 一式を読み込み、約 0.9 秒止まる。
+  ;; dap-mode は dap-debug の実行時に読み込む。
+  (lsp-enable-dap-auto-configure nil)
+  ;; client は lsp/mode-clients に従って mode ごとに読み込む。
+  (lsp-client-packages nil)
   ;; JS/TS
   (lsp-javascript-preferences-import-module-specifier "relative")
   (lsp-typescript-preferences-import-module-specifier "relative")
@@ -779,34 +828,23 @@
   (defun lsp/enable-graphql ()
     "graphql-lsp を現在のバッファで手動起動する。gql`` を使うファイルで呼ぶ。"
     (interactive)
+    (require 'lsp-graphql)
     (setq-local lsp-disabled-clients
                 (remove 'graphql-lsp lsp-disabled-clients))
     (lsp))
 
+  ;; lsp/mode-clients にない言語で M-x lsp したときは、既定の全 client を読み込んでから続行する。
+  ;; 内部関数に依存するため、lsp-mode の更新で壊れる可能性がある。
+  (defun lsp/require-all-clients-if-unsupported (&rest _)
+    (unless (lsp--filter-clients #'lsp--supports-buffer?)
+      (let ((lsp-client-packages (eval (car (get 'lsp-client-packages 'standard-value)) t))
+            (lsp--client-packages-required nil))
+        (lsp--require-packages))))
+  (advice-add 'lsp :before #'lsp/require-all-clients-if-unsupported)
+
   (add-to-list 'lsp-language-id-configuration '(web-mode . "html"))
   (add-to-list 'lsp-language-id-configuration '(docker-compose-mode . "docker-compose"))
 
-  :hook (
-         (astro-ts-mode . lsp-deferred)
-         (go-ts-mode . lsp-deferred)
-         (js-ts-mode . lsp-deferred)
-         (kotlin-ts-mode . lsp-deferred)
-         (typescript-ts-mode . lsp-deferred)
-         (tsx-ts-mode . lsp-deferred)
-         (php-ts-mode . lsp-deferred)
-         (python-ts-mode . lsp-deferred)
-         (vue-mode . lsp-deferred)
-         (web-mode . lsp-deferred)
-         (bash-ts-mode . lsp-deferred)
-         (terraform-mode . lsp-deferred)
-         (graphql-mode . lsp-deferred)
-         (sql-mode . lsp-deferred)
-         (markdown-ts-mode . lsp-deferred)
-         (json-ts-mode . lsp-deferred)
-         (toml-ts-mode . lsp-deferred)
-         (yaml-ts-mode . lsp-deferred)
-         (dockerfile-ts-mode . lsp-deferred)
-         (docker-compose-mode . lsp-deferred))
   :commands lsp)
 
 (use-package lsp-ui
@@ -815,9 +853,11 @@
   :commands lsp-ui-mode)
 
 (use-package dap-mode
-  :after (lsp-mode)
+  :commands (dap-debug dap-debug-edit-template)
   :custom
-  (dap-auto-configure-features '(sessions locals controls tooltip)))
+  (dap-auto-configure-features '(sessions locals controls tooltip))
+  :config
+  (dap-auto-configure-mode))
 
 ;;----------------------------------------------------------------------------------
 ;; Languages
@@ -877,13 +917,6 @@
   (web-mode-engines-alist '(("php" . "\\.phtml\\'")
                             ("blade" . "\\.blade\\.php\\'"))))
 
-(use-package lsp-php
-  :straight nil
-  :after lsp-mode
-  :config
-  ;; web-mode の :mode を lsp-php.el が上書きするため、ロード後に再 push する。
-  (push '("\\.blade\\.php\\'" . web-mode) auto-mode-alist))
-
 (define-derived-mode vue-mode
   web-mode "vue")
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
@@ -920,7 +953,16 @@
   :commands markdown-ts-mode
   :init
   ;; treesit-major-mode-remap-alist に未登録のため、treesit-enabled-modes では有効にならない。
-  (add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode)))
+  (add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode))
+  ;; FIXME: markdown-inline 内の html_tag を埋め込む range に :local t がなく、range
+  ;; の更新がインライン要素数の 2 乗に比例する (bug#81334: https://debbugs.gnu.org/81334)。
+  ;; master では修正済みのため、Emacs 32 に上げたら削除する。
+  (defun markdown-ts/localize-html-tag-ranges ()
+    (setq-local treesit-range-settings
+                (mapcar (pcase-lambda (`(,query ,embed ,local . ,rest))
+                          `(,query ,embed ,(or local (eq embed 'html)) . ,rest))
+                        treesit-range-settings)))
+  (add-hook 'markdown-ts-mode-hook #'markdown-ts/localize-html-tag-ranges))
 
 (use-package markdown-ts-cjk-fix
   :straight nil
@@ -1015,6 +1057,8 @@
   (org-default-notes-file (concat org-directory "projects/inbox.org"))
   (org-use-speed-commands t)
   (org-startup-folded 'content)
+  ;; 既定に含まれる ol-gnus は gnus 全体を読み込み、最初の org バッファを開くのに約 0.7 秒かかる。
+  (org-modules '(ol-doi ol-eww ol-info))
   ;; Task Managements
   (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                        (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
