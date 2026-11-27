@@ -8,7 +8,6 @@ exists 'orb' && source ~/.orbstack/shell/init.zsh
 
 # aws
 exists 'aws' && complete -C "$(which aws_completer)" aws
-exists 'saml2aws' && eval "$(saml2aws --completion-script-zsh)"
 
 # Terraform
 exists 'hcp' && complete -o nospace -C "$(which hcp)" hcp
