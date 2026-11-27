@@ -430,8 +430,9 @@
   ;; (orderless-component-separator #'orderless-escapable-split-on-space)
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion))))
-  (completion-category-defaults nil) ;; Disable defaults, use our settings
-  (completion-pcm-leading-wildcard t)) ;; Emacs 31: partial-completion behaves like substring
+  (completion-pcm-leading-wildcard t) ;; Emacs 31: partial-completion behaves like substring
+  :config
+  (setq completion-category-defaults nil))
 
 ;; Enable rich annotations using the Marginalia package
 (use-package marginalia
@@ -477,6 +478,7 @@
   (tabspaces-default-tab "home")
   (tabspaces-session nil)
   (tabspaces-session-auto-restore nil)
+  :config
   (tabspaces-mode 1))
 
 ;;----------------------------------------------------------------------------------
