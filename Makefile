@@ -1,6 +1,6 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES := $(wildcard .??*)
-EXCLUSIONS := .DS_Store .git .gitignore .gitmodules
+EXCLUSIONS := .DS_Store .git .gitignore .gitmodules .claude
 DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 BINFILES   := $(wildcard bin/*)
 BINDIR     := $(HOME)/.local/bin
